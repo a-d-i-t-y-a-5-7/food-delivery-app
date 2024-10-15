@@ -19,5 +19,11 @@ namespace backend.Services.Implementations
 
             return restaurants;
         }
+
+        public List<Order> GetOrders(int restaurantId)
+        {
+            List<Order> orders = _restaurantRepo.GetOrders(restaurantId);
+            return orders;
+        }
     }
 }

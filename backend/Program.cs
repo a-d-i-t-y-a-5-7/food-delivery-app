@@ -38,8 +38,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodDeliveryDbContext>();
-builder.Services.AddScoped<IRestaurantServices, RestaurantServices>();
 builder.Services.AddScoped<IRestaurantRepositories, RestaurantRepositories>();
+builder.Services.AddScoped<IRestaurantServices, RestaurantServices>();
 builder.Services.AddScoped<IDeliveryPartnerRepository, DeliveryPartnerRepository>();
 builder.Services.AddScoped<IDeliveryPartnerServices, DeliveryPartnerServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
