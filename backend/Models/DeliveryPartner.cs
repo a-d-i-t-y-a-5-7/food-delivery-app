@@ -19,9 +19,9 @@ public partial class DeliveryPartner
 
     public DateTime? CreatedAt { get; set; }
 
-    public virtual ICollection<DeliveryRequest>? DeliveryRequests { get; set; } = new List<DeliveryRequest>();
+    public virtual ICollection<DeliveryRequest> DeliveryRequests { get; set; } = new List<DeliveryRequest>();
 
-    public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual User? Partner { get; set; }
 }
