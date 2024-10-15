@@ -29,5 +29,17 @@ namespace backend.Controllers
 
             return StatusCode(200, new { restaurants = restaurants });
         }
+
+        [HttpGet("get-orders/{restaurantId}")]
+        public IActionResult GetOrders(int restaurantId)
+        {
+            List<Order> orders = _restaurantServices.GetOrders(restaurantId);
+            if (orders.IsNullOrEmpty())
+            {
+                return StatusCode(404, new { message = "Restaurant Not Found" });
+            }
+            return StatusCode(200, new { orders = orders });
+        }
     }
 }
+//comment

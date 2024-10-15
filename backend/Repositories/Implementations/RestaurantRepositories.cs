@@ -17,5 +17,11 @@ namespace backend.Repositories.Implementations
             List<Restaurant>? restaurants = _context.Restaurants.Where(r => r.OwnerId == ownerId).ToList();
             return restaurants;
         }
+
+        public List<Order> GetOrders(int restaurantId)
+        {
+            List<Order>? orders = _context.Orders.Where(o => o.RestaurantId == restaurantId).ToList();
+            return orders;
+        }
     }
 }
