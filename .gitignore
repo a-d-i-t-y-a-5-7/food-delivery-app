@@ -3,4 +3,5 @@
 ################################################################################
 
 /backend/bin/Debug/net8.0
+/backend/obj/backend.csproj.nuget.g.props
 /backend/obj/Debug/net8.0/backend.AssemblyInfoInputs.cache
