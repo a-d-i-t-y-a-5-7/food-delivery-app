@@ -17,7 +17,7 @@ public partial class User
 
     public DateTime? CreatedAt { get; set; }
 
-    public string? Role { get; set; }
+    public int? RoleId { get; set; }
 
     public virtual ICollection<Admin> Admins { get; set; } = new List<Admin>();
 
@@ -28,4 +28,6 @@ public partial class User
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<Restaurant> Restaurants { get; set; } = new List<Restaurant>();
+
+    public virtual Role? Role { get; set; }
 }
