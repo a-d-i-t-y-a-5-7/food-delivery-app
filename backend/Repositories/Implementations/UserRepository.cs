@@ -33,7 +33,7 @@ namespace backend.Repositories.Implementations
                     Name = newUser.Name,
                     Email = newUser.Email,
                     PhoneNumber = newUser.PhoneNumber,
-                    Role = newUser.Role,
+                    RoleId = newUser.RoleId,
                     PasswordHash = hasher.HashPassword(null, newUser.PasswordHash)
                 };
 
@@ -45,7 +45,7 @@ namespace backend.Repositories.Implementations
             return null;
         }
 
-        public async Task<string?> LoginUser(LoginDto loginUser)
+        public async Task<string> LoginUser(LoginDto loginUser)
         {
             User? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginUser.Email);
 
@@ -56,7 +56,7 @@ namespace backend.Repositories.Implementations
 
                 if (passwordVerification == PasswordVerificationResult.Success)
                 {
-                    return GenerateJwtToken(existingUser);
+                    return await GenerateJwtToken(existingUser);
                 }
             }
 
@@ -87,19 +87,22 @@ namespace backend.Repositories.Implementations
             }
         }
 
-        public string GenerateJwtToken(User user)
+        public async Task<string >GenerateJwtToken(User user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var secretKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]));
             var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+            Role? role = await _context.Roles.FindAsync(user.RoleId);
+
 
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+                new Claim(ClaimTypes.Role, role.RoleType)
+        };
 
             var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],

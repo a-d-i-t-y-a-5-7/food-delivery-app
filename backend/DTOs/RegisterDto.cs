@@ -7,6 +7,6 @@
         public required string Email { get; set; }= null!;
         public required string PasswordHash { get; set; } = null!;
         public string? PhoneNumber { get; set; }
-        public string? Role { get; set; }
+        public int? RoleId { get; set; }
     }
 }
