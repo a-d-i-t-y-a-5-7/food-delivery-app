@@ -44,6 +44,8 @@ builder.Services.AddScoped<IDeliveryPartnerRepository, DeliveryPartnerRepository
 builder.Services.AddScoped<IDeliveryPartnerServices, DeliveryPartnerServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFoodItemRepository, FoodItemRepository>();
+builder.Services.AddScoped<IFoodItemServices, FoodItemServices>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
