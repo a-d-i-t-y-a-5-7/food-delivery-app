@@ -20,6 +20,10 @@ namespace backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(RegisterDto registerUser)
         {
+            if (registerUser == null)
+            {
+                return BadRequest(new { message = "Invalid request data" });
+            }
             var result = await _userService.RegisterUser(registerUser);
 
             if (result!=null)
@@ -35,6 +39,10 @@ namespace backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginUser)
         {
+            if (loginUser == null)
+            {
+                return BadRequest(new { message = "Invalid request data" });
+            }
             var token = await _userService.LoginUser(loginUser);
 
             if (token == null)
@@ -48,6 +56,10 @@ namespace backend.Controllers
         [HttpPut("{userId}/update-profile")]
         public async Task<IActionResult> UpdateUserProfile(int userId, [FromBody] UpdateUserDto updateUserProfileDto)
         {
+            if (updateUserProfileDto == null)
+            {
+                return BadRequest(new { message = "Invalid request data" });
+            }
             try
             {
                 await _userService.UpdateUserProfile(userId, updateUserProfileDto);

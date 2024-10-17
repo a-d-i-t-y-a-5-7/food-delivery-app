@@ -28,7 +28,7 @@ namespace backend.Repositories.Implementations
             {
                 var hasher = new PasswordHasher<User>();
 
-                User obj = new User
+                User registerUser = new User
                 {
                     Name = newUser.Name,
                     Email = newUser.Email,
@@ -37,15 +37,15 @@ namespace backend.Repositories.Implementations
                     PasswordHash = hasher.HashPassword(null, newUser.PasswordHash)
                 };
 
-                await _context.Users.AddAsync(obj);
+                await _context.Users.AddAsync(registerUser);
                 await _context.SaveChangesAsync();
-                return obj;
+                return registerUser;
             }
 
             return null;
         }
 
-        public async Task<string> LoginUser(LoginDto loginUser)
+        public async Task<string?> LoginUser(LoginDto loginUser)
         {
             User? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginUser.Email);
 
