@@ -6,5 +6,7 @@ namespace backend.Services.Interfaces
     {
         public List<Restaurant> GetRestaurants(int ownerId);
         public List<Order> GetOrders(int restaurantId);
+        Task<Restaurant> AddRestaurantAsync(Restaurant restaurant);
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,50 @@ namespace backend.Controllers
                 return StatusCode(404, new { message = "Restaurant Not Found" });
             }
             return StatusCode(200, new { orders = orders });
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> AddRestaurant([FromBody] RestaurantDto restaurantDto)
+        {
+            if (restaurantDto == null)
+            {
+                return BadRequest("Invalid User Data");
+            }
+            try
+            {
+                Restaurant newrestaurant = new Restaurant
+                {
+                    OwnerId = restaurantDto.OwnerId,
+                    Name = restaurantDto.Name,
+                    PhoneNumber = restaurantDto.PhoneNumber,
+                    Rating = restaurantDto.Rating,
+                    OpeningTime = restaurantDto.OpeningTime,
+                    ClosingTime = restaurantDto.ClosingTime,
+                    IsApproved = restaurantDto.IsApproved,
+                    IsActive = restaurantDto.IsActive,
+                };
+                Restaurant newResturent = await _restaurantServices.AddRestaurantAsync(newrestaurant);
+                var result = new
+                {
+                    Id = newResturent.Id,
+                    Name = newResturent.Name,
+                    PhoneNumber = newrestaurant.PhoneNumber,
+                    Rating = newrestaurant.Rating,
+                    OpningTime = newrestaurant.OpeningTime,
+                    ClosingTime = newrestaurant.ClosingTime,
+                    IsAprroved = newrestaurant.IsApproved,
+                    IsActive = newrestaurant.IsActive,
+                };
+                return Ok(new {succeessMessage ="Restaurant Added Successfully" , response = result});
+            }
+            catch(ArgumentException ex)
+            {
+                return BadRequest(new { errorMessage = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = "Internal Server Error." ,ex.Message});
+            }
         }
     }
 }
