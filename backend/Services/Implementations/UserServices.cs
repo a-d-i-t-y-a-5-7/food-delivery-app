@@ -28,5 +28,25 @@ namespace backend.Services.Implementations
         {
              await _userRepository.UpdateUserProfile(userId, userProfileDto);
         }
+        public async Task<Address?> AddAddress(AddAddressDto newAddress)
+        {
+            return await _userRepository.AddAddress(newAddress);
+        }
+        public async Task<List<Address?>> GetAddressByUserId(int userId)
+        {
+            return await _userRepository.GetAddressByUserId(userId);
+        }
+        public async Task<bool> DeleteAddressByEntityId(int entityId)
+        {
+            return await _userRepository.DeleteAddressByEntityId(entityId);
+        }
+        public async Task UpdateAddress(int userId, UpdateAddressDto addressDto)
+        {
+            await _userRepository.UpdateAddress(userId, addressDto);
+        }
+        public async Task<IEnumerable<Order>> GetOrderHistory(int userId)
+        {
+            return await _userRepository.GetOrderHistory(userId);
+        }
     }
 }

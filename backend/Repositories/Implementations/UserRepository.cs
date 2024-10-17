@@ -28,7 +28,7 @@ namespace backend.Repositories.Implementations
             {
                 var hasher = new PasswordHasher<User>();
 
-                User obj = new User
+                User registerUser = new User
                 {
                     Name = newUser.Name,
                     Email = newUser.Email,
@@ -37,15 +37,15 @@ namespace backend.Repositories.Implementations
                     PasswordHash = hasher.HashPassword(null, newUser.PasswordHash)
                 };
 
-                await _context.Users.AddAsync(obj);
+                await _context.Users.AddAsync(registerUser);
                 await _context.SaveChangesAsync();
-                return obj;
+                return registerUser;
             }
 
             return null;
         }
 
-        public async Task<string> LoginUser(LoginDto loginUser)
+        public async Task<string?> LoginUser(LoginDto loginUser)
         {
             User? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginUser.Email);
 
@@ -114,6 +114,81 @@ namespace backend.Repositories.Implementations
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public async Task<Address?> AddAddress(AddAddressDto newAddress)
+        {
+
+            Address? existingAddress = await _context.Addresses
+                .FirstOrDefaultAsync(a => a.EntityId == newAddress.EntityId && a.EntityType == newAddress.EntityType);
+
+            if (existingAddress == null)
+            {
+                Address address = new Address
+                {
+                    EntityId = newAddress.EntityId,
+                    EntityType = newAddress.EntityType,
+                    AddressLine1 = newAddress.AddressLine1,
+                    AddressLine2 = newAddress.AddressLine2,
+                    City = newAddress.City,
+                    State = newAddress.State,
+                    ZipCode = newAddress.ZipCode,
+                    Country = newAddress.Country,
+
+                };
+
+                await _context.Addresses.AddAsync(address);
+                await _context.SaveChangesAsync();
+                return address;
+            }
+
+            return null;
+        }
+        public async Task<List<Address>> GetAddressByUserId(int userId)
+        {
+            return await _context.Addresses
+         .Where(a => a.EntityId == userId && (a.EntityType == "USER" || a.EntityType == "RESTAURANT"))
+         .ToListAsync();
+        }
+        //Delete Address whose Entity_Id is not foreign key of Order table
+        public async Task<bool> DeleteAddressByEntityId(int entityId)
+        {
+            var address = await _context.Addresses.FindAsync(entityId);
+            if (address != null)
+            {
+                _context.Addresses.Remove(address);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+        public async Task UpdateAddress(int userId, UpdateAddressDto addressDto)
+        {
+            var existingAddress = await _context.Addresses.FirstOrDefaultAsync(a => a.EntityId == userId);
+
+            if (existingAddress != null)
+            {
+                existingAddress.AddressLine1 = addressDto.AddressLine1;
+                existingAddress.AddressLine2 = addressDto.AddressLine2;
+                existingAddress.City = addressDto.City;
+                existingAddress.State = addressDto.State;
+                existingAddress.ZipCode = addressDto.ZipCode;
+                existingAddress.Country = addressDto.Country;
+                existingAddress.IsPrimary = addressDto.IsPrimary;
+
+                _context.Addresses.Update(existingAddress);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Address not found for the user.");
+            }
+        }
+        public async Task<IEnumerable<Order>> GetOrderHistory(int userId)
+        {
+            return await _context.Orders
+                .Where(order => order.CustomerId == userId)
+                .ToListAsync();
+        }
+
 
     }
 }
