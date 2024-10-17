@@ -58,8 +58,5 @@ namespace backend.Controllers
                 return NotFound(ex.Message);
             }
         }
-
-
-
     }
 }

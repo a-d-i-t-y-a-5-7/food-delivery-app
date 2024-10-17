@@ -25,5 +25,10 @@ namespace backend.Services.Implementations
             List<Order> orders = _restaurantRepo.GetOrders(restaurantId);
             return orders;
         }
+        public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
+        {
+            Restaurant newRestaurant = await _restaurantRepo.AddRestaurantAsync(restaurant);
+            return newRestaurant;
+        }
     }
 }
