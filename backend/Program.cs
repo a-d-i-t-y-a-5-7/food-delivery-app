@@ -32,6 +32,11 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true
     };
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        builder => builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowCredentials().AllowAnyHeader());
+});
 
 
 
@@ -85,7 +90,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors("AllowReactApp");
 app.MapControllers();
 
 app.Run();
