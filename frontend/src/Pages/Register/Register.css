@@ -1,4 +1,4 @@
-.login-container {
+.signup-container {
   display: flex;
   height: 100vh;
   align-items: center;
@@ -12,11 +12,11 @@
   grid-template-columns: 50% 50%;
 }
 
-.login-left {
+.signup-left {
   display: flex;
   justify-content: center;
   background-color: #fff;
-  padding: 20px;
+  padding: 30px;
   border-radius: 40px 0px 0px 40px;
   opacity: 0.5px;
 }
@@ -30,13 +30,13 @@
   width: 80%;
 }
 
-.login-form {
+.signup-form {
   width: 100%;
   max-width: 400px;
   text-align: center;
 }
 
-.login-title {
+.signup-title {
   font-size: 32px;
   margin-bottom: 30px;
   border-bottom: 2px solid #000000;
@@ -63,16 +63,16 @@
   margin-bottom: 5px;
 }
 
-.create-account {
+.login-account {
   margin-top: 10px;
 }
 
-.login-right {
+.signup-right {
   display: flex;
   justify-content: center;
 }
 
-.login-image {
+.signup-image {
   max-width: 100%;
   border-radius: 0px 40px 40px 0px;
   height: auto;
@@ -84,24 +84,25 @@
     grid-template-columns: 100%;
   }
 
-  .login-left {
+  .signup-left {
     border-radius: 40px 40px 40px 40px;
   }
 
-  .login-right {
+  .signup-right {
     display: none;
   }
 }
+
 @media screen and (max-width: 480px) {
   .outerContainer {
     grid-template-columns: 100%;
   }
 
-  .login-left {
+  .signup-left {
     border-radius: 40px 40px 40px 40px;
   }
 
-  .login-right {
+  .signup-right {
     display: none;
   }
 }
