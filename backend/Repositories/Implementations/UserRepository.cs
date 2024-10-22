@@ -34,7 +34,7 @@ namespace backend.Repositories.Implementations
                     Email = newUser.Email,
                     PhoneNumber = newUser.PhoneNumber,
                     RoleId = newUser.RoleId,
-                    PasswordHash = hasher.HashPassword(null, newUser.PasswordHash)
+                    PasswordHash = hasher.HashPassword(null, newUser.Password)
                 };
 
                 await _context.Users.AddAsync(registerUser);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { apiLogin } from "./Helper";
 
@@ -9,12 +9,15 @@ export const Login = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await apiLogin(formData);
       console.log("Login successful:", response);
+      navigate("/");
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -65,7 +68,7 @@ export const Login = () => {
               </button>
               <div className="create-account">
                 No account?{" "}
-                <Link to="/signup" className="link">
+                <Link to="/register" className="link">
                   Create one
                 </Link>
               </div>
