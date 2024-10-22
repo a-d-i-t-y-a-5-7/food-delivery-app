@@ -6,16 +6,16 @@ namespace backend.Services.Implementations
 {
     public class DeliveryPartnerServices : IDeliveryPartnerServices
     {
-        private readonly IDeliveryPartnerRepository _userRepo;
+        private readonly IDeliveryPartnerRepository _deliveryPartnerRepo;
 
-        public DeliveryPartnerServices(IDeliveryPartnerRepository userRepo)
+        public DeliveryPartnerServices(IDeliveryPartnerRepository deliveryPartnerRepo)
         {
-            _userRepo = userRepo;
+            _deliveryPartnerRepo = deliveryPartnerRepo;
         }
 
         public bool AddDeliveryPartner(User deliveryPartner)
         {
-            bool result = _userRepo.AddDeliveryPartner(deliveryPartner);
+            bool result = _deliveryPartnerRepo.AddDeliveryPartner(deliveryPartner);
             return result;
         }
     }
