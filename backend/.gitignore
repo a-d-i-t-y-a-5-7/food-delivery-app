@@ -1,2 +1,11 @@
 .vs/
 obj/
+/backend/bin/Debug/net8.0
+/backend/obj/backend.csproj.nuget.g.props
+/backend/obj/Debug/net8.0/backend.AssemblyInfoInputs.cache
+/.vs/VSWorkspaceState.json
+/.vs/food-delivery-app/v17/DocumentLayout.json
+/.vs/food-delivery-app/v17/.wsuo
+/backend/.config
+/backend/bin/
+/backend/Properties/PublishProfiles
