@@ -1,8 +1,42 @@
 .headerContainer {
   display: flex;
   align-items: center;
-  padding: 10px;
+  height: 70px;
+  justify-content: space-between;
+  padding: 10px 20px;
   background-color: #ffffff;
-  border-bottom: 1px solid;
-  box-shadow: 2px 2px 2px rgb(186, 184, 184);
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+  .logo img {
+    width: 80px; 
+    height: auto; 
+    max-height: 50px; 
+    margin-left: 130px;
+  }
+
+  .search-bar {
+    width: 40%;
+    margin: 0 auto; 
+    margin-top: 20px;
+    margin-left: 330px;
+    
+  }
+
+  .header-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+    
+    .ant-avatar {
+      background-color: #f56a00;
+      font-size: 24px;
+    }
+    
+    .ant-badge {
+      .anticon {
+        font-size: 28px;
+      }
+    }
+  }
 }
