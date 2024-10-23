@@ -1,6 +1,4 @@
 ﻿using backend.DTOs;
-using backend.Models;
-using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,6 +42,11 @@ namespace backend.Controllers
                 return BadRequest(new { message = "Invalid request data" });
             }
             var token = await _userService.LoginUser(loginUser);
+
+            if(token == "UserNotFound")
+            {
+                return BadRequest(new {message="User Not Found"});
+            }
 
             if (token == null)
             {
@@ -136,7 +139,6 @@ namespace backend.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
 
 
     }
