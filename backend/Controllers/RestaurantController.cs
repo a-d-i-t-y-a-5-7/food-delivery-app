@@ -17,7 +17,25 @@ namespace backend.Controllers
         {
             _restaurantServices = restaurantServices;
         }
+        [HttpGet("get-all-restaurants")]
+        public IActionResult GetAllRestaurants()
+        {
+            try
+            {
+                List<Restaurant> restaurants = _restaurantServices.GetAllRestaurants();
 
+                if (restaurants.IsNullOrEmpty())
+                {
+                    return StatusCode(404, new { message = "No Restaurants Found" });
+                }
+
+                return Ok(new { restaurants = restaurants });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = "Internal Server Error", details = ex.Message });
+            }
+        }
         [HttpGet("get-restaurants/{ownerId}")]
         public IActionResult GetRestaurant(int ownerId)
         {

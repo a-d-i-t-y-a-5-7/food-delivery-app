@@ -40,9 +40,9 @@ namespace backend.Services.Implementations
         {
             return await _userRepository.DeleteAddressById( Id);
         }
-        public async Task UpdateAddress(int userId,string role, UpdateAddressDto addressDto)
+        public async Task UpdateAddress(int Id, UpdateAddressDto addressDto)
         {
-            await _userRepository.UpdateAddress(userId,role, addressDto);
+            await _userRepository.UpdateAddress(Id,addressDto);
         }
        
         public async Task<IEnumerable<Order>> GetOrderHistory(int userId)

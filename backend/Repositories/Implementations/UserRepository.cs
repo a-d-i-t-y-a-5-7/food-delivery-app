@@ -155,11 +155,11 @@ namespace backend.Repositories.Implementations
             }
             return false;
         }
-        public async Task UpdateAddress(int userId, string role, UpdateAddressDto addressDto)
+        public async Task UpdateAddress(int Id, UpdateAddressDto addressDto)
         {
          
             var existingAddress = await _context.Addresses
-                .FirstOrDefaultAsync(a => a.EntityId == userId && a.EntityType==role); 
+                .FirstOrDefaultAsync(a => a.Id==Id); 
 
         
             if (existingAddress == null)

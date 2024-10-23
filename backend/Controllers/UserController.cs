@@ -98,7 +98,7 @@ namespace backend.Controllers
             return Ok(addresses);
         }
 
-        [HttpDelete("delete-Address")]
+        [HttpDelete("delete-Address/{Id}")]
         public async Task<IActionResult> DeleteAddressById(int Id)
         {
             var result = await _userService.DeleteAddressById(Id);
@@ -108,8 +108,8 @@ namespace backend.Controllers
             }
             return NotFound(new { message = "Address not found." });
         }
-        [HttpPut("update-address/{userId},{role}")]
-        public async Task<IActionResult> UpdateAddress(int userId, string role ,[FromBody] UpdateAddressDto updateAddressDto)
+        [HttpPut("update-address/{Id}")]
+        public async Task<IActionResult> UpdateAddress(int Id, [FromBody] UpdateAddressDto updateAddressDto)
         {
             if (updateAddressDto == null)
             {
@@ -117,7 +117,7 @@ namespace backend.Controllers
             }
             try
             {
-                await _userService.UpdateAddress(userId,role, updateAddressDto);
+                await _userService.UpdateAddress(Id ,updateAddressDto);
                 return Ok(new { message = "Address updated successfully." });
             }
             catch (Exception ex)

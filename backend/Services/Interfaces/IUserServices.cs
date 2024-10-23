@@ -11,7 +11,7 @@ namespace backend.Services.Interfaces
         Task<Address?> AddAddress(AddAddressDto newAddress);
         Task<List<Address>> GetAddressById(int userId, string role);
         Task<bool> DeleteAddressById(int Id);
-        Task UpdateAddress(int userId, string role, UpdateAddressDto addressDto);
+        Task UpdateAddress(int Id, UpdateAddressDto addressDto);
         
         Task<IEnumerable<Order>> GetOrderHistory(int userId);
 
