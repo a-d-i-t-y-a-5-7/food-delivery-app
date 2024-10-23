@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { apiLogin } from "./Helper";
+import { apiLogin } from "../../Helper/LoginHelper";
 
 export const Login = () => {
   const [formData, setformData] = useState({
@@ -11,12 +11,11 @@ export const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await apiLogin(formData);
-      console.log("Login successful:", response);
+      sessionStorage.setItem("accessToken", response?.token);
       navigate("/");
     } catch (error) {
       setErrorMessage(error.message);

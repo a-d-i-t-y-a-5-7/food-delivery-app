@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
-import { handleRegister } from "./Helper";
+import { handleRegister } from "../../Helper/RegisterHelper";
 
 export const Register = () => {
   const [formData, setformData] = useState({
