@@ -1,4 +1,5 @@
 ﻿using backend.DTOs;
+using backend.Models;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,6 +55,21 @@ namespace backend.Controllers
             }
 
             return Ok(new { token, message = "Login successful" });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUserById(int id)
+        {
+            if(id == 0)
+            {
+                return BadRequest(new { message = "UserId is not provided" });
+            }
+            var user = await _userService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound(new {message="User Not Found"});
+            }
+            return Ok(user);
         }
 
         [HttpPut("{userId}/update-profile")]

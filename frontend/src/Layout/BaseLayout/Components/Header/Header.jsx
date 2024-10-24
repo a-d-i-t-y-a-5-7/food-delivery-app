@@ -7,7 +7,7 @@ const { Header } = Layout;
 export const HeaderComponent = () => {
   return (
     <Header className="headerContainer">
-      <h2 className="text-light mb-0">Food Delivery app</h2>
+      <h3 className="text-dark">Food Delivery app</h3>
     </Header>
   );
 };

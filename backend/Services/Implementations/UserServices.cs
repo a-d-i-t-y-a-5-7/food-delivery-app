@@ -52,6 +52,11 @@ namespace backend.Services.Implementations
 
             return await GenerateJwtToken(user);
         }
+        public async Task<User?> GetUserById(int id)
+        {
+            return await _userRepository.GetUserById(id);
+        }
+
         public async Task UpdateUserProfile(int userId, UpdateUserDto userProfileDto)
         {
             var existingUser = await _userRepository.GetUserById(userId);
