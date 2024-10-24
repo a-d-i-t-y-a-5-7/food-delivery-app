@@ -3,7 +3,6 @@ using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -35,7 +34,7 @@ namespace backend.Repositories.Implementations
                     Email = newUser.Email,
                     PhoneNumber = newUser.PhoneNumber,
                     RoleId = newUser.RoleId,
-                    PasswordHash = hasher.HashPassword(null, newUser.Password)
+                    PasswordHash = hasher.HashPassword(null, newUser.PasswordHash)
                 };
 
                 await _context.Users.AddAsync(registerUser);
@@ -118,35 +117,41 @@ namespace backend.Repositories.Implementations
         public async Task<Address?> AddAddress(AddAddressDto newAddress)
         {
 
-            var address = new Address
+            Address? existingAddress = await _context.Addresses
+                .FirstOrDefaultAsync(a => a.EntityId == newAddress.EntityId && a.EntityType == newAddress.EntityType);
+
+            if (existingAddress == null)
             {
-                EntityId = newAddress.EntityId,
-                EntityType = newAddress.EntityType,
-                AddressLine1 = newAddress.AddressLine1,
-                AddressLine2 = newAddress.AddressLine2,
-                City = newAddress.City,
-                State = newAddress.State,
-                Country = newAddress.Country,
-                ZipCode = newAddress.ZipCode,
-            };
+                Address address = new Address
+                {
+                    EntityId = newAddress.EntityId,
+                    EntityType = newAddress.EntityType,
+                    AddressLine1 = newAddress.AddressLine1,
+                    AddressLine2 = newAddress.AddressLine2,
+                    City = newAddress.City,
+                    State = newAddress.State,
+                    ZipCode = newAddress.ZipCode,
+                    Country = newAddress.Country,
 
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
+                };
 
-            return address;
+                await _context.Addresses.AddAsync(address);
+                await _context.SaveChangesAsync();
+                return address;
+            }
+
+            return null;
         }
-        public async Task<List<Address>> GetAddressById(int userId, string role)
+        public async Task<List<Address>> GetAddressByUserId(int userId)
         {
             return await _context.Addresses
-                .Where(a => a.EntityId == userId && a.EntityType == role)
-                .ToListAsync();
+         .Where(a => a.EntityId == userId && (a.EntityType == "USER" || a.EntityType == "RESTAURANT"))
+         .ToListAsync();
         }
         //Delete Address whose Entity_Id is not foreign key of Order table
-        public async Task<bool> DeleteAddressById( int Id)
+        public async Task<bool> DeleteAddressByEntityId(int entityId)
         {
-            var address = await _context.Addresses
-         .FirstOrDefaultAsync(a => a.Id==Id);
-
+            var address = await _context.Addresses.FindAsync(entityId);
             if (address != null)
             {
                 _context.Addresses.Remove(address);
@@ -155,32 +160,28 @@ namespace backend.Repositories.Implementations
             }
             return false;
         }
-        public async Task UpdateAddress(int Id, UpdateAddressDto addressDto)
+        public async Task UpdateAddress(int userId, UpdateAddressDto addressDto)
         {
-         
-            var existingAddress = await _context.Addresses
-                .FirstOrDefaultAsync(a => a.Id==Id); 
+            var existingAddress = await _context.Addresses.FirstOrDefaultAsync(a => a.EntityId == userId);
 
-        
-            if (existingAddress == null)
+            if (existingAddress != null)
+            {
+                existingAddress.AddressLine1 = addressDto.AddressLine1;
+                existingAddress.AddressLine2 = addressDto.AddressLine2;
+                existingAddress.City = addressDto.City;
+                existingAddress.State = addressDto.State;
+                existingAddress.ZipCode = addressDto.ZipCode;
+                existingAddress.Country = addressDto.Country;
+                existingAddress.IsPrimary = addressDto.IsPrimary;
+
+                _context.Addresses.Update(existingAddress);
+                await _context.SaveChangesAsync();
+            }
+            else
             {
                 throw new Exception("Address not found for the user.");
             }
-
-            
-            existingAddress.AddressLine1 = addressDto.AddressLine1 ?? existingAddress.AddressLine1; 
-            existingAddress.AddressLine2 = addressDto.AddressLine2 ?? existingAddress.AddressLine2;
-            existingAddress.City = addressDto.City ?? existingAddress.City;
-            existingAddress.State = addressDto.State ?? existingAddress.State;
-            existingAddress.ZipCode = addressDto.ZipCode ?? existingAddress.ZipCode;
-            existingAddress.Country = addressDto.Country ?? existingAddress.Country;
-            existingAddress.IsPrimary = addressDto.IsPrimary.HasValue ? addressDto.IsPrimary.Value : existingAddress.IsPrimary;
-
-            _context.Addresses.Update(existingAddress);
-            await _context.SaveChangesAsync();
         }
-
-
         public async Task<IEnumerable<Order>> GetOrderHistory(int userId)
         {
             return await _context.Orders

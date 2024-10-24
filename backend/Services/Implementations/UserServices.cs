@@ -32,19 +32,18 @@ namespace backend.Services.Implementations
         {
             return await _userRepository.AddAddress(newAddress);
         }
-        public async Task<List<Address?>> GetAddressById(int userId, string role)
+        public async Task<List<Address?>> GetAddressByUserId(int userId)
         {
-            return await _userRepository.GetAddressById(userId, role);
+            return await _userRepository.GetAddressByUserId(userId);
         }
-        public async Task<bool> DeleteAddressById(int Id)
+        public async Task<bool> DeleteAddressByEntityId(int entityId)
         {
-            return await _userRepository.DeleteAddressById( Id);
+            return await _userRepository.DeleteAddressByEntityId(entityId);
         }
-        public async Task UpdateAddress(int Id, UpdateAddressDto addressDto)
+        public async Task UpdateAddress(int userId, UpdateAddressDto addressDto)
         {
-            await _userRepository.UpdateAddress(Id,addressDto);
+            await _userRepository.UpdateAddress(userId, addressDto);
         }
-       
         public async Task<IEnumerable<Order>> GetOrderHistory(int userId)
         {
             return await _userRepository.GetOrderHistory(userId);

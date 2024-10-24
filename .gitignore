@@ -8,6 +8,3 @@
 /.vs/VSWorkspaceState.json
 /.vs/food-delivery-app/v17/DocumentLayout.json
 /.vs/food-delivery-app/v17/.wsuo
-/backend/.config
-/backend/bin/Release/net8.0
-/backend/Properties/PublishProfiles

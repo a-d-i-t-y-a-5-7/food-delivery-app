@@ -172,6 +172,14 @@ ALTER TABLE Users ADD RoleId INT FOREIGN KEY REFERENCES Roles(RoleId);
 -- ###########################################################         INSERTION QUERIES
 
 
+INSERT INTO Roles (RoleType) VALUES
+('admin-level1'),
+('admin-level2'),
+('admin-level3'),
+('user'),
+('delivery-partner'),
+('restaurant-owner');
+
 INSERT INTO Users (name, email, password_hash, phone_number, created_at) VALUES
 ('John Doe', 'john@example.com', 'password', '1234567890', '2024-10-14'),
 ('Jane Smith', 'jane@example.com', 'password', '0987654321', '2024-10-14'),
@@ -336,15 +344,6 @@ INSERT INTO Logs (entity_id, entity_type, action_category, action_type, referenc
 (1, 'USER', 'Order', 'Order Created', 1, 'Order 1 created by user 1', '2024-10-14'),
 (2, 'USER', 'Order', 'Order Delivered', 2, 'Order 2 delivered by delivery partner 2', '2024-10-14'),
 (3, 'USER', 'Order', 'Out For Delivery', 3, 'Order 3 is out for delivery by delivery partner 1', '2024-10-14');
-
-INSERT INTO Roles (RoleType) VALUES
-('admin-level1'),
-('admin-level2'),
-('admin-level3'),
-('user'),
-('delivery-partner'),
-('restaurant-owner');
-
 
 
 -- ###########################################################         SELECTION QUERIES
