@@ -4,7 +4,6 @@ import { BaseLayout } from "../Layout/BaseLayout";
 import { Home, Login, Register } from "../Pages";
 import Address from "../Pages/Addresses/Address";
 
-
 export const AppRouter = () => {
   return (
     <Routes>
