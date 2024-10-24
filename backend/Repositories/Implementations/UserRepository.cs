@@ -1,8 +1,13 @@
 ﻿using backend.DTOs;
 using backend.Models;
 using backend.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace backend.Repositories.Implementations
 {
@@ -16,75 +21,132 @@ namespace backend.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<User?> GetUserByEmail(string email)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
-        public async Task<Role?> GetUserRole(int? roleId)
-        {
-            return await _context.Roles.FindAsync(roleId);
-        }
-        public async Task<User?> GetUserById(int userId)
-        {
-            return await _context.Users.FindAsync(userId);
-        }
-        public async Task UpdateUser(User user)
-        {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-        }
         public async Task<User?> RegisterUser(RegisterDto newUser)
         {
-            var user = new User
-            {
-                Name = newUser.Name,
-                Email = newUser.Email,
-                PhoneNumber = newUser.PhoneNumber,
-                RoleId = newUser.RoleId,
-                PasswordHash = newUser.Password
-            };
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-        public async Task<Address?> AddAddress(AddAddressDto newAddress)
-        {
+            User? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == newUser.Email);
 
-            Address? existingAddress = await _context.Addresses
-                .FirstOrDefaultAsync(a => a.EntityId == newAddress.EntityId && a.EntityType == newAddress.EntityType);
-
-            if (existingAddress == null)
+            if (existingUser == null)
             {
-                Address address = new Address
+                var hasher = new PasswordHasher<User>();
+
+                User registerUser = new User
                 {
-                    EntityId = newAddress.EntityId,
-                    EntityType = newAddress.EntityType,
-                    AddressLine1 = newAddress.AddressLine1,
-                    AddressLine2 = newAddress.AddressLine2,
-                    City = newAddress.City,
-                    State = newAddress.State,
-                    ZipCode = newAddress.ZipCode,
-                    Country = newAddress.Country,
-
+                    Name = newUser.Name,
+                    Email = newUser.Email,
+                    PhoneNumber = newUser.PhoneNumber,
+                    RoleId = newUser.RoleId,
+                    PasswordHash = hasher.HashPassword(null, newUser.Password)
                 };
 
-                await _context.Addresses.AddAsync(address);
+                await _context.Users.AddAsync(registerUser);
                 await _context.SaveChangesAsync();
-                return address;
+                return registerUser;
             }
 
             return null;
         }
-        public async Task<List<Address>> GetAddressByUserId(int userId)
+
+        public async Task<string?> LoginUser(LoginDto loginUser)
+        {
+            User? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginUser.Email);
+
+            if (existingUser != null)
+            {
+                var hasher = new PasswordHasher<User>();
+                var passwordVerification = hasher.VerifyHashedPassword(existingUser, existingUser.PasswordHash, loginUser.Password);
+
+                if (passwordVerification == PasswordVerificationResult.Success)
+                {
+                    return await GenerateJwtToken(existingUser);
+                }
+            }
+
+            return null;
+        }
+
+        public async Task UpdateUserProfile(int userId, UpdateUserDto user)
+        {
+            var existingUser = await _context.Users.FindAsync(userId);
+            if (existingUser != null)
+            {
+                var hasher = new PasswordHasher<User>();
+                existingUser.Name = user.Name;
+                existingUser.Email = user.Email;
+                existingUser.PhoneNumber = user.PhoneNumber;
+
+                if (!string.IsNullOrEmpty(user.Password))
+                {
+                    existingUser.PasswordHash = hasher.HashPassword(existingUser, user.Password);
+                }
+
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("User not found.");
+            }
+        }
+
+        public async Task<string >GenerateJwtToken(User user)
+        {
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var secretKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]));
+            var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+            Role? role = await _context.Roles.FindAsync(user.RoleId);
+
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, role.RoleType)
+        };
+
+            var token = new JwtSecurityToken(
+                issuer: jwtSettings["Issuer"],
+                audience: jwtSettings["Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"])),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public async Task<Address?> AddAddress(AddAddressDto newAddress)
+        {
+
+            var address = new Address
+            {
+                EntityId = newAddress.EntityId,
+                EntityType = newAddress.EntityType,
+                AddressLine1 = newAddress.AddressLine1,
+                AddressLine2 = newAddress.AddressLine2,
+                City = newAddress.City,
+                State = newAddress.State,
+                Country = newAddress.Country,
+                ZipCode = newAddress.ZipCode,
+            };
+
+            _context.Addresses.Add(address);
+            await _context.SaveChangesAsync();
+
+            return address;
+        }
+        public async Task<List<Address>> GetAddressById(int userId, string role)
         {
             return await _context.Addresses
-         .Where(a => a.EntityId == userId && (a.EntityType == "USER" || a.EntityType == "RESTAURANT"))
-         .ToListAsync();
+                .Where(a => a.EntityId == userId && a.EntityType == role)
+                .ToListAsync();
         }
         //Delete Address whose Entity_Id is not foreign key of Order table
-        public async Task<bool> DeleteAddressByEntityId(int entityId)
+        public async Task<bool> DeleteAddressById( int Id)
         {
-            var address = await _context.Addresses.FindAsync(entityId);
+            var address = await _context.Addresses
+         .FirstOrDefaultAsync(a => a.Id==Id);
+
             if (address != null)
             {
                 _context.Addresses.Remove(address);
@@ -93,34 +155,39 @@ namespace backend.Repositories.Implementations
             }
             return false;
         }
-        public async Task UpdateAddress(int userId, UpdateAddressDto addressDto)
+        public async Task UpdateAddress(int Id, UpdateAddressDto addressDto)
         {
-            var existingAddress = await _context.Addresses.FirstOrDefaultAsync(a => a.EntityId == userId);
+         
+            var existingAddress = await _context.Addresses
+                .FirstOrDefaultAsync(a => a.Id==Id); 
 
-            if (existingAddress != null)
-            {
-                existingAddress.AddressLine1 = addressDto.AddressLine1;
-                existingAddress.AddressLine2 = addressDto.AddressLine2;
-                existingAddress.City = addressDto.City;
-                existingAddress.State = addressDto.State;
-                existingAddress.ZipCode = addressDto.ZipCode;
-                existingAddress.Country = addressDto.Country;
-                existingAddress.IsPrimary = addressDto.IsPrimary;
-
-                _context.Addresses.Update(existingAddress);
-                await _context.SaveChangesAsync();
-            }
-            else
+        
+            if (existingAddress == null)
             {
                 throw new Exception("Address not found for the user.");
             }
+
+            
+            existingAddress.AddressLine1 = addressDto.AddressLine1 ?? existingAddress.AddressLine1; 
+            existingAddress.AddressLine2 = addressDto.AddressLine2 ?? existingAddress.AddressLine2;
+            existingAddress.City = addressDto.City ?? existingAddress.City;
+            existingAddress.State = addressDto.State ?? existingAddress.State;
+            existingAddress.ZipCode = addressDto.ZipCode ?? existingAddress.ZipCode;
+            existingAddress.Country = addressDto.Country ?? existingAddress.Country;
+            existingAddress.IsPrimary = addressDto.IsPrimary.HasValue ? addressDto.IsPrimary.Value : existingAddress.IsPrimary;
+
+            _context.Addresses.Update(existingAddress);
+            await _context.SaveChangesAsync();
         }
+
+
         public async Task<IEnumerable<Order>> GetOrderHistory(int userId)
         {
             return await _context.Orders
                 .Where(order => order.CustomerId == userId)
                 .ToListAsync();
         }
+
 
     }
 }
