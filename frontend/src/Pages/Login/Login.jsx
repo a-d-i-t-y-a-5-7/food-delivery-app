@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Login.css";
-import { apiLogin } from "../../Helper/LoginHelper";
+import { apiLogin } from "./Helper";
 
 export const Login = () => {
   const [formData, setformData] = useState({
@@ -9,14 +9,12 @@ export const Login = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await apiLogin(formData);
-      sessionStorage.setItem("accessToken", response?.token);
-      navigate("/");
+      console.log("Login successful:", response);
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -67,7 +65,7 @@ export const Login = () => {
               </button>
               <div className="create-account">
                 No account?{" "}
-                <Link to="/register" className="link">
+                <Link to="/signup" className="link">
                   Create one
                 </Link>
               </div>
