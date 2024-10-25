@@ -1,5 +1,6 @@
 import { Layout } from "antd";
 import "./Header.css";
+import { Link } from "react-router-dom";
 import React from "react";
 
 const { Header } = Layout;
@@ -7,7 +8,9 @@ const { Header } = Layout;
 export const HeaderComponent = () => {
   return (
     <Header className="headerContainer">
-      <h2 className="text-light mb-0">Food Delivery app</h2>
+      <Link to="/">
+        <h3 className="text-dark">Food Delivery app</h3>
+      </Link>
     </Header>
   );
 };

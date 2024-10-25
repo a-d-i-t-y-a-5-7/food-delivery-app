@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { BaseLayout } from "../Layout/BaseLayout";
-import { Home, Login, Register } from "../Pages";
+import { Home, Login, Register, ViewProfile } from "../Pages";
 
 export const AppRouter = () => {
   return (
@@ -10,6 +10,7 @@ export const AppRouter = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<BaseLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/view-profile/:userId" element={<ViewProfile />} />
       </Route>
     </Routes>
   );
