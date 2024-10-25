@@ -64,7 +64,10 @@ export const ViewProfile = () => {
           {isEditing ? "Update" : "Edit"}
         </Button>
         <div className="avatar">
-          <Avatar size={150} src={user.profilePicture} />
+          <Avatar
+            size={150}
+            src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"
+          />
         </div>
         <div className="details">
           <Form
