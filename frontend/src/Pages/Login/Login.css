@@ -70,7 +70,6 @@
 .login-right {
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .login-image {
@@ -78,4 +77,31 @@
   border-radius: 0px 40px 40px 0px;
   height: auto;
   object-fit: cover;
+}
+
+@media screen and (max-width: 768px) {
+  .outerContainer {
+    grid-template-columns: 100%;
+  }
+
+  .login-left {
+    border-radius: 40px 40px 40px 40px;
+  }
+
+  .login-right {
+    display: none;
+  }
+}
+@media screen and (max-width: 480px) {
+  .outerContainer {
+    grid-template-columns: 100%;
+  }
+
+  .login-left {
+    border-radius: 40px 40px 40px 40px;
+  }
+
+  .login-right {
+    display: none;
+  }
 }

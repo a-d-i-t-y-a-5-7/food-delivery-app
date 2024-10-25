@@ -12,6 +12,10 @@ namespace backend.Repositories.Implementations
         {
             _Dbcontext = context;
         }
+        public List<Restaurant> GetAllRestaurants()
+        {
+            return _Dbcontext.Restaurants.ToList();
+        }
 
         public List<Restaurant> GetRestaurants(int ownerId)
         {
@@ -42,22 +46,6 @@ namespace backend.Repositories.Implementations
                 throw new Exception("Failed to add Restaurant to database.", ex);
             }
 
-        }
-
-        public Restaurant? GetRestaurantById(int restaurantId)
-        {
-            return _Dbcontext.Restaurants.FirstOrDefault(r => r.Id == restaurantId);
-        }
-
-        public void Save()
-        {
-            _Dbcontext.SaveChanges();
-        }
-
-        public void DeleteRestaurant(Restaurant restaurant)
-        {
-            _Dbcontext.Restaurants.Remove(restaurant);
-            Save();
         }
 
     }
