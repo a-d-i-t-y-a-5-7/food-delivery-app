@@ -12,6 +12,10 @@ namespace backend.Repositories.Implementations
         {
             _Dbcontext = context;
         }
+        public List<Restaurant> GetAllRestaurants()
+        {
+            return _Dbcontext.Restaurants.ToList();
+        }
 
         public List<Restaurant> GetRestaurants(int ownerId)
         {

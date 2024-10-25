@@ -5,7 +5,7 @@ import "./Footer.css";
 export const FooterComponent = () => {
   return (
     <Footer className="footerContainer">
-      <h3>All Copyrights reserved</h3>
+      <p>@ All Copyrights reserved</p>
     </Footer>
   );
 };
