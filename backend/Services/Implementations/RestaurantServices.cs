@@ -12,6 +12,12 @@ namespace backend.Services.Implementations
         {
             _restaurantRepo = restaurantRepo;
         }
+        public List<Restaurant> GetAllRestaurants()
+        {
+            List<Restaurant> restaurants = _restaurantRepo.GetAllRestaurants();
+
+            return restaurants;
+        }
 
         public List<Restaurant> GetRestaurants(int ownerId)
         {
