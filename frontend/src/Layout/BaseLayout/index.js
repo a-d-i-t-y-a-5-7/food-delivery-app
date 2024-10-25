@@ -14,7 +14,7 @@ export const BaseLayout = () => {
           <Outlet className="main-content" />
         </Layout>
       </Layout>
-      <FooterComponent />
+      {/* <FooterComponent /> */}
     </Layout>
   );
 };

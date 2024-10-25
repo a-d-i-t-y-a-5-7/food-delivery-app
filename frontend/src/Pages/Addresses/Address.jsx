@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Typography, message, Row, Col, Popconfirm, Modal, Form, Input } from 'antd';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import { Button,message, Modal, Form, Input} from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { fetchAddresses, addAddress, updateAddress, deleteAddress } from '../../Helper/AddressHelper';
 
 const Address = () => {
     const [addresses, setAddresses] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentAddress, setCurrentAddress] = useState(null);
+    const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [form] = Form.useForm();
 
     useEffect(() => {
-        const fetchAddresses = async () => {
+        const loadAddresses = async () => {
             try {
-                const response = await axios.get(`https://localhost:44357/api/User/get-address`, {
-                    params: {
-                        userId: 2, 
-                        role: 'USER' 
-                    }
-                });
-                setAddresses(response.data);
+                const addressData = await fetchAddresses(2, 'USER');
+                setAddresses(addressData);
             } catch (error) {
-                message.error('Failed to fetch addresses.');
+                message.error(error.message);
             }
         };
-        fetchAddresses();
+        loadAddresses();
     }, []);
 
     const handleAdd = () => {
         setCurrentAddress(null);
-        form.resetFields(); 
+        form.resetFields();
         setIsModalVisible(true);
     };
 
@@ -44,15 +41,21 @@ const Address = () => {
         });
         setIsModalVisible(true);
     };
+
     const handleDelete = async (addressId) => {
         try {
-            await axios.delete(`https://localhost:44357/api/User/delete-Address/${addressId}`);
+            await deleteAddress(addressId);
             setAddresses(addresses.filter(address => address.id !== addressId));
             message.success('Address deleted successfully.');
         } catch (error) {
-            console.error('Delete error:', error.response ? error.response.data : error.message);
-            message.error('Failed to delete address.');
+            message.error(error.message);
         }
+    };
+
+    const handleDeliverHere = (addressId) => {
+        setSelectedAddressId(addressId);
+        const selectedAddress = addresses.find((address) => address.id === addressId);
+        message.success(`Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`);
     };
 
     const handleModalCancel = () => {
@@ -61,81 +64,111 @@ const Address = () => {
     };
 
     const handleFormSubmit = async (values) => {
-        if (currentAddress) {
-            // Update existing address
-            try {
-                await axios.put(`https://localhost:44357/api/User/update-address/${currentAddress.id}`, values);
-                
+        try {
+            if (currentAddress) {
+                await updateAddress(currentAddress.id, values);
                 setAddresses(
                     addresses.map((address) =>
                         address.id === currentAddress.id ? { ...address, ...values } : address
                     )
                 );
                 message.success('Address updated successfully.');
-            } catch (error) {
-                message.error('Failed to update address.');
-            }
-        } else {
-            // Add new address
-            try {
-                const response = await axios.post('https://localhost:44357/api/User/add-address', {
-                    entityId: 2,  
-                    entityType: 'USER', 
-                    ...values, 
-                   
-                });
-                              
-                setAddresses([...addresses, response.data]); 
+            } else {
+                const newAddress = await addAddress({ entityId: 2, entityType: 'USER', ...values });
+                setAddresses([...addresses, newAddress]);
                 message.success('Address added successfully.');
-            } catch (error) {
-                message.error('Failed to add address.');
             }
+        } catch (error) {
+            message.error(error.message);
         }
-    
         setIsModalVisible(false);
     };
 
     return (
-        <div className="container mt-4">
-            <Typography.Title level={2}>Saved Addresses</Typography.Title>
-            <Button type="primary" onClick={handleAdd} style={{ marginBottom: '20px', marginLeft: '90%' }}>
-                Add New Address
-            </Button>
-            
-            <Row gutter={[16, 16]}>
-                {addresses.map((address) => (
-                    <Col key={address.id} xs={24} sm={12} md={8}>
-                        <Card
-                            title={`${address.city}, ${address.state}`}
-                            bordered={false}
-                            style={{ borderRadius: '10px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}
-                            actions={[
-                                <Button onClick={() => handleUpdate(address)} type="primary">Update</Button>,
-                                <Popconfirm
-                                    title="Are you sure you want to delete this address?"
-                                    onConfirm={() => handleDelete(address.id)}
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
-                                    <Button danger>Delete</Button>
-                                </Popconfirm>
-                                
-                            ]}
-                        >
-                            <p><strong>Street:</strong> {address.addressLine1}, {address.addressLine2}</p>
-                            <p><strong>City:</strong> {address.city}</p>
-                            <p><strong>State:</strong> {address.state}</p>
-                            <p><strong>Zip Code:</strong> {address.zipCode}</p>
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
+        <div className="container mt-4 d-flex" style={{padding: "20px", flexDirection: "column"}}>
+        <h2 className="text-left mb-4" style={{marginLeft: "100px"}}>Select a Delivery Address</h2>
+
+        <div className="row">
+        {addresses.map((address) => (
+          <div className="col-12 col-md-6 mb-4" key={address.id}>
+            <div
+              className="card h-100 shadow-sm"
+              style={{
+                width: "100%", 
+                maxWidth: "450px", 
+                margin: "auto", 
+                background: "white",
+                //   "linear-gradient(to right, rgb(235, 87, 87), rgb(0, 0, 0))",
+                  
+                color: "black", 
+                // "white",
+              }}
+            >
+              <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
+                <span>
+                  {address.city}, {address.state}
+                </span>
+                <input
+                  type="radio"
+                  name="deliveryAddress"
+                  checked={selectedAddressId === address.id}
+                  onChange={() => handleDeliverHere(address.id)}
+                  className="form-check-input"
+                />
+              </div>
+              <div className="card-body">
+                <p>
+                  <strong>Street:</strong> {address.addressLine1},{" "}
+                  {address.addressLine2}
+                </p>
+                <p>
+                  <strong>Zip Code:</strong> {address.zipCode}
+                </p>
+                <p>
+                  <strong>Country:</strong> {address.country}
+                </p>
+                <div className="d-flex justify-content-end">
+                <button
+                    className="btn btn-outline-danger mx-2"
+                    onClick={() => handleUpdate(address)}
+                    style={{
+                      padding: "0.5rem 1rem",
+                      borderRadius: "5px",
+                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                    }}
+                  >
+                    <EditOutlined />
+                  </button>
+                  <button
+                    className="btn btn-outline-danger mx-2"
+                    onClick={() => handleDelete(address.id)}
+                    style={{
+                      padding: "0.5rem 1rem",
+                      borderRadius: "5px",
+                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                    }}
+                  >
+                    <DeleteOutlined />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+            <div className="text-center mt-4">
+                <Button type="primary" onClick={handleAdd}>
+                    Add New Address
+                </Button>
+            </div>
 
             <Modal
                 title={currentAddress ? "Update Address" : "Add New Address"}
                 open={isModalVisible}
                 onCancel={handleModalCancel}
                 footer={null}
+                width={300}
             >
                 <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
                     <Form.Item
@@ -145,10 +178,7 @@ const Address = () => {
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item
-                        label="Address Line 2"
-                        name="addressLine2"
-                    >
+                    <Form.Item label="Address Line 2" name="addressLine2">
                         <Input />
                     </Form.Item>
                     <Form.Item
@@ -180,7 +210,7 @@ const Address = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" block>
                             {currentAddress ? "Update" : "Add"}
                         </Button>
                     </Form.Item>
