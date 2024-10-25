@@ -1,6 +1,5 @@
 ﻿using backend.DTOs;
 using backend.Models;
-using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,25 @@ namespace backend.Controllers
         {
             _restaurantServices = restaurantServices;
         }
+        [HttpGet("get-all-restaurants")]
+        public IActionResult GetAllRestaurants()
+        {
+            try
+            {
+                List<Restaurant> restaurants = _restaurantServices.GetAllRestaurants();
 
+                if (restaurants.IsNullOrEmpty())
+                {
+                    return StatusCode(404, new { message = "No Restaurants Found" });
+                }
+
+                return Ok(new { restaurants = restaurants });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = "Internal Server Error", details = ex.Message });
+            }
+        }
         [HttpGet("get-restaurants/{ownerId}")]
         public IActionResult GetRestaurant(int ownerId)
         {
@@ -85,19 +102,6 @@ namespace backend.Controllers
             {
                 return StatusCode(500, new { errorMessage = "Internal Server Error." ,ex.Message});
             }
-        }
-
-        [HttpPut("approve-reject/{id}/{status}")]
-        public IActionResult UpdateRestaurantApprovalStatus(int id, bool status)
-        {
-            bool result = _restaurantServices.UpdateRestaurantApprovalStatus(id, status);
-
-            if (result)
-            {
-                return Ok(new { message = status ? "Restaurant approved" : "Restaurant rejected and deleted" });
-            }
-
-            return BadRequest(new { message = "Failed to update restaurant approval status" });
         }
     }
 }

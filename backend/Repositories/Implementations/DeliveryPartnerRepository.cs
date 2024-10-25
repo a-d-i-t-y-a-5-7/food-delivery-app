@@ -1,6 +1,5 @@
 ﻿using backend.Models;
 using backend.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories.Implementations
 {
@@ -38,19 +37,6 @@ namespace backend.Repositories.Implementations
             }
 
             return false;
-        }
-
-        public DeliveryPartner? GetDeliveryPartnerWithOrders(int deliveryPartnerId)
-        {
-            return _context.DeliveryPartners
-                .Include(dp => dp.Orders)
-                    .ThenInclude(o => o.Restaurant)
-                .Include(dp => dp.Orders)
-                    .ThenInclude(o => o.DeliveryRequests)
-                .Include(dp => dp.Orders)
-                    .ThenInclude(o => o.Customer)
-                .FirstOrDefault(dp => dp.Id == deliveryPartnerId);
-        }
-
+        } 
     }
 }

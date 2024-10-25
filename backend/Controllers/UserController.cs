@@ -3,6 +3,7 @@ using backend.Models;
 using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace backend.Controllers
 {
@@ -71,9 +72,9 @@ namespace backend.Controllers
             }
         }
         [HttpPost("add-Address")]
-        public async Task<IActionResult> AddAddress(AddAddressDto registerAddress)
+        public async Task<IActionResult> AddAddress([FromBody] AddAddressDto newAddress)
         {
-            var result = await _userService.AddAddress(registerAddress);
+            var result = await _userService.AddAddress(newAddress);
 
             if (result != null)
             {
@@ -81,44 +82,51 @@ namespace backend.Controllers
             }
             else
             {
-                return BadRequest(new { message = "User already exists" });
+                return BadRequest(new { message = "Failed to add address" });
             }
         }
-        [HttpGet("get-address/{userId}")]
-        public async Task<IActionResult> GetAddressByUserId(int userId)
+        [HttpGet("get-address")]
+        public async Task<IActionResult> GetAddress(int userId, string role)
         {
-            var address = await _userService.GetAddressByUserId(userId);
+            var addresses = await _userService.GetAddressById(userId, role);
 
-            if (address == null)
+            if (addresses == null || !addresses.Any())
             {
-                return NotFound(new { message = "No Address Found" });
+                return NotFound(new { message = "No addresses found for the specified UserId and Role." });
             }
 
-            return Ok(address);
+            return Ok(addresses);
         }
-        [HttpDelete("delete-Address/{entityId}")]
-        public async Task<IActionResult> DeleteAddressByEntityId(int entityId)
+
+        [HttpDelete("delete-Address/{Id}")]
+        public async Task<IActionResult> DeleteAddressById(int Id)
         {
-            var result = await _userService.DeleteAddressByEntityId(entityId);
+            var result = await _userService.DeleteAddressById(Id);
             if (result)
             {
                 return Ok(new { message = "Address deleted successfully." });
             }
             return NotFound(new { message = "Address not found." });
         }
-        [HttpPut("update-address/{userId}")]
-        public async Task<IActionResult> UpdateAddress(int userId, [FromBody] UpdateAddressDto updateAddressDto)
+        [HttpPut("update-address/{Id}")]
+        public async Task<IActionResult> UpdateAddress(int Id, [FromBody] UpdateAddressDto updateAddressDto)
         {
+            if (updateAddressDto == null)
+            {
+                return BadRequest(new { message = "Invalid request data" });
+            }
             try
             {
-                await _userService.UpdateAddress(userId, updateAddressDto);
-                return Ok(new { message = "User address updated successfully." });
+                await _userService.UpdateAddress(Id ,updateAddressDto);
+                return Ok(new { message = "Address updated successfully." });
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
         }
+       
+
         [HttpGet("view-order-history/{userId}")]
         public async Task<IActionResult> GetOrderHistory(int userId)
         {
