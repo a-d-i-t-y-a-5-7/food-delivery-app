@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { BaseLayout } from "../Layout/BaseLayout";
+import { RestaurantOrders } from "../Pages/RestaurantOrders/RestaurantOrders";
 import { Home, Login, Register, ViewProfile } from "../Pages";
 
 export const AppRouter = () => {
@@ -12,6 +13,7 @@ export const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
       </Route>
+      <Route path='/restaurantOrders' element={<RestaurantOrders/>}/>
     </Routes>
   );
 };
