@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
@@ -25,9 +26,9 @@ namespace backend.Services.Implementations
             List<Order> orders = _restaurantRepo.GetOrders(restaurantId);
             return orders;
         }
-        public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
+        public async Task<RestaurantDto> AddRestaurantAsync(RestaurantDto restaurant)
         {
-            Restaurant newRestaurant = await _restaurantRepo.AddRestaurantAsync(restaurant);
+            RestaurantDto newRestaurant = await _restaurantRepo.AddRestaurantAsync(restaurant);
             return newRestaurant;
         }
     }

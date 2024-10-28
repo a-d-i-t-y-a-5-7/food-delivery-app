@@ -51,30 +51,16 @@ namespace backend.Controllers
             }
             try
             {
-                Restaurant newrestaurant = new Restaurant
-                {
-                    OwnerId = restaurantDto.OwnerId,
-                    Name = restaurantDto.Name,
-                    PhoneNumber = restaurantDto.PhoneNumber,
-                    Rating = restaurantDto.Rating,
-                    OpeningTime = restaurantDto.OpeningTime,
-                    ClosingTime = restaurantDto.ClosingTime,
-                    IsApproved = restaurantDto.IsApproved,
-                    IsActive = restaurantDto.IsActive,
-                };
-                Restaurant newResturent = await _restaurantServices.AddRestaurantAsync(newrestaurant);
+                RestaurantDto newRestaurant = await _restaurantServices.AddRestaurantAsync(restaurantDto);
                 var result = new
                 {
-                    Id = newResturent.Id,
-                    Name = newResturent.Name,
-                    PhoneNumber = newrestaurant.PhoneNumber,
-                    Rating = newrestaurant.Rating,
-                    OpningTime = newrestaurant.OpeningTime,
-                    ClosingTime = newrestaurant.ClosingTime,
-                    IsAprroved = newrestaurant.IsApproved,
-                    IsActive = newrestaurant.IsActive,
+                    Name = newRestaurant.Name,
+                    PhoneNumber = newRestaurant.PhoneNumber,
+                    Rating = newRestaurant.Rating,
+                    OpningTime = newRestaurant.OpeningTime,
+                    ClosingTime = newRestaurant.ClosingTime,
                 };
-                return Ok(new {succeessMessage ="Restaurant Added Successfully" , response = result});
+                return Ok(new {succeessMessage ="Restaurant Added Successfully"});
             }
             catch(ArgumentException ex)
             {
@@ -88,3 +74,4 @@ namespace backend.Controllers
     }
 }
 //comment
+ 

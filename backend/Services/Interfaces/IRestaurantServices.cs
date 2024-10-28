@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 
 namespace backend.Services.Interfaces
 {
@@ -6,7 +7,7 @@ namespace backend.Services.Interfaces
     {
         public List<Restaurant> GetRestaurants(int ownerId);
         public List<Order> GetOrders(int restaurantId);
-        Task<Restaurant> AddRestaurantAsync(Restaurant restaurant);
+        Task<RestaurantDto> AddRestaurantAsync(RestaurantDto restaurant);
 
     }
 }

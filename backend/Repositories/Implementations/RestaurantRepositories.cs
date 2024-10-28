@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,18 +25,38 @@ namespace backend.Repositories.Implementations
             List<Order>? orders = _Dbcontext.Orders.Where(o => o.RestaurantId == restaurantId).ToList();
             return orders;
         }
-        public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
+        public async Task<RestaurantDto> AddRestaurantAsync(RestaurantDto restaurantDto)
         {
-            bool IsPhonenoExits = await _Dbcontext.Restaurants.AnyAsync(u => u.PhoneNumber == restaurant.PhoneNumber);
+            bool IsPhonenoExits = await _Dbcontext.Restaurants.AnyAsync(u => u.PhoneNumber == restaurantDto.PhoneNumber);
             if (IsPhonenoExits)
             {
-                throw new ArgumentException($"{restaurant.PhoneNumber}' is already exits");
+                throw new ArgumentException($"{restaurantDto.PhoneNumber}' is already exits");
             }
             try
             {
-                _Dbcontext.Add(restaurant);
+                Address address = new Address
+                {
+                    EntityId = restaurantDto.OwnerId,
+                    EntityType = "Restaurant",
+                    AddressLine1 = restaurantDto.StreetAddress,
+                    AddressLine2 = restaurantDto.AdditionalAddress,
+                    City = restaurantDto.City,
+                    State = restaurantDto.State,
+                    ZipCode = restaurantDto.Pincode,
+                    Country = "INDIA"
+                };
+                Restaurant newrestaurant = new Restaurant {
+                    OwnerId = restaurantDto.OwnerId,
+                    Name = restaurantDto.Name,
+                    PhoneNumber = restaurantDto.PhoneNumber,
+                    OpeningTime = restaurantDto.OpeningTime,
+                    ClosingTime = restaurantDto.ClosingTime
+                };
+
+                _Dbcontext.Add(address);
+                _Dbcontext.Add(newrestaurant);
                 await _Dbcontext.SaveChangesAsync();
-                return restaurant;
+                return restaurantDto;
             }
             catch (Exception ex)
             {

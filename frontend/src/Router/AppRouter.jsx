@@ -1,7 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { BaseLayout } from "../Layout/BaseLayout";
+import { VerticalLayout} from "../Layout/VerticalLayout";
 import { Home, Login, Register } from "../Pages";
+import AddRestaurant from "../Pages/AddRestaurant/AddRestaurant";
+import DashboardLayout from "../Layout/DashboardLayout/DashboardLayout";
 
 
 export const AppRouter = () => {
@@ -9,7 +11,8 @@ export const AppRouter = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route element={<BaseLayout />}>
+      <Route path="/addrestaurant" element={<AddRestaurant />} />
+      <Route element={<VerticalLayout />}>
         <Route path="/" element={<Home />} />
       </Route>
     </Routes>

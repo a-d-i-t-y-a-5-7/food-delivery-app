@@ -2,14 +2,16 @@
 {
     public class RestaurantDto
     {
-            public int OwnerId { get; set; }
-            public required string Name { get; set; }
-            public required string PhoneNumber { get; set; }
-            public decimal? Rating { get; set; }
-            public DateTime? OpeningTime { get; set; }
-            public DateTime? ClosingTime { get; set; }
-            public bool IsApproved { get; set; }
-            public bool IsActive { get; set; }
-            public DateTime? CreatedAt { get; set; }       
+        public int OwnerId { get; set; }
+        public  string Name { get; set; }
+        public  string PhoneNumber { get; set; }
+        public decimal? Rating { get; set; }
+        public DateTime? OpeningTime { get; set; }
+        public DateTime? ClosingTime { get; set; }
+        public  string StreetAddress { get; set; }
+        public  string AdditionalAddress { get; set; }
+        public  string City { get; set; }
+        public  string State { get; set; }
+        public  string Pincode { get; set; }
     }
 }
