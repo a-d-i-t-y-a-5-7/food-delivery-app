@@ -86,6 +86,8 @@ const Address = () => {
 
     return (
         <div className="container mt-4 d-flex" style={{padding: "20px", flexDirection: "column"}}>
+            <div className="row">
+                <div className="col-md-8">
         <h2 className="text-left mb-4" style={{marginLeft: "100px"}}>Select a Delivery Address</h2>
 
         <div className="row">
@@ -97,11 +99,13 @@ const Address = () => {
                 width: "100%", 
                 maxWidth: "450px", 
                 margin: "auto", 
-                background: "white",
-                //   "linear-gradient(to right, rgb(235, 87, 87), rgb(0, 0, 0))",
+                background: 
+                "white",
+                    //"linear-gradient(to right, rgb(235, 87, 87), rgb(0, 0, 0))",
                   
-                color: "black", 
-                // "white",
+                color: 
+                "black", 
+                 //"white",
               }}
             >
               <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
@@ -129,7 +133,7 @@ const Address = () => {
                 </p>
                 <div className="d-flex justify-content-end">
                 <button
-                    className="btn btn-outline-danger mx-2"
+                    className="btn btn-outline-success mx-2"
                     onClick={() => handleUpdate(address)}
                     style={{
                       padding: "0.5rem 1rem",
@@ -163,6 +167,20 @@ const Address = () => {
                 </Button>
             </div>
 
+            </div>
+            <div className="col-md-4" >
+                <div className="card p-3">
+                    <h5>Offers</h5>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <img src="https://img.pikbest.com/origin/09/07/51/74NpIkbEsTIXv.jpg!bw700" style={{width:"100%", height:"500px"}} alt="offer" />
+                        </div>
+                        <div className="text-center mt-2">
+                            <button className="btn btn-primary mt-2" > Order Now</button>
+                        </div>
+                    
+                </div>
+            </div>
+            </div>
             <Modal
                 title={currentAddress ? "Update Address" : "Add New Address"}
                 open={isModalVisible}

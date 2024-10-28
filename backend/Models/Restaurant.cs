@@ -14,6 +14,7 @@ public partial class Restaurant
     public string? PhoneNumber { get; set; }
 
     public decimal? Rating { get; set; }
+     public string? Image_url { get; set; }
 
     public DateTime? OpeningTime { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +13,32 @@ namespace backend.Repositories.Implementations
         {
             _Dbcontext = context;
         }
-        public List<Restaurant> GetAllRestaurants()
+        public List<RestaurantDto> GetAllRestaurants()
         {
-            return _Dbcontext.Restaurants.ToList();
+            
+            var restaurants = _Dbcontext.Restaurants.ToList();
+            var cuisines = _Dbcontext.Cuisines.ToList();
+            var restaurantCuisines = _Dbcontext.RestaurantCuisines.ToList();
+            var restaurantDtos = restaurants.Select(r => new RestaurantDto
+            {
+                Id = r.Id,
+                OwnerId = r.OwnerId,
+                Name = r.Name,
+                PhoneNumber = r.PhoneNumber,
+                Rating = r.Rating,
+                OpeningTime = r.OpeningTime,
+                ClosingTime = r.ClosingTime,
+                IsApproved = r.IsApproved,
+                IsActive= r.IsActive,
+                image_url = r.Image_url,
+                Cuisine = restaurantCuisines
+                    .Where(rc => rc.RestaurantId == r.Id)
+                    .Select(rc => cuisines.FirstOrDefault(c => c.Id == rc.CuisineId)?.CuisineName)
+                    .Where(cuisineName => cuisineName != null) 
+                    .ToList()
+            }).ToList();
+
+            return restaurantDtos;
         }
 
         public List<Restaurant> GetRestaurants(int ownerId)
