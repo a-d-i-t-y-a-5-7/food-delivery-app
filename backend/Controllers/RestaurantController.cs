@@ -22,7 +22,7 @@ namespace backend.Controllers
         {
             try
             {
-                List<Restaurant> restaurants = _restaurantServices.GetAllRestaurants();
+                List<RestaurantDto> restaurants = _restaurantServices.GetAllRestaurants();
 
                 if (restaurants.IsNullOrEmpty())
                 {

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { BaseLayout } from "../Layout/BaseLayout";
 import { RestaurantOrders } from "../Pages/RestaurantOrders/RestaurantOrders";
 import { Home, Login, Register, ViewProfile } from "../Pages";
+import Address from "../Pages/Addresses/Address";
 
 export const AppRouter = () => {
   return (
@@ -14,6 +15,7 @@ export const AppRouter = () => {
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
       </Route>
       <Route path='/restaurantOrders' element={<RestaurantOrders/>}/>
+      <Route path="/address" element={<Address/>}/>
     </Routes>
   );
 };

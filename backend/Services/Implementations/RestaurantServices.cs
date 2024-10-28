@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
@@ -12,11 +13,10 @@ namespace backend.Services.Implementations
         {
             _restaurantRepo = restaurantRepo;
         }
-        public List<Restaurant> GetAllRestaurants()
+        public List<RestaurantDto> GetAllRestaurants()
         {
-            List<Restaurant> restaurants = _restaurantRepo.GetAllRestaurants();
 
-            return restaurants;
+            return _restaurantRepo.GetAllRestaurants();
         }
 
         public List<Restaurant> GetRestaurants(int ownerId)
