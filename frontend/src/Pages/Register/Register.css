@@ -6,6 +6,8 @@
 }
 
 .outerContainer {
+  width: 80%;
+  max-width: 900px;
   display: grid;
   margin: 15px;
   border-radius: 10px;

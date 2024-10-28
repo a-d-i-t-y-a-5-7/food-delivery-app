@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Login.css";
 import { apiLogin } from "../../Helper/LoginHelper";
+import Login_Image from "../../assets/Login.jpg";
+import "./Login.css";
 
 export const Login = () => {
   const [formData, setformData] = useState({
@@ -75,11 +76,7 @@ export const Login = () => {
           </div>
         </div>
         <div className="login-right">
-          <img
-            src="https://via.placeholder.com/600x800"
-            alt="Login visual"
-            className="login-image"
-          />
+          <img src={Login_Image} alt="Login visual" className="login-image" />
         </div>
       </div>
     </div>

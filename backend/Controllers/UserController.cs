@@ -1,6 +1,5 @@
 ﻿using backend.DTOs;
 using backend.Models;
-using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -46,12 +45,32 @@ namespace backend.Controllers
             }
             var token = await _userService.LoginUser(loginUser);
 
+            if(token == "UserNotFound")
+            {
+                return BadRequest(new {message="User Not Found"});
+            }
+
             if (token == null)
             {
                 return Unauthorized(new { message = "Invalid credentials" });
             }
 
             return Ok(new { token, message = "Login successful" });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUserById(int id)
+        {
+            if(id == 0)
+            {
+                return BadRequest(new { message = "UserId is not provided" });
+            }
+            var user = await _userService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound(new {message="User Not Found"});
+            }
+            return Ok(user);
         }
 
         [HttpPut("{userId}/update-profile")]
@@ -144,7 +163,6 @@ namespace backend.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
 
 
     }
