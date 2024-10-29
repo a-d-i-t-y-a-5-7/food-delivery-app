@@ -15,6 +15,7 @@ export default function RestaurantList() {
             try {
                 const response = await getRestaurantList(parseInt(logiinObj.sub));
                 console.log(response);
+                setRestaurantList(response.data.restaurants);
             } catch (error) {
                 setErrorMessage(error.message);
             }
@@ -24,13 +25,21 @@ export default function RestaurantList() {
         }
     }
 
+    let navigateToOrders = (restaurantId) =>{
+        navigate(`/restaurantOrders/${restaurantId}`)
+    }
+
     useEffect(() => {
         restaurants();
-    })
+    },[])
 
     return (
         <div>
-
+            {
+                restaurantList.map(r => (
+                    <p onClick={() => navigateToOrders(r.id)} key={r.id} style={{cursor:'pointer'}}>{r.name}</p>
+                ))
+            }
         </div>
     )
 }
