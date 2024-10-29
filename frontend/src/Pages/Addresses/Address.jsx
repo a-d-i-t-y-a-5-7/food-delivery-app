@@ -85,10 +85,10 @@ const Address = () => {
     };
 
     return (
-        <div className="container mt-4 d-flex" style={{padding: "20px", flexDirection: "column"}}>
+        <div className="container " style={{padding: "20px", flexDirection: "column"}}>
             <div className="row">
                 <div className="col-md-8">
-        <h2 className="text-left mb-4" style={{marginLeft: "100px"}}>Select a Delivery Address</h2>
+        <h2 className="text-left mb-4">Select a Delivery Address</h2>
 
         <div className="row">
         {addresses.map((address) => (
@@ -118,6 +118,7 @@ const Address = () => {
                   checked={selectedAddressId === address.id}
                   onChange={() => handleDeliverHere(address.id)}
                   className="form-check-input"
+                  
                 />
               </div>
               <div className="card-body">
@@ -169,10 +170,10 @@ const Address = () => {
 
             </div>
             <div className="col-md-4" >
-                <div className="card p-3">
+                <div className="card p-3" style={{ marginTop: "60px" }}>
                     <h5>Offers</h5>
                         <div className="d-flex justify-content-between align-items-center">
-                            <img src="https://img.pikbest.com/origin/09/07/51/74NpIkbEsTIXv.jpg!bw700" style={{width:"100%", height:"500px"}} alt="offer" />
+                            <img src="https://img.pikbest.com/origin/09/07/51/74NpIkbEsTIXv.jpg!bw700" style={{width:"100%",height:"400px"}} alt="offer" />
                         </div>
                         <div className="text-center mt-2">
                             <button className="btn btn-primary mt-2" > Order Now</button>

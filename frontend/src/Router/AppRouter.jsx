@@ -13,9 +13,10 @@ export const AppRouter = () => {
       <Route element={<BaseLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
+        <Route path="/address" element={<Address/>}/>
       </Route>
       <Route path='/restaurantOrders' element={<RestaurantOrders/>}/>
-      <Route path="/address" element={<Address/>}/>
+      
     </Routes>
   );
 };
