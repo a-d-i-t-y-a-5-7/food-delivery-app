@@ -345,6 +345,39 @@ INSERT INTO Roles (RoleType) VALUES
 ('delivery-partner'),
 ('restaurant-owner');
 
+//Added image_url Columns
+alter table Restaurants add image_url varchar(255) null 
+	
+//Added Images to existing columns
+UPDATE [FoodDeliveryDB].[dbo].[Restaurants]
+SET [image_url] = CASE 
+    WHEN [id] = 1 THEN 'https://cdn.pixabay.com/photo/2016/11/19/12/44/burgers-1839090_1280.jpg'
+    WHEN [id] = 2 THEN 'https://cdn.pixabay.com/photo/2020/08/27/07/31/restaurant-5521372_640.jpg'
+    WHEN [id] = 3 THEN 'https://cdn.pixabay.com/photo/2023/10/04/20/31/sunrise-8294459_1280.jpg'
+    WHEN [id] = 4 THEN 'https://cdn.pixabay.com/photo/2022/11/14/10/37/chinese-lanterns-7591296_1280.jpg'    
+END;
+
+//Inserted more restaurants
+INSERT INTO [FoodDeliveryDB].[dbo].[Restaurants] 
+    ([owner_id], [name], [phone_number], [rating], [opening_time], [closing_time], [is_approved], [is_active], [created_at], [image_url])
+VALUES 
+    (12, 'Pasta Palace', '9876234516', 4.5, '09:00', '22:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2020/09/01/21/19/palace-5536801_1280.jpg'),
+    (13, 'Burger Bistro', '7876234516', 4.2, '11:00', '23:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2023/08/22/08/45/restaurant-8205743_960_720.jpg'),
+    (13, 'Sushi Spot', '9876232345', 4.7, '10:00', '21:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2022/03/04/00/47/wine-7046276_640.jpg'),
+    (14, 'Taco Town', '9809874516', 4.3, '10:30', '23:30', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2017/07/08/16/33/taco-2484868_640.jpg'),
+    (15, 'Pizza Mania', '7887623410', 4.8, '08:00', '22:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2018/03/07/18/42/menu-3206749_640.jpg');
+
+//Inserted cuisines to every restaurants
+insert into RestaurantCuisines([restaurant_id],[cuisine_id])
+  values(4,1),(4,2),(4,3),(4,4),
+  (5,3),(5,4),
+  (6,4),
+  (7,4),
+  (8,4),
+  (9,3),
+
+	 
+
 
 
 -- ###########################################################         SELECTION QUERIES
