@@ -36,5 +36,32 @@ namespace backend.Services.Implementations
             Restaurant newRestaurant = await _restaurantRepo.AddRestaurantAsync(restaurant);
             return newRestaurant;
         }
+
+        public bool UpdateRestaurantApprovalStatus(int restaurantId, bool status)
+        {
+            var restaurant = _restaurantRepo.GetRestaurantById(restaurantId);
+
+            if (restaurant == null)
+                return false;
+            if (restaurant.IsApproved == false)
+            {
+                if (status)
+                {
+                    restaurant.IsApproved = true;
+                    _restaurantRepo.Save();
+                }
+                else
+                {
+                    _restaurantRepo.DeleteRestaurant(restaurant);
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+
+            return true;
+        }
     }
 }

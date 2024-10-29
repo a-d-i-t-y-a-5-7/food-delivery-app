@@ -72,5 +72,22 @@ namespace backend.Repositories.Implementations
 
         }
 
+
+        public Restaurant? GetRestaurantById(int restaurantId)
+        {
+            return _Dbcontext.Restaurants.FirstOrDefault(r => r.Id == restaurantId);
+        }
+
+        public void Save()
+        {
+            _Dbcontext.SaveChanges();
+        }
+
+        public void DeleteRestaurant(Restaurant restaurant)
+        {
+            _Dbcontext.Restaurants.Remove(restaurant);
+            Save();
+        }
+
     }
 }
