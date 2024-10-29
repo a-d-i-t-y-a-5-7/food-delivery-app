@@ -30,7 +30,7 @@ namespace backend.Repositories.Implementations
                 ClosingTime = r.ClosingTime,
                 IsApproved = r.IsApproved,
                 IsActive= r.IsActive,
-                image_url = r.Image_url,
+                image_url = r.ImageUrl,
                 Cuisine = restaurantCuisines
                     .Where(rc => rc.RestaurantId == r.Id)
                     .Select(rc => cuisines.FirstOrDefault(c => c.Id == rc.CuisineId)?.CuisineName)

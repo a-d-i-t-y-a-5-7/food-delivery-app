@@ -14,7 +14,6 @@ public partial class Restaurant
     public string? PhoneNumber { get; set; }
 
     public decimal? Rating { get; set; }
-     public string? Image_url { get; set; }
 
     public DateTime? OpeningTime { get; set; }
 
@@ -25,6 +24,8 @@ public partial class Restaurant
     public bool? IsActive { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public string? ImageUrl { get; set; }
 
     public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
 
