@@ -103,6 +103,19 @@ namespace backend.Controllers
                 return StatusCode(500, new { errorMessage = "Internal Server Error." ,ex.Message});
             }
         }
+
+        [HttpPut("approve-reject/{id}/{status}")]
+        public IActionResult UpdateRestaurantApprovalStatus(int id, bool status)
+        {
+            bool result = _restaurantServices.UpdateRestaurantApprovalStatus(id, status);
+
+            if (result)
+            {
+                return Ok(new { message = status ? "Restaurant approved" : "Restaurant rejected and deleted" });
+            }
+
+            return BadRequest(new { message = "Failed to update restaurant approval status" });
+        }
     }
 }
 //comment
