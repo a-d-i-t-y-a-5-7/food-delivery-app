@@ -9,6 +9,7 @@ namespace backend.Services.Interfaces
         public List<RestaurantDto> GetAllRestaurants();
         public List<Order> GetOrders(int restaurantId);
         Task<Restaurant> AddRestaurantAsync(Restaurant restaurant);
+        bool UpdateRestaurantApprovalStatus(int restaurantId, bool status);
 
     }
 }

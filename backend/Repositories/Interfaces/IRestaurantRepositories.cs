@@ -9,5 +9,9 @@ namespace backend.Repositories.Interfaces
         public List<RestaurantDto> GetAllRestaurants();
         public List<Order> GetOrders(int restaurantId);
         Task<Restaurant> AddRestaurantAsync(Restaurant restaurant);
+        public Restaurant? GetRestaurantById(int restaurantId);
+        void DeleteRestaurant(Restaurant restaurant);
+
+        public void Save();
     }
 }
