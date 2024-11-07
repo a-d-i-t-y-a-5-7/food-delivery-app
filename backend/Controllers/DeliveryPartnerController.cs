@@ -28,5 +28,18 @@ namespace backend.Controllers
 
             return StatusCode(400, new { message = "Delivery Partner Already Exists" });
         }
+
+        [HttpGet("{deliveryPartnerId}/orders")]
+        public IActionResult GetOrdersByDeliveryPartner(int deliveryPartnerId)
+        {
+            var result = _deliveryPartnerServices.GetOrdersByDeliveryPartner(deliveryPartnerId);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return NotFound(new { message = "Delivery Partner or Orders Not Found" });
+        }
     }
 }

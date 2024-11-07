@@ -4,6 +4,7 @@ import { BaseLayout } from "../Layout/BaseLayout";
 import { RestaurantOrders } from "../Pages/RestaurantOrders/RestaurantOrders";
 import { Home, Login, Register, ViewProfile } from "../Pages";
 import Address from "../Pages/Addresses/Address";
+import RestaurantList from "../Pages/RestaurantList/RestaurantList";
 
 export const AppRouter = () => {
   return (
@@ -15,7 +16,8 @@ export const AppRouter = () => {
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
         <Route path="/address" element={<Address/>}/>
       </Route>
-      <Route path='/restaurantOrders' element={<RestaurantOrders/>}/>
+      <Route path='/restaurantOrders/:restaurantId' element={<RestaurantOrders/>}/>
+      <Route path='/restaurantList' element={<RestaurantList/>}/>
       
     </Routes>
   );

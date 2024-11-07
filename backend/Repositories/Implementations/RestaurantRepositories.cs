@@ -30,7 +30,7 @@ namespace backend.Repositories.Implementations
                 ClosingTime = r.ClosingTime,
                 IsApproved = r.IsApproved,
                 IsActive= r.IsActive,
-                image_url = r.Image_url,
+                image_url = r.ImageUrl,
                 Cuisine = restaurantCuisines
                     .Where(rc => rc.RestaurantId == r.Id)
                     .Select(rc => cuisines.FirstOrDefault(c => c.Id == rc.CuisineId)?.CuisineName)
@@ -70,6 +70,23 @@ namespace backend.Repositories.Implementations
                 throw new Exception("Failed to add Restaurant to database.", ex);
             }
 
+        }
+
+
+        public Restaurant? GetRestaurantById(int restaurantId)
+        {
+            return _Dbcontext.Restaurants.FirstOrDefault(r => r.Id == restaurantId);
+        }
+
+        public void Save()
+        {
+            _Dbcontext.SaveChanges();
+        }
+
+        public void DeleteRestaurant(Restaurant restaurant)
+        {
+            _Dbcontext.Restaurants.Remove(restaurant);
+            Save();
         }
 
     }

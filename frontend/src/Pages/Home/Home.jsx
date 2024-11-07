@@ -14,6 +14,7 @@ export const Home = () => {
         const restaurantData = await fetchRestaurants();
         setRestaurants(restaurantData);
       } catch (error) {
+        console.log('error',error);
         setError(error.message);
       } finally {
         setLoading(false);
