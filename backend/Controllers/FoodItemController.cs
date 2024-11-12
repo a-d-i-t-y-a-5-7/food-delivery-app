@@ -1,9 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
-using backend.Services.Implementations;
 using backend.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -33,7 +30,7 @@ namespace backend.Controllers
         }
 
         [HttpPost("AddmenuItem/{restaurantId}")]
-        public async Task<IActionResult> AddMenuItem(int restaurantId, [FromBody] FoodItemDto foodItemDto)
+        public async Task<IActionResult> AddMenuItem(int restaurantId, [FromForm] FoodItemDto foodItemDto, IFormFile? image)
         {
             if (restaurantId <= 0 || foodItemDto == null)
             {
@@ -41,6 +38,22 @@ namespace backend.Controllers
             }
             try
             {
+                if (image != null && image.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "..", "frontend", "public", "uploads","menuitem");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    var imagePath = Path.Combine(uploadsFolder, image.FileName);
+
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+                    string imageUrl = $"/uploads/menuitem/{image.FileName}";
+                    foodItemDto.ImageUrl = imageUrl;
+                }
                 FoodItem newFoodItem = new FoodItem
                 {
                     RestaurantId = foodItemDto.RestaurantId,
@@ -79,7 +92,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("UpdateMenuItemById/{menuItemId}")]
-        public async Task<IActionResult> UpdateMenuItem(int menuItemId, [FromBody] FoodItemDto foodItemDto)
+        public async Task<IActionResult> UpdateMenuItem(int menuItemId, [FromForm] FoodItemDto foodItemDto, IFormFile? image)
         {
             if (menuItemId <= 0 || foodItemDto == null)
             {
@@ -87,6 +100,23 @@ namespace backend.Controllers
             }
             try
             {
+                if (image != null && image.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "..", "frontend", "public", "uploads", "menuitem");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    var imagePath = Path.Combine(uploadsFolder, image.FileName);
+
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+                    string imageUrl = $"/uploads/menuitem/{image.FileName}";
+                    foodItemDto.ImageUrl = imageUrl;
+                }
+
                 FoodItem UpdateFoodItem = new FoodItem
                 {
                     Name = foodItemDto.Name,
@@ -132,6 +162,25 @@ namespace backend.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
+            }
+
+        }
+        [HttpGet("GetListOfCuisineAndCategory")]
+        public async Task<IActionResult> GetListOfCuisineAndCategory() {
+            try
+            {
+                CuisineAndCategoryListDto cuisineAndCategoryList = await _foodItemServices.GetCategoryAndCuisineList();
+                if(cuisineAndCategoryList != null)
+                {
+                    return Ok(cuisineAndCategoryList);
+                }
+                return NotFound();
+               
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
+
             }
 
         }

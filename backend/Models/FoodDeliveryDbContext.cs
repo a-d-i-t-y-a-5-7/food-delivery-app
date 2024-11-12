@@ -21,6 +21,8 @@ public partial class FoodDeliveryDbContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<City> Cities { get; set; }
+
     public virtual DbSet<Coupon> Coupons { get; set; }
 
     public virtual DbSet<Cuisine> Cuisines { get; set; }
@@ -49,17 +51,19 @@ public partial class FoodDeliveryDbContext : DbContext
 
     public virtual DbSet<Role> Roles { get; set; }
 
+    public virtual DbSet<State> States { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=CVC241;Initial Catalog=FoodDeliveryDB;User ID=sa;Password=cybage@123456; Encrypt=false;");
+        => optionsBuilder.UseSqlServer("Data Source= CVC241;Initial Catalog=FoodDeliveryDB;User ID=sa;Password=cybage@123456; Encrypt=false;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Addresse__3213E83F86CD40D2");
+            entity.HasKey(e => e.Id).HasName("PK__Addresse__3213E83FFE3F5F98");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AddressLine1)
@@ -98,22 +102,17 @@ public partial class FoodDeliveryDbContext : DbContext
 
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Admins__3213E83F451E3ED2");
+            entity.HasKey(e => e.Id).HasName("PK__Admins__3213E83F6BD331EB");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AdminUserId).HasColumnName("admin_user_id");
             entity.Property(e => e.Level).HasColumnName("level");
-
-            entity.HasOne(d => d.AdminUser).WithMany(p => p.Admins)
-                .HasForeignKey(d => d.AdminUserId)
-                .HasConstraintName("FK__Admins__admin_us__3B75D760");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Categori__3213E83F24E86928");
+            entity.HasKey(e => e.Id).HasName("PK__Categori__3213E83F4B4B283A");
 
-            entity.HasIndex(e => e.CategoryName, "UQ__Categori__5189E25559E4D374").IsUnique();
+            entity.HasIndex(e => e.CategoryName, "UQ__Categori__5189E255A118632B").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoryName)
@@ -122,9 +121,24 @@ public partial class FoodDeliveryDbContext : DbContext
                 .HasColumnName("category_name");
         });
 
+        modelBuilder.Entity<City>(entity =>
+        {
+            entity.HasKey(e => e.CityId).HasName("PK__City__F2D21A9614235018");
+
+            entity.ToTable("City");
+
+            entity.Property(e => e.CityId).HasColumnName("CityID");
+            entity.Property(e => e.CityName).HasMaxLength(100);
+            entity.Property(e => e.StateId).HasColumnName("StateID");
+
+            entity.HasOne(d => d.State).WithMany(p => p.Cities)
+                .HasForeignKey(d => d.StateId)
+                .HasConstraintName("FK__City__StateID__04E4BC85");
+        });
+
         modelBuilder.Entity<Coupon>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Coupons__3213E83F0AE5AF9A");
+            entity.HasKey(e => e.Id).HasName("PK__Coupons__3213E83F4EFF854F");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
@@ -148,14 +162,14 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Restaurant).WithMany(p => p.Coupons)
                 .HasForeignKey(d => d.RestaurantId)
-                .HasConstraintName("FK__Coupons__restaur__70DDC3D8");
+                .HasConstraintName("FK__Coupons__restaur__5DCAEF64");
         });
 
         modelBuilder.Entity<Cuisine>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Cuisines__3213E83F638508A8");
+            entity.HasKey(e => e.Id).HasName("PK__Cuisines__3213E83F9F79B327");
 
-            entity.HasIndex(e => e.CuisineName, "UQ__Cuisines__A15646FBAB623DAF").IsUnique();
+            entity.HasIndex(e => e.CuisineName, "UQ__Cuisines__A15646FB83ECAFF9").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CuisineName)
@@ -166,7 +180,7 @@ public partial class FoodDeliveryDbContext : DbContext
 
         modelBuilder.Entity<DeliveryPartner>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Delivery__3213E83F896F7D03");
+            entity.HasKey(e => e.Id).HasName("PK__Delivery__3213E83FF746B4E7");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ComplaintCount).HasColumnName("complaint_count");
@@ -186,12 +200,12 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Partner).WithMany(p => p.DeliveryPartners)
                 .HasForeignKey(d => d.PartnerId)
-                .HasConstraintName("FK__DeliveryP__partn__5629CD9C");
+                .HasConstraintName("FK__DeliveryP__partn__4316F928");
         });
 
         modelBuilder.Entity<DeliveryRequest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Delivery__3213E83F5D62DC68");
+            entity.HasKey(e => e.Id).HasName("PK__Delivery__3213E83F32925C3B");
 
             entity.ToTable("DeliveryRequest");
 
@@ -206,16 +220,16 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.DeliveryPartner).WithMany(p => p.DeliveryRequests)
                 .HasForeignKey(d => d.DeliveryPartnerId)
-                .HasConstraintName("FK__DeliveryR__deliv__6C190EBB");
+                .HasConstraintName("FK__DeliveryR__deliv__59063A47");
 
             entity.HasOne(d => d.Order).WithMany(p => p.DeliveryRequests)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__DeliveryR__order__6D0D32F4");
+                .HasConstraintName("FK__DeliveryR__order__59FA5E80");
         });
 
         modelBuilder.Entity<Dispute>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Disputes__3213E83FB9D1734B");
+            entity.HasKey(e => e.Id).HasName("PK__Disputes__3213E83F38C888F0");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
@@ -240,12 +254,12 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Disputes)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__Disputes__order___75A278F5");
+                .HasConstraintName("FK__Disputes__order___628FA481");
         });
 
         modelBuilder.Entity<FoodItem>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FoodItem__3213E83F1903688B");
+            entity.HasKey(e => e.Id).HasName("PK__FoodItem__3213E83FDE75B87C");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
@@ -271,20 +285,20 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.FoodItems)
                 .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__FoodItems__categ__52593CB8");
+                .HasConstraintName("FK__FoodItems__categ__3F466844");
 
             entity.HasOne(d => d.CuisineType).WithMany(p => p.FoodItems)
                 .HasForeignKey(d => d.CuisineTypeId)
-                .HasConstraintName("FK__FoodItems__cuisi__5165187F");
+                .HasConstraintName("FK__FoodItems__cuisi__3E52440B");
 
             entity.HasOne(d => d.Restaurant).WithMany(p => p.FoodItems)
                 .HasForeignKey(d => d.RestaurantId)
-                .HasConstraintName("FK__FoodItems__resta__5070F446");
+                .HasConstraintName("FK__FoodItems__resta__3D5E1FD2");
         });
 
         modelBuilder.Entity<Log>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Logs__3213E83F0DEF201D");
+            entity.HasKey(e => e.Id).HasName("PK__Logs__3213E83F799B6A5D");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ActionCategory)
@@ -312,7 +326,7 @@ public partial class FoodDeliveryDbContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3213E83F23F8A3E5");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3213E83FF70878F2");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AdminId).HasColumnName("admin_id");
@@ -330,16 +344,16 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Admin).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.AdminId)
-                .HasConstraintName("FK__Notificat__admin__7B5B524B");
+                .HasConstraintName("FK__Notificat__admin__07C12930");
 
             entity.HasOne(d => d.SentToUser).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.SentToUserId)
-                .HasConstraintName("FK__Notificat__sent___7C4F7684");
+                .HasConstraintName("FK__Notificat__sent___08B54D69");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Orders__3213E83FFD476016");
+            entity.HasKey(e => e.Id).HasName("PK__Orders__3213E83FE1437378");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Address).HasColumnName("address");
@@ -370,24 +384,24 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.AddressNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Address)
-                .HasConstraintName("FK__Orders__address__5DCAEF64");
+                .HasConstraintName("FK__Orders__address__4AB81AF0");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK__Orders__customer__5AEE82B9");
+                .HasConstraintName("FK__Orders__customer__47DBAE45");
 
             entity.HasOne(d => d.DeliveryPartner).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.DeliveryPartnerId)
-                .HasConstraintName("FK__Orders__delivery__5CD6CB2B");
+                .HasConstraintName("FK__Orders__delivery__49C3F6B7");
 
             entity.HasOne(d => d.Restaurant).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.RestaurantId)
-                .HasConstraintName("FK__Orders__restaura__5BE2A6F2");
+                .HasConstraintName("FK__Orders__restaura__48CFD27E");
         });
 
         modelBuilder.Entity<OrderItem>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3213E83FAF7B3277");
+            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3213E83FC4CCB807");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.FoodItemId).HasColumnName("food_item_id");
@@ -399,16 +413,16 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.FoodItem).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.FoodItemId)
-                .HasConstraintName("FK__OrderItem__food___6477ECF3");
+                .HasConstraintName("FK__OrderItem__food___5165187F");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__OrderItem__order__6383C8BA");
+                .HasConstraintName("FK__OrderItem__order__5070F446");
         });
 
         modelBuilder.Entity<Restaurant>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Restaura__3213E83F2ED62539");
+            entity.HasKey(e => e.Id).HasName("PK__Restaura__3213E83FAEB37732");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ClosingTime)
@@ -446,12 +460,12 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Owner).WithMany(p => p.Restaurants)
                 .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK__Restauran__owner__412EB0B6");
+                .HasConstraintName("FK__Restauran__owner__2E1BDC42");
         });
 
         modelBuilder.Entity<RestaurantCuisine>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Restaura__3213E83F2B059838");
+            entity.HasKey(e => e.Id).HasName("PK__Restaura__3213E83FFBF25250");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CuisineId).HasColumnName("cuisine_id");
@@ -459,16 +473,16 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Cuisine).WithMany(p => p.RestaurantCuisines)
                 .HasForeignKey(d => d.CuisineId)
-                .HasConstraintName("FK__Restauran__cuisi__4D94879B");
+                .HasConstraintName("FK__Restauran__cuisi__3A81B327");
 
             entity.HasOne(d => d.Restaurant).WithMany(p => p.RestaurantCuisines)
                 .HasForeignKey(d => d.RestaurantId)
-                .HasConstraintName("FK__Restauran__resta__4CA06362");
+                .HasConstraintName("FK__Restauran__resta__398D8EEE");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reviews__3213E83F033F7A33");
+            entity.HasKey(e => e.Id).HasName("PK__Reviews__3213E83FE89F4D41");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Comment)
@@ -487,23 +501,33 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__Reviews__order_i__6754599E");
+                .HasConstraintName("FK__Reviews__order_i__5441852A");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE1AA9193F8E");
+            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE1ADE914B2F");
 
             entity.Property(e => e.RoleType)
                 .HasMaxLength(40)
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<State>(entity =>
+        {
+            entity.HasKey(e => e.StateId).HasName("PK__State__C3BA3B5A6774831E");
+
+            entity.ToTable("State");
+
+            entity.Property(e => e.StateId).HasColumnName("StateID");
+            entity.Property(e => e.StateName).HasMaxLength(100);
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F7AF86E8F");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F7C549DEF");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E61644C4DC011").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__AB6E616482B1C1F5").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
@@ -529,7 +553,7 @@ public partial class FoodDeliveryDbContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK__Users__RoleId__02FC7413");
+                .HasConstraintName("FK__Users__RoleId__286302EC");
         });
 
         OnModelCreatingPartial(modelBuilder);
