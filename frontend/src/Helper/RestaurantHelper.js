@@ -1,10 +1,10 @@
 import AxiosInstance from "./AxiosInstance";
 
-export const getRestaurantList = async(ownerId) =>{
+export const getRestaurantList = async (ownerId) => {
     try {
-        const response = await AxiosInstance.get(`/Restaurant/get-restaurants/${ownerId}`,{
-            headers:{
-                'Include-Authorization':true
+        const response = await AxiosInstance.get(`/Restaurant/get-restaurants/${ownerId}`, {
+            headers: {
+                'Include-Authorization': true
             }
         });
         return response;
@@ -13,15 +13,34 @@ export const getRestaurantList = async(ownerId) =>{
     }
 }
 
-export const restaurantOrders = async (restaurantId) =>{
+export const restaurantOrders = async (restaurantId) => {
     try {
-        const response = await AxiosInstance.get(`/Restaurant/get-orders/${restaurantId}`,{
-            headers:{
-                'Include-Authorization':true
+        const response = await AxiosInstance.get(`/Restaurant/get-orders/${restaurantId}`, {
+            headers: {
+                'Include-Authorization': true
             }
         });
-        return response;   
+        return response;
     } catch (error) {
         throw new Error('Orders not found');
     }
 }
+
+export const addRestaurant = async (restaurantDetails) => {
+    try {
+        const response = await AxiosInstance.post(
+            "/Restaurant/Register",
+            restaurantDetails,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Include-Authorization": true,
+                },
+            });
+        return response;
+    }
+    catch (error) {
+        throw new error("Failed to Add Restaurant Details")
+    }
+}
+
