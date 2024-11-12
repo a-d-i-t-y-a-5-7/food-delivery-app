@@ -26,6 +26,37 @@ export const restaurantOrders = async (restaurantId) => {
     }
 }
 
+export const updateOrderStatus = async (orderId, orderStatus) => {
+    if (orderStatus === 'Preparing') {
+        orderStatus = 'OutForDelivery';
+        let orderStatusDto = {
+            'orderId': orderId,
+            'status': orderStatus
+        };
+        try{
+            const response = await AxiosInstance.put(`/Order/update-status`, orderStatusDto);
+            return response;
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    if (orderStatus === 'OutForDelivery') {
+        orderStatus = 'Delivered';
+        let orderStatusDto = {
+            'orderId': orderId,
+            'status': orderStatus
+        };
+        try{
+            const response = await AxiosInstance.put(`/Order/update-status`, orderStatusDto);
+            return response;
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+}
 export const addRestaurant = async (restaurantDetails) => {
     try {
         const response = await AxiosInstance.post(

@@ -26,9 +26,9 @@ namespace backend.Services.Implementations
             return restaurants;
         }
 
-        public List<Order> GetOrders(int restaurantId)
+        public List<OrdersDto> GetOrders(int restaurantId)
         {
-            List<Order> orders = _restaurantRepo.GetOrders(restaurantId);
+            List<OrdersDto> orders = _restaurantRepo.GetOrders(restaurantId);
             return orders;
         }
         public async Task<RestaurantsDto> AddRestaurantAsync(RestaurantsDto restaurant)

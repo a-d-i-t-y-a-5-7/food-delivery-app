@@ -47,10 +47,27 @@ namespace backend.Repositories.Implementations
             return restaurants;
         }
 
-        public List<Order> GetOrders(int restaurantId)
+        public List<OrdersDto> GetOrders(int restaurantId)
         {
             List<Order>? orders = _Dbcontext.Orders.Where(o => o.RestaurantId == restaurantId).ToList();
-            return orders;
+            List<OrdersDto> ordersDtos = new List<OrdersDto>();
+            if(orders != null && orders.Count > 0)
+            {
+                for(int i=0; i<orders.Count; i++)
+                {
+                    OrdersDto dto = new OrdersDto
+                    {
+                        OrderId = orders[i].Id,
+                        Restaurantname = _Dbcontext.Restaurants.Find(orders[i].RestaurantId).Name,
+                        CustomerName = _Dbcontext.Users.Find(orders[i].CustomerId).Name,
+                        TotalAmount = orders[i].TotalAmount,
+                        Status = orders[i].Status,
+                        PaymentStatus = orders[i].PaymentStatus
+                    };
+                    ordersDtos.Add(dto);
+                }
+            }
+            return ordersDtos;
         }
         public async Task<RestaurantsDto> AddRestaurantAsync(RestaurantsDto restaurantDto)
         {
