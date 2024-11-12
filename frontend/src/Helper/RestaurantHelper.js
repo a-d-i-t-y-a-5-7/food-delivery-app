@@ -57,3 +57,21 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
         }
     }
 }
+export const addRestaurant = async (restaurantDetails) => {
+    try {
+        const response = await AxiosInstance.post(
+            "/Restaurant/Register",
+            restaurantDetails,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Include-Authorization": true,
+                },
+            });
+        return response;
+    }
+    catch (error) {
+        throw new error("Failed to Add Restaurant Details")
+    }
+}
+
