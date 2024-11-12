@@ -166,6 +166,20 @@ CREATE TABLE Roles(
 	RoleType VARCHAR(40)
 );
 
+
+CREATE TABLE State (
+    StateID INT PRIMARY KEY IDENTITY(1,1),
+    StateName NVARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE City (
+    CityID INT PRIMARY KEY IDENTITY(1,1),
+    CityName NVARCHAR(100) NOT NULL,
+    StateID INT FOREIGN KEY REFERENCES State(StateID)
+);
+
+
 ALTER TABLE Users ADD RoleId INT FOREIGN KEY REFERENCES Roles(RoleId);
 
 
@@ -372,6 +386,82 @@ VALUES
   (7,4),
   (8,4);
 	 
+
+INSERT INTO State (StateName) VALUES
+('Andhra Pradesh'),
+('Arunachal Pradesh'),
+('Assam'),
+('Bihar'),
+('Chhattisgarh'),
+('Goa'),
+('Gujarat'),
+('Haryana'),
+('Himachal Pradesh'),
+('Jharkhand'),
+('Karnataka'),
+('Kerala'),
+('Madhya Pradesh'),
+('Maharashtra'),
+('Manipur'),
+('Meghalaya'),
+('Mizoram'),
+('Nagaland'),
+('Odisha'),
+('Punjab'),
+('Rajasthan'),
+('Sikkim'),
+('Tamil Nadu'),
+('Telangana'),
+('Tripura'),
+('Uttar Pradesh'),
+('Uttarakhand'),
+('West Bengal'),
+('Andaman and Nicobar Islands'),
+('Chandigarh'),
+('Dadra and Nagar Haveli and Daman and Diu'),
+('Lakshadweep'),
+('Delhi'),
+('Puducherry'),
+('Jammu and Kashmir'),
+('Ladakh');
+
+INSERT INTO City (CityName, StateID) VALUES
+('Visakhapatnam', 1), ('Vijayawada', 1), ('Guntur', 1), ('Tirupati', 1), ('Rajahmundry', 1),
+('Itanagar', 2), ('Tawang', 2),
+('Guwahati', 3), ('Silchar', 3), ('Dibrugarh', 3), ('Jorhat', 3),
+('Patna', 4), ('Gaya', 4), ('Bhagalpur', 4), ('Muzaffarpur', 4),
+('Raipur', 5), ('Bilaspur', 5), ('Durg', 5), ('Bhilai', 5),
+('Panaji', 6), ('Margao', 6), ('Vasco da Gama', 6),
+('Ahmedabad', 7), ('Surat', 7), ('Vadodara', 7), ('Rajkot', 7), ('Bhavnagar', 7),
+('Gurugram', 8), ('Faridabad', 8), ('Panipat', 8), ('Ambala', 8),
+('Shimla', 9), ('Manali', 9), ('Dharamshala', 9), ('Kullu', 9),
+('Ranchi', 10), ('Jamshedpur', 10), ('Dhanbad', 10), ('Bokaro', 10),
+('Bangalore', 11), ('Mysore', 11), ('Mangalore', 11), ('Hubli', 11), ('Belgaum', 11),
+('Thiruvananthapuram', 12), ('Kochi', 12), ('Kozhikode', 12), ('Thrissur', 12),
+('Bhopal', 13), ('Indore', 13), ('Gwalior', 13), ('Jabalpur', 13),
+('Mumbai', 14), ('Pune', 14), ('Nagpur', 14), ('Nashik', 14), ('Aurangabad', 14),
+('Imphal', 15),
+('Shillong', 16), ('Tura', 16),
+('Aizawl', 17),
+('Kohima', 18), ('Dimapur', 18),
+('Bhubaneswar', 19), ('Cuttack', 19), ('Rourkela', 19), ('Puri', 19),
+('Amritsar', 20), ('Ludhiana', 20), ('Jalandhar', 20), ('Patiala', 20),
+('Jaipur', 21), ('Udaipur', 21), ('Jodhpur', 21), ('Bikaner', 21), ('Ajmer', 21),
+('Gangtok', 22),
+('Chennai', 23), ('Coimbatore', 23), ('Madurai', 23), ('Salem', 23), ('Tiruchirappalli', 23),
+('Hyderabad', 24), ('Warangal', 24), ('Nizamabad', 24),
+('Agartala', 25),
+('Lucknow', 26), ('Varanasi', 26), ('Kanpur', 26), ('Agra', 26), ('Prayagraj', 26),
+('Dehradun', 27), ('Haridwar', 27), ('Nainital', 27),
+('Kolkata', 28), ('Howrah', 28), ('Durgapur', 28), ('Asansol', 28), ('Siliguri', 28),
+('Port Blair', 29),
+('Chandigarh', 30),
+('Silvassa', 31), ('Daman', 31), ('Diu', 31),
+('Kavaratti', 32),
+('New Delhi', 33),
+('Pondicherry', 34), ('Karaikal', 34),
+('Srinagar', 35), ('Jammu', 35), ('Anantnag', 35),
+('Leh', 36), ('Kargil', 36);
 
 
 
