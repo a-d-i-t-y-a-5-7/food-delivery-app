@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
@@ -35,6 +36,11 @@ namespace backend.Services.Implementations
         {
             IEnumerable<FoodItem> foodItemsList = await _foodItemRepo.GetListOfMenuItemByRestaurantIdAsync(resturentId);
             return foodItemsList;
+        }
+        public async Task<CuisineAndCategoryListDto> GetCategoryAndCuisineList()
+        {
+            CuisineAndCategoryListDto cuisineAndCategoryListDto = await _foodItemRepo.GetCuisineAndCategoryList();
+            return cuisineAndCategoryListDto;
         }
     }
 }

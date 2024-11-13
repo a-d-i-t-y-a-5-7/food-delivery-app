@@ -26,14 +26,14 @@ namespace backend.Services.Implementations
             return restaurants;
         }
 
-        public List<Order> GetOrders(int restaurantId)
+        public List<OrdersDto> GetOrders(int restaurantId)
         {
-            List<Order> orders = _restaurantRepo.GetOrders(restaurantId);
+            List<OrdersDto> orders = _restaurantRepo.GetOrders(restaurantId);
             return orders;
         }
-        public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
+        public async Task<RestaurantsDto> AddRestaurantAsync(RestaurantsDto restaurant)
         {
-            Restaurant newRestaurant = await _restaurantRepo.AddRestaurantAsync(restaurant);
+            RestaurantsDto newRestaurant = await _restaurantRepo.AddRestaurantAsync(restaurant);
             return newRestaurant;
         }
 

@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,7 +65,10 @@ namespace backend.Repositories.Implementations
                 existingMenuItem.Description = foodItem.Description;
                 existingMenuItem.CuisineType = foodItem.CuisineType;
                 existingMenuItem.Price = foodItem.Price;
-                existingMenuItem.ImageUrl = foodItem.ImageUrl;
+                if (!string.IsNullOrEmpty(foodItem.ImageUrl))
+                {
+                    existingMenuItem.ImageUrl = foodItem.ImageUrl;
+                }
                 existingMenuItem.CategoryId = foodItem.CategoryId;
                 existingMenuItem.IsAvailable = foodItem.IsAvailable;
                 await _Dbcontext.SaveChangesAsync();
@@ -85,6 +89,28 @@ namespace backend.Repositories.Implementations
             catch (Exception ex)
             {
                 throw new Exception("Failed to fetch Restaurant Details from database.", ex);
+            }
+        }
+
+        public async Task<CuisineAndCategoryListDto> GetCuisineAndCategoryList()
+        {
+            try
+            {
+                IEnumerable<Cuisine> cuisines = await _Dbcontext.Cuisines.ToListAsync();
+                IEnumerable<Category> categories = await _Dbcontext.Categories.ToListAsync();
+                if (cuisines.Any() && categories.Any())
+                {
+                   return  new CuisineAndCategoryListDto
+                    {
+                        Cuisines = cuisines,
+                        Categories = categories
+                    };
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to fetch Details from database.", ex);
             }
         }
     }

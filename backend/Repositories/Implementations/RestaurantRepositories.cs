@@ -47,23 +47,68 @@ namespace backend.Repositories.Implementations
             return restaurants;
         }
 
-        public List<Order> GetOrders(int restaurantId)
+        public List<OrdersDto> GetOrders(int restaurantId)
         {
             List<Order>? orders = _Dbcontext.Orders.Where(o => o.RestaurantId == restaurantId).ToList();
-            return orders;
+            List<OrdersDto> ordersDtos = new List<OrdersDto>();
+            if(orders != null && orders.Count > 0)
+            {
+                for(int i=0; i<orders.Count; i++)
+                {
+                    OrdersDto dto = new OrdersDto
+                    {
+                        OrderId = orders[i].Id,
+                        Restaurantname = _Dbcontext.Restaurants.Find(orders[i].RestaurantId).Name,
+                        CustomerName = _Dbcontext.Users.Find(orders[i].CustomerId).Name,
+                        TotalAmount = orders[i].TotalAmount,
+                        Status = orders[i].Status,
+                        PaymentStatus = orders[i].PaymentStatus
+                    };
+                    ordersDtos.Add(dto);
+                }
+            }
+            return ordersDtos;
         }
-        public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
+        public async Task<RestaurantsDto> AddRestaurantAsync(RestaurantsDto restaurantDto)
         {
-            bool IsPhonenoExits = await _Dbcontext.Restaurants.AnyAsync(u => u.PhoneNumber == restaurant.PhoneNumber);
+
+            bool IsPhonenoExits = await _Dbcontext.Restaurants.AnyAsync(u => u.PhoneNumber == restaurantDto.PhoneNumber);
             if (IsPhonenoExits)
             {
-                throw new ArgumentException($"{restaurant.PhoneNumber}' is already exits");
+                throw new ArgumentException($"{restaurantDto.PhoneNumber}' is already exits");
+            }
+            bool IsRestaurantNameExits = await _Dbcontext.Restaurants.AnyAsync(u => u.Name == restaurantDto.Name && u.OwnerId == restaurantDto.OwnerId);
+            if (IsRestaurantNameExits)
+            {
+                throw new ArgumentException($"{restaurantDto.Name}' is already exits");
             }
             try
             {
-                _Dbcontext.Add(restaurant);
+                Address address = new Address
+                {
+                    EntityId = restaurantDto.OwnerId,
+                    EntityType = "RESTAURANT",
+                    AddressLine1 = restaurantDto.StreetAddress,
+                    AddressLine2 = restaurantDto.AdditionalAddress,
+                    City = restaurantDto.City,
+                    State = restaurantDto.State,
+                    ZipCode = restaurantDto.Pincode,
+                    Country = "INDIA"
+                };
+                Restaurant newrestaurant = new Restaurant
+                {
+                    OwnerId = restaurantDto.OwnerId,    
+                    Name = restaurantDto.Name,
+                    PhoneNumber = restaurantDto.PhoneNumber,
+                    OpeningTime = restaurantDto.OpeningTime,
+                    ClosingTime = restaurantDto.ClosingTime,
+                    ImageUrl = restaurantDto.image_url
+                };
+
+                _Dbcontext.Add(address);
+                _Dbcontext.Add(newrestaurant);
                 await _Dbcontext.SaveChangesAsync();
-                return restaurant;
+                return restaurantDto;
             }
             catch (Exception ex)
             {

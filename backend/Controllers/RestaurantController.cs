@@ -1,7 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
 using backend.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -52,7 +51,7 @@ namespace backend.Controllers
         [HttpGet("get-orders/{restaurantId}")]
         public IActionResult GetOrders(int restaurantId)
         {
-            List<Order> orders = _restaurantServices.GetOrders(restaurantId);
+            List<OrdersDto> orders = _restaurantServices.GetOrders(restaurantId);
             if (orders.IsNullOrEmpty())
             {
                 return StatusCode(404, new { message = "Restaurant Not Found" });
@@ -61,48 +60,54 @@ namespace backend.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> AddRestaurant([FromBody] RestaurantDto restaurantDto)
+        public async Task<IActionResult> AddRestaurant([FromForm] RestaurantsDto restaurantDto ,IFormFile? image)
         {
-            if (restaurantDto == null)
+            if (restaurantDto == null && image == null)
             {
                 return BadRequest("Invalid User Data");
             }
             try
             {
-                Restaurant newrestaurant = new Restaurant
+                if (image != null && image.Length > 0)
                 {
-                    OwnerId = restaurantDto.OwnerId,
-                    Name = restaurantDto.Name,
-                    PhoneNumber = restaurantDto.PhoneNumber,
-                    Rating = restaurantDto.Rating,
-                    OpeningTime = restaurantDto.OpeningTime,
-                    ClosingTime = restaurantDto.ClosingTime,
-                    IsApproved = restaurantDto.IsApproved,
-                    IsActive = restaurantDto.IsActive,
-                };
-                Restaurant newResturent = await _restaurantServices.AddRestaurantAsync(newrestaurant);
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "..", "frontend", "public", "uploads","restaurant");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    var imagePath = Path.Combine(uploadsFolder, image.FileName);
+
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+                   string imageUrl = $"/uploads/restaurant/{image.FileName}";
+                    restaurantDto.image_url = imageUrl;
+                }
+                RestaurantsDto newRestaurant = await _restaurantServices.AddRestaurantAsync(restaurantDto);
+
                 var result = new
                 {
-                    Id = newResturent.Id,
-                    Name = newResturent.Name,
-                    PhoneNumber = newrestaurant.PhoneNumber,
-                    Rating = newrestaurant.Rating,
-                    OpningTime = newrestaurant.OpeningTime,
-                    ClosingTime = newrestaurant.ClosingTime,
-                    IsAprroved = newrestaurant.IsApproved,
-                    IsActive = newrestaurant.IsActive,
+                    Name = newRestaurant.Name,
+                    PhoneNumber = newRestaurant.PhoneNumber,
+                    Rating = newRestaurant.Rating,
+                    OpeningTime = newRestaurant.OpeningTime,
+                    ClosingTime = newRestaurant.ClosingTime,
+                    ImageUrl = newRestaurant.image_url
                 };
-                return Ok(new {succeessMessage ="Restaurant Added Successfully" , response = result});
+
+                return Ok(new { successMessage = "Restaurant Added Successfully", restaurant = result });
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { errorMessage = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { errorMessage = "Internal Server Error." ,ex.Message});
+                return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
             }
         }
+    
 
         [HttpPut("approve-reject/{id}/{status}")]
         public IActionResult UpdateRestaurantApprovalStatus(int id, bool status)
