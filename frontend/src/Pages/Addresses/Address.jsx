@@ -14,7 +14,7 @@ const Address = () => {
     useEffect(() => {
         const loadAddresses = async () => {
             try {
-                const addressData = await fetchAddresses(2, 'USER');
+                const addressData = await fetchAddresses(21, 'USER');
                 setAddresses(addressData);
             } catch (error) {
                 message.error(error.message);
@@ -74,7 +74,7 @@ const Address = () => {
                 );
                 message.success('Address updated successfully.');
             } else {
-                const newAddress = await addAddress({ entityId: 2, entityType: 'USER', ...values });
+                const newAddress = await addAddress({ entityId: 21, entityType: 'USER', ...values });
                 setAddresses([...addresses, newAddress]);
                 message.success('Address added successfully.');
             }
