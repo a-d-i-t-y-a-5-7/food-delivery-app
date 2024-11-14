@@ -1,10 +1,14 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 
 namespace backend.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        Order? GetOrderById(int orderId);
+       
         void Save();
+        void Add(Order order);
+        Order GetOrderByOrderId(int orderId);
+        public List<OrdersDto> GetOrderByUserId(int userId);
     }
 }
