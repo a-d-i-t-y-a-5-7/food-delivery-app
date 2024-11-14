@@ -12,5 +12,7 @@ namespace backend.Repositories.Interfaces
         public Restaurant? GetRestaurantById(int restaurantId);
         void DeleteRestaurant(Restaurant restaurant);
         public void Save();
+        public bool UpdateRestaurant(string token, RestaurantDto restaurant);
+        public bool UpdateActiveStatus(string token, int restaurantId);
     }
 }

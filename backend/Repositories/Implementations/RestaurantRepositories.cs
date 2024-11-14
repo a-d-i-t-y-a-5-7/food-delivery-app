@@ -2,6 +2,7 @@
 using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace backend.Repositories.Implementations
 {
@@ -134,5 +135,64 @@ namespace backend.Repositories.Implementations
             Save();
         }
 
+        public bool UpdateRestaurant(string token, RestaurantDto restaurant)
+        {
+            int id = ReturnIdFromToken(token);
+            if(id == restaurant.OwnerId)
+            {
+                Restaurant? rest = _Dbcontext.Restaurants.Find(restaurant.Id);
+                if(rest!=null)
+                {
+                    rest.Name  = restaurant.Name;
+                    rest.PhoneNumber = restaurant.PhoneNumber;
+                    rest.OpeningTime = restaurant.OpeningTime;
+                    rest.ClosingTime = restaurant.ClosingTime;
+                    rest.ImageUrl = restaurant.image_url;
+                    _Dbcontext.SaveChanges();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private int ReturnIdFromToken(string token)
+        {
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            int userId = -999;
+
+            if (handler.CanReadToken(token))
+            {
+                JwtSecurityToken jwtToken = handler.ReadJwtToken(token);
+                string? id = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
+                userId = Convert.ToInt32(id);
+            }
+
+            return userId;
+        }
+
+        public bool UpdateActiveStatus(string token, int restaurantId)
+        {
+            int id = ReturnIdFromToken(token);
+            Restaurant? restaurant = _Dbcontext.Restaurants.Find(restaurantId);
+
+            if(restaurant != null && id == restaurant.OwnerId)
+            {
+                if (restaurant.IsActive != null && restaurant.IsActive == true)
+                {
+                    restaurant.IsActive = false;
+                    _Dbcontext.SaveChanges();
+                    return true;
+                }
+                if (restaurant.IsActive != null && restaurant.IsActive == false)
+                {
+                    restaurant.IsActive = true;
+                    _Dbcontext.SaveChanges();
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

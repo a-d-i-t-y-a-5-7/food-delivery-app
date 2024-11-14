@@ -63,5 +63,17 @@ namespace backend.Services.Implementations
 
             return true;
         }
+
+        public bool UpdateRestaurant(string token, RestaurantDto restaurantDto)
+        {
+            bool result = _restaurantRepo.UpdateRestaurant(token, restaurantDto);
+            return result;
+        }
+
+        public bool UpdateActiveStatus(string token, int restaurantId)
+        {
+            bool result = _restaurantRepo.UpdateActiveStatus(token, restaurantId);
+            return result;
+        }
     }
 }
