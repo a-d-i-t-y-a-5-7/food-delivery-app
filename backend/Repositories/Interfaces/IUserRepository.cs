@@ -12,6 +12,8 @@ namespace backend.Repositories.Interfaces
         Task<User?> RegisterUser(RegisterDto newUser);
         Task<Address?> AddAddress(AddAddressDto newAddress);
         Task<List<Address>> GetAddressById(int userId, string role);
+        Task<List<Address>> GetAddressesById(int userId);
+        Task<bool> SetPrimary(int addressId);
         Task<bool> DeleteAddressById(int Id);
         Task UpdateAddress(int Id, UpdateAddressDto addressDto);
         Task<IEnumerable<Order>> GetOrderHistory(int userId);

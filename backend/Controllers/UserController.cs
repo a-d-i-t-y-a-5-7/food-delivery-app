@@ -2,7 +2,6 @@
 using backend.Models;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace backend.Controllers
 {
@@ -144,7 +143,19 @@ namespace backend.Controllers
                 return NotFound(ex.Message);
             }
         }
-       
+
+        [HttpPatch("{userId}/set-primary/{addressId}")]
+        public async Task<IActionResult> SetPrimaryAddress(int userId,int addressId)
+        {
+            var result = await _userService.SetPrimaryAddress(userId,addressId);
+
+            if (!result)
+            {
+                return NotFound($"Address with ID {addressId} not found or could not be updated.");
+            }
+
+            return Ok(new {message=$"Address set as primary."});
+        }
 
         [HttpGet("view-order-history/{userId}")]
         public async Task<IActionResult> GetOrderHistory(int userId)
