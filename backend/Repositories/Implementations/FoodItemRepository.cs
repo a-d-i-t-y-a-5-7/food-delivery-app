@@ -113,5 +113,6 @@ namespace backend.Repositories.Implementations
                 throw new Exception("Failed to fetch Details from database.", ex);
             }
         }
+        
     }
 }

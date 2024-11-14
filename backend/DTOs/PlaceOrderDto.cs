@@ -4,6 +4,7 @@
     {
         public int CustomerId { get; set; }
         public int RestaurantId { get; set; }
-        public decimal TotalAmount { get; set; }
+        public int AddressId { get; set; } 
+        public List<OrderItemDto> OrderItems { get; set; }
     }
 }

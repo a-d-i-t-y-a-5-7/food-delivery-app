@@ -10,5 +10,6 @@ namespace backend.Repositories.Interfaces
         Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItem foodItem);
         Task<IEnumerable<FoodItem>> GetListOfMenuItemByRestaurantIdAsync(int resturentId);
         Task<CuisineAndCategoryListDto> GetCuisineAndCategoryList();
+        
     }
 }

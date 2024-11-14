@@ -18,38 +18,29 @@ namespace backend.Controllers
             _orderService = orderService;
         }
         [HttpPost("place-order")]
-        public IActionResult PlaceOrder([FromBody] PlaceOrderDto placeOrderDto)
+        public async Task<IActionResult> PlaceOrder([FromBody] PlaceOrderDto placeOrderDto)
         {
-            if (placeOrderDto == null)
+            var result = await _orderService.PlaceOrderAsync(placeOrderDto);
+            if (result)
             {
-                return BadRequest(new { message = "Order data is required" });
+                return Ok(new { message = "Order placed successfully" });
             }
-            if (placeOrderDto.CustomerId <= 0 || placeOrderDto.RestaurantId <= 0 || placeOrderDto.TotalAmount <= 0)
-            {
-                return BadRequest(new { message = "Invalid input data" });
-            }
-
-            var result = _orderService.PlaceOrder(placeOrderDto);
-
-            if (result != null)
-            {
-                return CreatedAtAction(nameof(GetOrderByOrderId), new { orderId = result.OrderId }, result);
-            }
-
-            return BadRequest(new { message = "Order creation failed" });
+            return BadRequest(new { message = "Failed to place order" });
         }
-        [HttpGet("get-orders/{orderId}")]
+
+        [HttpGet("{orderId}")]
         public IActionResult GetOrderByOrderId(int orderId)
         {
             var order = _orderService.GetOrderByOrderId(orderId);
 
             if (order != null)
             {
-                return Ok(order);
+                return Ok(order); 
             }
 
             return NotFound(new { message = "Order not found" });
         }
+
         [HttpGet("get-orders/{userId}")]
         public IActionResult GetOrders(int userId)
         {

@@ -14,15 +14,16 @@ namespace backend.Repositories.Implementations
         {
             _context = context;
         }
-
-        public void Save()
-        {
-            _context.SaveChanges();
-        }
-        public void Add(Order order)
+        public void AddOrder(Order order)
         {
             _context.Orders.Add(order);
         }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();  
+        }
+
         public Order GetOrderByOrderId(int orderId)
         {
             return _context.Orders

@@ -8,11 +8,56 @@ namespace backend.Services.Implementations
         public class OrderService : IOrderService
         {
             private readonly IOrderRepository _orderRepository;
+            private readonly IFoodItemRepository _foodItemRepository;
 
-            public OrderService(IOrderRepository orderRepository)
+
+        public OrderService(IOrderRepository orderRepository,  IFoodItemRepository foodItemRepository)
             {
                 _orderRepository = orderRepository;
+                _foodItemRepository = foodItemRepository;              
             }
+        public async Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto)
+        {
+            var foodItems = await _foodItemRepository.GetListOfMenuItemByRestaurantIdAsync(placeOrderDto.RestaurantId);
+
+            Order newOrder = new Order
+            {
+                CustomerId = placeOrderDto.CustomerId,
+                RestaurantId = placeOrderDto.RestaurantId,
+                Address = placeOrderDto.AddressId,
+                CreatedAt = DateTime.Now,
+                Status = "Pending", 
+                PaymentStatus = "Pending", 
+                TotalAmount = 0
+            };
+
+            decimal totalAmount = 0;
+
+            foreach (var item in placeOrderDto.OrderItems)
+            {
+                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId);
+                if (foodItem == null)
+                {
+                    throw new Exception($"Food item with ID {item.FoodItemId} not found.");
+                }
+
+                totalAmount += foodItem.Price * item.Quantity;
+
+                newOrder.OrderItems.Add(new OrderItem
+                {
+                    FoodItemId = item.FoodItemId,
+                    Quantity = item.Quantity,
+                    Price = foodItem.Price
+                });
+            }
+
+            newOrder.TotalAmount = totalAmount;
+
+            _orderRepository.AddOrder(newOrder);
+            _orderRepository.SaveAsync();
+
+            return true;
+        }
 
 
         public bool UpdateOrderStatus(UpdateOrderStatusDto updateOrderStatusDto)
@@ -37,36 +82,10 @@ namespace backend.Services.Implementations
                 return false;
             }
 
-            _orderRepository.Save();
+            _orderRepository.SaveAsync();
             return true;
         }
-        public OrdersDto PlaceOrder(PlaceOrderDto placeOrderDto)
-        {
-            if (placeOrderDto == null)
-                return null;
-
-            var order = new Order
-            {
-                CustomerId = placeOrderDto.CustomerId,
-                RestaurantId = placeOrderDto.RestaurantId,
-                TotalAmount = placeOrderDto.TotalAmount,
-                Status = "Pending", 
-                CreatedAt = DateTime.Now
-            };
-
-            _orderRepository.Add(order);
-            _orderRepository.Save();
-
-
-            return new OrdersDto
-            {
-                OrderId = order.Id,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status,
-                PaymentStatus = order.PaymentStatus
-            };
-        }
-
+        
         public OrdersDto GetOrderByOrderId(int orderId)
         {
             var order = _orderRepository.GetOrderByOrderId(orderId);
@@ -80,7 +99,7 @@ namespace backend.Services.Implementations
                 Restaurantname = order.Restaurant?.Name,
                 TotalAmount = order.TotalAmount,
                 Status = order.Status,
-                PaymentStatus = order.PaymentStatus
+                PaymentStatus = order.PaymentStatus,
             };
         }
         public List<OrdersDto> GetOrderByUserId(int userId)
