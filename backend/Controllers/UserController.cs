@@ -2,7 +2,6 @@
 using backend.Models;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace backend.Controllers
 {
@@ -144,7 +143,6 @@ namespace backend.Controllers
                 return NotFound(ex.Message);
             }
         }
-       
 
         [HttpGet("view-order-history/{userId}")]
         public async Task<IActionResult> GetOrderHistory(int userId)

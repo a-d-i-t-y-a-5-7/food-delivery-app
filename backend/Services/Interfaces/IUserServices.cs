@@ -13,7 +13,6 @@ namespace backend.Services.Interfaces
         Task<List<Address>> GetAddressById(int userId, string role);
         Task<bool> DeleteAddressById(int Id);
         Task UpdateAddress(int Id, UpdateAddressDto addressDto);
-        
         Task<IEnumerable<Order>> GetOrderHistory(int userId);
 
     }
