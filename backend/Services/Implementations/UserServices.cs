@@ -91,6 +91,20 @@ namespace backend.Services.Implementations
             await _userRepository.UpdateAddress(Id,addressDto);
         }
    
+        public async Task<bool> SetPrimaryAddress(int userId,int addressId)
+        {
+            var addresses = await _userRepository.GetAddressesById(userId);
+            if (addresses != null)
+            {
+                foreach (var address in addresses)
+                {
+                    await _userRepository.SetPrimary(address.Id);
+                }
+                return true;
+            }
+            return false ;
+        }
+
         public async Task<IEnumerable<Order>> GetOrderHistory(int userId)
         {
             return await _userRepository.GetOrderHistory(userId);

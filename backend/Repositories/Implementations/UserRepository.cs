@@ -72,6 +72,14 @@ namespace backend.Repositories.Implementations
                 .Where(a => a.EntityId == userId && a.EntityType == role)
                 .ToListAsync();
         }
+
+        public async Task<List<Address>> GetAddressesById(int userId)
+        {
+            return await _context.Addresses
+                .Where(a => a.EntityId == userId)
+                .ToListAsync();
+        }
+
         //Delete Address whose Entity_Id is not foreign key of Order table
         public async Task<bool> DeleteAddressById( int Id)
         {
@@ -109,6 +117,18 @@ namespace backend.Repositories.Implementations
 
             _context.Addresses.Update(existingAddress);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> SetPrimary(int addressId)
+        {
+            Address address = await _context.Addresses.FindAsync(addressId);
+            if (address != null)
+            {
+                address.IsPrimary =true;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
         public async Task<IEnumerable<Order>> GetOrderHistory(int userId)
