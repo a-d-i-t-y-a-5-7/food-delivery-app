@@ -25,33 +25,95 @@ namespace backend.Controllers
         {
             if (review == null)
             {
-                return BadRequest("Review is null.");
+                return BadRequest("Review is not provided.");
             }
 
             var createdReview = await _reviewService.AddReviews(review);
             return CreatedAtAction(nameof(AddReview), new { id = createdReview.Id }, createdReview);
         }
 
-        [HttpGet("restaurantRating/{restaurantId}")]
-        public async Task<IActionResult> GetRestaurantRating(int restaurantId)
+        [HttpGet("restaurant/{restaurantId}/reviews")]
+        public async Task<IActionResult> GetReviewsByRestaurantId(int restaurantId)
         {
-            if(restaurantId == 0 || restaurantId==null) { return BadRequest(); }
-
-            var restaurantRating = await _reviewService.GetRestaurantRating(restaurantId);
-
-            if (restaurantRating == null)
+            if (restaurantId <= 0)
             {
-                return NotFound($"No ratings found for restuarant with ID {restaurantId}");
+                return BadRequest("Invalid Restaurant ID.");
             }
-            return Ok(new { restaurantId = restaurantId, restaurantRating= restaurantRating });
+
+            try
+            {
+                var reviews = await _reviewService.GetReviewsByRestaurantId(restaurantId);
+
+                if (reviews == null || !reviews.Any())
+                {
+                    return NotFound("No reviews found for this restaurant.");
+                }
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        [HttpGet("{deliveryPartnerId}/average-rating")]
-        public IActionResult GetAverageRatingForDeliveryPartner(int deliveryPartnerId)
+        [HttpGet("delivery-partner/{deliveryPartnerId}/reviews")]
+        public async Task<IActionResult> GetReviewsByDeliveryPartnerId(int deliveryPartnerId)
         {
-            var averageRating = _deliveryRequestService.GetAverageRatingForDeliveryPartner(deliveryPartnerId);
+            if (deliveryPartnerId <= 0)
+            {
+                return BadRequest("Invalid Delivery Partner ID.");
+            }
+            try
+            {
+                var reviews = await _reviewService.GetReviewsByDeliveryPartnerId(deliveryPartnerId);
 
-            return Ok(new { DeliveryPartnerId = deliveryPartnerId, AverageRating = averageRating });
+                if (reviews == null || !reviews.Any())
+                {
+                    return NotFound("No reviews found for this delivery partner.");
+                }
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("delivery-partner/{deliveryPartnerId}/avg-rating")]
+        public async Task<IActionResult> GetAverageRatingByDeliveryPartnerId(int deliveryPartnerId)
+        {
+            if (deliveryPartnerId <= 0)
+            {
+                return BadRequest("Invalid Delivery Partner ID.");
+            }
+
+            var averageRating = await _reviewService.GetAverageRatingByDeliveryPartnerId(deliveryPartnerId);
+
+            if (averageRating == null)
+            {
+                return NotFound("No reviews found for this delivery partner.");
+            }
+
+            return Ok(new { averageRating });
+        }
+
+        [HttpGet("restaurant/{restaurantId}/avg-rating")]
+        public async Task<IActionResult> GetAverageRatingByRestaurantId(int restaurantId)
+        {
+            if (restaurantId <= 0)
+            {
+                return BadRequest("Invalid Restaurant ID.");
+            }
+
+            var averageRating = await _reviewService.GetAverageRatingByRestaurantId(restaurantId);
+
+            if (averageRating == null)
+            {
+                return NotFound("No reviews found for this restaurant.");
+            }
+
+            return Ok(new { averageRating });
         }
     }
-}
+
+    }

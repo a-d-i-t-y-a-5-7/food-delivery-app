@@ -72,7 +72,7 @@ namespace backend.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{userId}/update-profile")]
+        [HttpPatch("{userId}/update-profile")]
         public async Task<IActionResult> UpdateUserProfile(int userId, [FromBody] UpdateUserDto updateUserProfileDto)
         {
             if (updateUserProfileDto == null)
@@ -89,6 +89,7 @@ namespace backend.Controllers
                 return NotFound(ex.Message);
             }
         }
+
         [HttpPost("add-Address")]
         public async Task<IActionResult> AddAddress([FromBody] AddAddressDto newAddress)
         {

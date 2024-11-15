@@ -15,9 +15,8 @@ export const getUserById = async (userId) => {
 
 export const updateUser = async (userId, updatedData) => {
   try {
-    const response = await AxiosInstance.put(
+    const response = await AxiosInstance.patch(
       `/user/${userId}/update-profile`,
-      userId,
       updatedData,
       {
         headers: {

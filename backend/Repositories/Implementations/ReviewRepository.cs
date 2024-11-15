@@ -19,10 +19,19 @@ namespace backend.Repositories.Implementations
             await _context.SaveChangesAsync();
             return review;
         }
-        public async Task<decimal?> GetRatingByRestaurant(int restaurantId)
+
+        public async Task<List<Review>> GetReviewsByRestaurantId(int restaurantId)
         {
-            return await _context.Restaurants.Where(r => r.Id == restaurantId && r.Rating.HasValue)
-                .AverageAsync(r => r.Rating);
+            return await _context.Reviews
+        .Where(r => r.Order.RestaurantId == restaurantId && r.ReviewType == "Restaurant")
+        .ToListAsync();
+        }
+
+        public async Task<List<Review>> GetReviewsByDeliveryPartnerId(int deliveryPartnerId)
+        {
+            return await _context.Reviews
+                .Where(r => r.Order.DeliveryPartnerId == deliveryPartnerId && r.ReviewType == "DeliveryPartner")
+                .ToListAsync();
         }
 
         public List<int?> GetRatingsByOrderIdsAndType(List<int> orderIds, string reviewType)
@@ -32,5 +41,25 @@ namespace backend.Repositories.Implementations
                 .Select(r => r.Rating)
                 .ToList();
         }
+
+        public async Task<double?> GetavgRatingByDeliveryId(int deliveryPartnerId)
+        {
+            var reviews = await _context.Reviews
+       .Where(r => r.Order.DeliveryPartnerId == deliveryPartnerId && r.ReviewType == "DeliveryPartner")
+       .ToListAsync();
+
+            return reviews.Average(r => r.Rating);
+        }
+
+        public async Task<double?> GetavgRatingByRestaurantId(int restaurantId)
+        {
+           var reviews = await _context.Reviews
+        .Where(r => r.Order.RestaurantId == restaurantId && r.ReviewType == "Restaurant")
+        .ToListAsync();
+
+            return reviews.Average(r => r.Rating);
+        }
+
+
     }
 }
