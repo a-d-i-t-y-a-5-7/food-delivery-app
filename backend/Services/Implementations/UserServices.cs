@@ -60,11 +60,17 @@ namespace backend.Services.Implementations
         public async Task UpdateUserProfile(int userId, UpdateUserDto userProfileDto)
         {
             var existingUser = await _userRepository.GetUserById(userId);
-            if (existingUser == null) throw new Exception("User not found");
 
-            existingUser.Name = userProfileDto.Name;
-            existingUser.Email = userProfileDto.Email;
-            existingUser.PhoneNumber = userProfileDto.PhoneNumber;
+            if (existingUser == null) throw new KeyNotFoundException("User not found");
+
+            if (!string.IsNullOrEmpty(userProfileDto.Name))
+                existingUser.Name = userProfileDto.Name;
+
+            if (!string.IsNullOrEmpty(userProfileDto.Email))
+                existingUser.Email = userProfileDto.Email;
+
+            if (!string.IsNullOrEmpty(userProfileDto.PhoneNumber))
+                existingUser.PhoneNumber = userProfileDto.PhoneNumber;
 
             if (!string.IsNullOrEmpty(userProfileDto.Password))
             {
@@ -74,6 +80,7 @@ namespace backend.Services.Implementations
 
             await _userRepository.UpdateUser(existingUser);
         }
+
         public async Task<Address?> AddAddress(AddAddressDto newAddress)
         {
             return await _userRepository.AddAddress(newAddress);

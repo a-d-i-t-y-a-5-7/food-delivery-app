@@ -18,11 +18,14 @@ export const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
       </Route>
-      <Route path='/restaurantOrders/:restaurantId' element={<RestaurantOrders/>}/>
+      <Route
+        path="/restaurantOrders/:restaurantId"
+        element={<RestaurantOrders />}
+      />
       <Route path="/menuItem" element={<MenuItem />}></Route>
-      <Route path='/restaurantList' element={<RestaurantList/>}/>
-      <Route path="/address" element={<Address/>}/>
-      <Route path="/addrestaurant" element={<AddRestaurant/>}></Route>
+      <Route path="/restaurantList" element={<RestaurantList />} />
+      <Route path="/address" element={<Address />} />
+      <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
     </Routes>
   );

@@ -13,7 +13,6 @@ export const ViewProfile = () => {
     name: "",
     email: "",
     phoneNumber: "",
-    role: "user",
   });
 
   useEffect(() => {
@@ -21,7 +20,6 @@ export const ViewProfile = () => {
       if (userId) {
         try {
           const data = await getUserById(userId);
-          console.log(data);
           setUser(data);
           form.setFieldsValue(data);
         } catch (error) {
@@ -38,14 +36,23 @@ export const ViewProfile = () => {
       form
         .validateFields()
         .then(async (values) => {
-          console.log(values);
-          try {
-            const response = await updateUser(userId, values);
-            console.log("Update Response:", response);
-            setUser(values);
-          } catch (error) {
-            console.error("Error updating user:", error);
+          const updatedData = {};
+          for (const key in values) {
+            if (values[key] !== user[key]) {
+              updatedData[key] = values[key];
+            }
           }
+          if (Object.keys(updatedData).length > 0) {
+            try {
+              const response = await updateUser(userId, updatedData);
+              setUser((prevUser) => ({ ...prevUser, ...updatedData }));
+            } catch (error) {
+              console.error("Error updating user:", error);
+            }
+          } else {
+            console.log("No changes detected.");
+          }
+
           setIsEditing(false);
         })
         .catch((errorInfo) => {
@@ -76,46 +83,14 @@ export const ViewProfile = () => {
             initialValues={user}
             disabled={!isEditing}
           >
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: "Please input your name!" }]}
-            >
+            <Form.Item label="Name" name="name">
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                { required: true, message: "Please input your email!" },
-                { type: "email", message: "Please enter a valid email!" },
-              ]}
-            >
+            <Form.Item label="Email" name="email">
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Phone"
-              name="phoneNumber"
-              rules={[
-                { required: true, message: "Please input your phone number!" },
-              ]}
-            >
+            <Form.Item label="Phone" name="phoneNumber">
               <Input />
-            </Form.Item>
-            <Form.Item
-              label="Role"
-              name="role"
-              rules={[{ required: true, message: "Please select your role!" }]}
-            >
-              <Select placeholder="Select a role">
-                <Select.Option value="user">User</Select.Option>
-                <Select.Option value="delivery-partner">
-                  Delivery Partner
-                </Select.Option>
-                <Select.Option value="restaurant-owner">
-                  Restaurant Owner
-                </Select.Option>
-              </Select>
             </Form.Item>
           </Form>
         </div>
