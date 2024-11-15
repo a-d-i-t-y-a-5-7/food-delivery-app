@@ -24,5 +24,13 @@ namespace backend.Repositories.Implementations
             return await _context.Restaurants.Where(r => r.Id == restaurantId && r.Rating.HasValue)
                 .AverageAsync(r => r.Rating);
         }
+
+        public List<int?> GetRatingsByOrderIdsAndType(List<int> orderIds, string reviewType)
+        {
+            return _context.Reviews
+                .Where(r => orderIds.Contains(r.OrderId.Value) && r.ReviewType == reviewType)
+                .Select(r => r.Rating)
+                .ToList();
+        }
     }
 }

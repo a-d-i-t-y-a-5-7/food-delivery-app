@@ -7,5 +7,6 @@ namespace backend.Repositories.Interfaces
     {
         Task<Review?> AddReview(Review review);
         Task<decimal?> GetRatingByRestaurant(int restaurantId);
+        List<int?> GetRatingsByOrderIdsAndType(List<int> orderIds, string reviewType);
     }
 }

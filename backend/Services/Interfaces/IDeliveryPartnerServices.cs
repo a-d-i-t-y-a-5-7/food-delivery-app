@@ -7,5 +7,6 @@ namespace backend.Services.Interfaces
     {
         public bool AddDeliveryPartner(User deliveryPartner);
         public DeliveryPartnerOrderDetailsDto? GetOrdersByDeliveryPartner(int deliveryPartnerId);
+        public bool ToggleIsActiveStatus(int id);
     }
 }

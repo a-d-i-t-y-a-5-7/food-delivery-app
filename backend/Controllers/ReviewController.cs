@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,13 @@ namespace backend.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;
+        private readonly IDeliveryRequestService _deliveryRequestService;
+        
 
-        public ReviewController(IReviewService reviewService)
+        public ReviewController(IReviewService reviewService, IDeliveryRequestService deliveryRequestService)
         {
             _reviewService = reviewService;
+            _deliveryRequestService = deliveryRequestService;
         }
 
         [HttpPost]
@@ -40,6 +44,14 @@ namespace backend.Controllers
                 return NotFound($"No ratings found for restuarant with ID {restaurantId}");
             }
             return Ok(new { restaurantId = restaurantId, restaurantRating= restaurantRating });
+        }
+
+        [HttpGet("{deliveryPartnerId}/average-rating")]
+        public IActionResult GetAverageRatingForDeliveryPartner(int deliveryPartnerId)
+        {
+            var averageRating = _deliveryRequestService.GetAverageRatingForDeliveryPartner(deliveryPartnerId);
+
+            return Ok(new { DeliveryPartnerId = deliveryPartnerId, AverageRating = averageRating });
         }
     }
 }
