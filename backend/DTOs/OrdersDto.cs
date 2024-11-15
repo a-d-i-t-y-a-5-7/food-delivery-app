@@ -10,6 +10,9 @@ namespace backend.DTOs
         public decimal TotalAmount { get; set; }
         public string? Status { get; set; }
         public string? PaymentStatus { get; set; }
+        public DateTime? PickedAt { get; set; }
+        public DateTime? DeliveredAt { get; set; }
+        public int? DeliveryPartnerId { get; set; }
         public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>();
 
 

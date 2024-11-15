@@ -18,7 +18,10 @@ namespace backend.Repositories.Implementations
         {
             _context.Orders.Add(order);
         }
-
+        public void AddDeliveryRequest(DeliveryRequest deliveryRequest)
+        {
+            _context.DeliveryRequests.Add(deliveryRequest);
+        }
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();  
@@ -29,29 +32,48 @@ namespace backend.Repositories.Implementations
             return _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.Restaurant)
+                .Include(o => o.OrderItems) 
+                .ThenInclude(oi => oi.FoodItem) 
                 .FirstOrDefault(o => o.Id == orderId);
         }
+
         public List<OrdersDto> GetOrderByUserId(int userId)
         {
-            List<Order>? orders = _context.Orders.Where(o => o.CustomerId == userId).ToList();
+            var orders = _context.Orders
+                .Include(o => o.OrderItems) 
+                .ThenInclude(oi => oi.FoodItem) 
+                .Where(o => o.CustomerId == userId)
+                .ToList();
+
             List<OrdersDto> ordersDtos = new List<OrdersDto>();
             if (orders != null && orders.Count > 0)
             {
-                for (int i = 0; i < orders.Count; i++)
+                foreach (var order in orders)
                 {
                     OrdersDto dto = new OrdersDto
                     {
-                        OrderId = orders[i].Id,
-                        Restaurantname = _context.Restaurants.Find(orders[i].RestaurantId).Name,
-                        CustomerName = _context.Users.Find(orders[i].CustomerId).Name,
-                        TotalAmount = orders[i].TotalAmount,
-                        Status = orders[i].Status,
-                        PaymentStatus = orders[i].PaymentStatus
+                        OrderId = order.Id,
+                        Restaurantname = _context.Restaurants.Find(order.RestaurantId)?.Name,
+                        CustomerName = _context.Users.Find(order.CustomerId)?.Name,
+                        TotalAmount = order.TotalAmount,
+                        Status = order.Status,
+                        PaymentStatus = order.PaymentStatus,
+                        PickedAt = order.PickedAt,
+                        DeliveredAt = order.DeliveredAt,
+                        DeliveryPartnerId = order.DeliveryPartnerId,
+                        OrderItems = order.OrderItems.Select(item => new OrderItemDto
+                        {
+                            Id = item.Id,
+                            FoodItemId = item.FoodItemId ?? 0,
+                            Quantity = item.Quantity,
+                            Price = item.Price,
+                        }).ToList()
                     };
                     ordersDtos.Add(dto);
                 }
             }
             return ordersDtos;
         }
+
     }
 }

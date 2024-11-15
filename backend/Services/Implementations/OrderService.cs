@@ -3,13 +3,13 @@ using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
+
 namespace backend.Services.Implementations
 {
         public class OrderService : IOrderService
         {
             private readonly IOrderRepository _orderRepository;
             private readonly IFoodItemRepository _foodItemRepository;
-
 
         public OrderService(IOrderRepository orderRepository,  IFoodItemRepository foodItemRepository)
             {
@@ -58,8 +58,89 @@ namespace backend.Services.Implementations
 
             return true;
         }
+        public OrdersDto GetOrderByOrderId(int orderId)
+        {
+            var order = _orderRepository.GetOrderByOrderId(orderId);
 
+            if (order == null)
+                return null;
 
+            var orderDto = new OrdersDto
+            {
+                OrderId = order.Id,
+                CustomerName = order.Customer?.Name,
+                Restaurantname = order.Restaurant?.Name,
+                TotalAmount = order.TotalAmount,
+                Status = order.Status,
+                PaymentStatus = order.PaymentStatus,
+                PickedAt = order.PickedAt,
+                DeliveredAt = order.DeliveredAt,
+                DeliveryPartnerId = order.DeliveryPartnerId,
+                OrderItems = order.OrderItems?.Select(item => new OrderItemDto
+                {
+                    Id = item.Id,
+                    FoodItemId = item.FoodItemId ?? 0,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                }).ToList() ?? new List<OrderItemDto>()
+            };
+
+            return orderDto;
+        }
+
+        public List<OrdersDto> GetOrderByUserId(int userId)
+        {
+            return _orderRepository.GetOrderByUserId(userId);
+        }
+        public bool AssignDeliveryPartnerToOrder(int orderId, int deliveryPartnerId)
+        {
+            var order = _orderRepository.GetOrderByOrderId(orderId);
+            if (order == null)
+                return false; 
+
+            order.DeliveryPartnerId = deliveryPartnerId;
+
+            var deliveryRequest = new DeliveryRequest
+            {
+                OrderId = orderId,
+                DeliveryPartnerId = deliveryPartnerId,
+                CreatedAt = DateTime.Now
+            };
+            _orderRepository.AddDeliveryRequest(deliveryRequest);
+            _orderRepository.SaveAsync();
+
+            return true; 
+        }
+
+        public bool UpdatePickUpTimeToOrder(int orderId, DateTime? pickedAt)
+        {
+            var order = _orderRepository.GetOrderByOrderId(orderId);
+            if (order == null) return false;
+
+            order.PickedAt = pickedAt;
+            _orderRepository.SaveAsync();
+            return true;
+        }
+        public bool UpdateDeliveryTimeToOrder(int orderId, DateTime? deliveredAt)
+        {
+            var order = _orderRepository.GetOrderByOrderId(orderId);
+            if (order == null) return false;
+
+            order.DeliveredAt = deliveredAt;
+            _orderRepository.SaveAsync();
+            return true;
+        }
+        public bool UpdatePaymentStatus(int orderId, string paymentStatus)
+        {
+            var order = _orderRepository.GetOrderByOrderId(orderId);
+
+            if (order == null) return false;
+
+            order.PaymentStatus = paymentStatus;
+
+            _orderRepository.SaveAsync();
+            return true;
+        }
         public bool UpdateOrderStatus(UpdateOrderStatusDto updateOrderStatusDto)
         {
             var order = _orderRepository.GetOrderByOrderId(updateOrderStatusDto.OrderId);
@@ -84,28 +165,6 @@ namespace backend.Services.Implementations
 
             _orderRepository.SaveAsync();
             return true;
-        }
-        
-        public OrdersDto GetOrderByOrderId(int orderId)
-        {
-            var order = _orderRepository.GetOrderByOrderId(orderId);
-            if (order == null)
-                return null;
-
-            return new OrdersDto
-            {
-                OrderId = order.Id,
-                CustomerName = order.Customer?.Name,
-                Restaurantname = order.Restaurant?.Name,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status,
-                PaymentStatus = order.PaymentStatus,
-            };
-        }
-        public List<OrdersDto> GetOrderByUserId(int userId)
-        {
-            List<OrdersDto> orders = _orderRepository.GetOrderByUserId(userId);
-            return orders;
         }
 
     }  

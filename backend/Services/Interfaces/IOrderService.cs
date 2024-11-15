@@ -4,9 +4,13 @@ namespace backend.Services.Interfaces
 {
     public interface IOrderService
     {
-        bool UpdateOrderStatus(UpdateOrderStatusDto updateOrderStatusDto);
         Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto);
         OrdersDto GetOrderByOrderId(int orderId);
         public List<OrdersDto> GetOrderByUserId(int userId);
+        bool AssignDeliveryPartnerToOrder(int orderId, int deliveryPartnerId);
+        bool UpdatePickUpTimeToOrder(int orderId, DateTime? PickedAt);
+        bool UpdateDeliveryTimeToOrder(int orderId, DateTime? DeliveredAt);
+        bool UpdatePaymentStatus(int orderId, string? PaymentStatus);
+        bool UpdateOrderStatus(UpdateOrderStatusDto updateOrderStatusDto);
     }
 }

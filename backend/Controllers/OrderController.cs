@@ -35,21 +35,69 @@ namespace backend.Controllers
 
             if (order != null)
             {
-                return Ok(order); 
+                return Ok(order);
             }
 
             return NotFound(new { message = "Order not found" });
         }
 
         [HttpGet("get-orders/{userId}")]
-        public IActionResult GetOrders(int userId)
+        public IActionResult GetOrderByUserId(int userId)
         {
             List<OrdersDto> orders = _orderService.GetOrderByUserId(userId);
-            if (orders.IsNullOrEmpty())
+            if (orders == null || orders.Count == 0)
             {
-                return StatusCode(404, new { message = "User Not Found" });
+                return NotFound(new { message = "Orders not found for the user" });
             }
-            return StatusCode(200, new { orders = orders });
+            return Ok(new { orders });
+        }
+        [HttpPatch("assign-delivery-partner")]
+        public IActionResult AssignDeliveryPartner([FromBody] AssignDeliveryPartnerDto dto)
+        {
+            var result = _orderService.AssignDeliveryPartnerToOrder(dto.OrderId, dto.DeliveryPartnerId);
+
+            if (result)
+            {
+                return Ok(new { message = "Delivery Partner assigned successfully" });
+            }
+
+            return BadRequest(new { message = "Failed to assign Delivery Partner" });
+        }
+        [HttpPatch("update-order-pickupTime")]
+        public IActionResult UpdateOrderPickUpTime([FromBody] UpdateOrderPickUpTimeDto dto)
+        {
+            var result = _orderService.UpdatePickUpTimeToOrder(dto.OrderId, dto.PickedAt);
+
+            if (result)
+            {
+                return Ok(new { message = "PickUp Time updated successfully" });
+            }
+
+            return BadRequest(new { message = "Failed to update PickUp Time" });
+        }
+        [HttpPatch("update-order-deliveryTime")]
+        public IActionResult UpdateOrderDeliveryUpTime([FromBody] UpdateOrderDeliveryTimeDto dto)
+        {
+            var result = _orderService.UpdateDeliveryTimeToOrder(dto.OrderId, dto.DeliveredAt);
+
+            if (result)
+            {
+                return Ok(new { message = "Delivery Time updated successfully" });
+            }
+
+            return BadRequest(new { message = "Failed to update Delivery Time" });
+        }
+        [HttpPatch("update-paymentstatus")]
+        public IActionResult UpdatePaymentStatus([FromBody] UpdatePaymentStatusDto dto)
+        {
+            var result = _orderService.UpdatePaymentStatus(dto.OrderId, dto.PaymentStatus);
+
+            if (result)
+            {
+                return Ok(new { message = "Payment Status updated successfully" });
+            }
+
+            return BadRequest(new { message = "Failed to update Payment Status" });
         }
         [HttpPut("update-status")]
         public IActionResult UpdateOrderStatus([FromBody] UpdateOrderStatusDto updateOrderStatusDto)
