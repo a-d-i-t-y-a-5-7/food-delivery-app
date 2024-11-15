@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,13 @@ namespace backend.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;
+        private readonly IDeliveryRequestService _deliveryRequestService;
+        
 
-        public ReviewController(IReviewService reviewService)
+        public ReviewController(IReviewService reviewService, IDeliveryRequestService deliveryRequestService)
         {
             _reviewService = reviewService;
+            _deliveryRequestService = deliveryRequestService;
         }
 
         [HttpPost]
@@ -110,6 +114,6 @@ namespace backend.Controllers
 
             return Ok(new { averageRating });
         }
-
     }
+
     }

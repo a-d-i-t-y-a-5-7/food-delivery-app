@@ -34,6 +34,14 @@ namespace backend.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public List<int?> GetRatingsByOrderIdsAndType(List<int> orderIds, string reviewType)
+        {
+            return _context.Reviews
+                .Where(r => orderIds.Contains(r.OrderId.Value) && r.ReviewType == reviewType)
+                .Select(r => r.Rating)
+                .ToList();
+        }
+
         public async Task<double?> GetavgRatingByDeliveryId(int deliveryPartnerId)
         {
             var reviews = await _context.Reviews
@@ -51,6 +59,7 @@ namespace backend.Repositories.Implementations
 
             return reviews.Average(r => r.Rating);
         }
+
 
     }
 }
