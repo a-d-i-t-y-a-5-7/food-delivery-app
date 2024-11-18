@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { apiLogin } from "../../Helper/LoginHelper";
 import Login_Image from "../../assets/Login.jpg";
 import "./Login.css";
@@ -17,6 +18,7 @@ export const Login = () => {
     try {
       const response = await apiLogin(formData);
       sessionStorage.setItem("accessToken", response?.token);
+      toast.success("Login Successful");
       navigate("/");
     } catch (error) {
       setErrorMessage(error.message);

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { handleRegister } from "../../Helper/RegisterHelper";
 import Signup_Image from "../../assets/Signup.jfif";
 import "./Register.css";
@@ -30,8 +31,8 @@ export const Register = () => {
     };
 
     try {
-      const response = await handleRegister(requestData);
-      console.log("Signup successful:", response);
+      await handleRegister(requestData);
+      toast.success("Signup Successful");
       navigate("/login");
     } catch (error) {
       setErrorMessage(error.message);
