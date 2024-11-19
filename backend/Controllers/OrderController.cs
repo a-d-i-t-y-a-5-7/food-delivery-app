@@ -45,6 +45,7 @@ namespace backend.Controllers
         public IActionResult GetOrderByUserId(int userId)
         {
             List<OrdersDto> orders = _orderService.GetOrderByUserId(userId);
+
             if (orders == null || orders.Count == 0)
             {
                 return NotFound(new { message = "Orders not found for the user" });

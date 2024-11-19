@@ -99,11 +99,13 @@ namespace backend.Services.Implementations
                 return false; 
 
             order.DeliveryPartnerId = deliveryPartnerId;
+             var deliveryIncentive = (int)(order.TotalAmount * 0.10m);
 
             var deliveryRequest = new DeliveryRequest
             {
                 OrderId = orderId,
                 DeliveryPartnerId = deliveryPartnerId,
+                DeliveryInsentive = deliveryIncentive,
                 CreatedAt = DateTime.Now
             };
             _orderRepository.AddDeliveryRequest(deliveryRequest);
