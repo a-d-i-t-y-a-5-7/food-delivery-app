@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Button,message, Modal, Form, Input} from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { fetchAddresses, addAddress, updateAddress, deleteAddress } from '../../Helper/AddressHelper';
+import React, { useEffect, useState } from "react";
+import { Button, message, Modal, Form, Input } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  fetchAddresses,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+} from "../../Helper/AddressHelper";
 
 const Address = () => {
-    const [addresses, setAddresses] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [currentAddress, setCurrentAddress] = useState(null);
-    const [selectedAddressId, setSelectedAddressId] = useState(null);
-    const [form] = Form.useForm();
+  const [addresses, setAddresses] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState(null);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [form] = Form.useForm();
 
     useEffect(() => {
         const loadAddresses = async () => {
@@ -23,45 +28,49 @@ const Address = () => {
         loadAddresses();
     }, []);
 
-    const handleAdd = () => {
-        setCurrentAddress(null);
-        form.resetFields();
-        setIsModalVisible(true);
-    };
+  const handleAdd = () => {
+    setCurrentAddress(null);
+    form.resetFields();
+    setIsModalVisible(true);
+  };
 
-    const handleUpdate = (address) => {
-        setCurrentAddress(address);
-        form.setFieldsValue({
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            state: address.state,
-            zipCode: address.zipCode,
-            country: address.country,
-        });
-        setIsModalVisible(true);
-    };
+  const handleUpdate = (address) => {
+    setCurrentAddress(address);
+    form.setFieldsValue({
+      addressLine1: address.addressLine1,
+      addressLine2: address.addressLine2,
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode,
+      country: address.country,
+    });
+    setIsModalVisible(true);
+  };
 
-    const handleDelete = async (addressId) => {
-        try {
-            await deleteAddress(addressId);
-            setAddresses(addresses.filter(address => address.id !== addressId));
-            message.success('Address deleted successfully.');
-        } catch (error) {
-            message.error(error.message);
-        }
-    };
+  const handleDelete = async (addressId) => {
+    try {
+      await deleteAddress(addressId);
+      setAddresses(addresses.filter((address) => address.id !== addressId));
+      message.success("Address deleted successfully.");
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
 
-    const handleDeliverHere = (addressId) => {
-        setSelectedAddressId(addressId);
-        const selectedAddress = addresses.find((address) => address.id === addressId);
-        message.success(`Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`);
-    };
+  const handleDeliverHere = (addressId) => {
+    setSelectedAddressId(addressId);
+    const selectedAddress = addresses.find(
+      (address) => address.id === addressId,
+    );
+    message.success(
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
+    );
+  };
 
-    const handleModalCancel = () => {
-        setIsModalVisible(false);
-        setCurrentAddress(null);
-    };
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    setCurrentAddress(null);
+  };
 
     const handleFormSubmit = async (values) => {
         try {
@@ -90,17 +99,16 @@ const Address = () => {
                 <div className="col-md-8">
         <h2 className="text-left mb-4">Select a Delivery Address</h2>
 
-        <div className="row">
-        {addresses.map((address) => (
-          <div className="col-12 col-md-6 mb-4" key={address.id}>
-            <div
-              className="card h-100 shadow-sm"
-              style={{
-                width: "100%", 
-                maxWidth: "450px", 
-                margin: "auto", 
-                background: 
-                "white",
+          <div className="row">
+            {addresses.map((address) => (
+              <div className="col-12 col-md-6 mb-4" key={address.id}>
+                <div
+                  className="card h-100 shadow-sm"
+                  style={{
+                    width: "100%",
+                    maxWidth: "450px",
+                    margin: "auto",
+                    background: "white",
                     //"linear-gradient(to right, rgb(235, 87, 87), rgb(0, 0, 0))",
                   
                 color: 

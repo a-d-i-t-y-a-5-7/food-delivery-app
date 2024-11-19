@@ -121,6 +121,43 @@ namespace backend.Controllers
 
             return BadRequest(new { message = "Failed to update restaurant approval status" });
         }
+
+        [HttpPut("update-restaurant")]
+        public IActionResult UpdateRestaurant(RestaurantDto restaurant)
+        {
+            Request.Headers.TryGetValue("Authorization", out var jwt);
+            string? token = jwt.FirstOrDefault()?.Split(" ").Last();
+            if (token != null)
+            {
+                bool result = _restaurantServices.UpdateRestaurant(token, restaurant);
+                if (result)
+                {
+                    return StatusCode(204, new { message = "Restaurant Details Updated" });
+                }
+                return StatusCode(400, new { message = "Failed to update the the restaurant details" });
+            }
+
+            return StatusCode(400, new { message = "Please Login First" });
+        }
+
+        [HttpPatch("update-active-status")]
+        public IActionResult UpdateActiveStatus([FromHeader]int restaurantId)
+        {
+            Request.Headers.TryGetValue("Authorization", out var jwt);
+            string? token = jwt.FirstOrDefault()?.Split(" ").Last();
+
+            if (token != null)
+            {
+                bool result = _restaurantServices.UpdateActiveStatus(token, restaurantId);
+                if (result)
+                {
+                    return StatusCode(204);
+                }
+                return StatusCode(400, new { message = "Failed to update status" });
+            }
+
+            return StatusCode(401, new { message = "Please Login" });
+        }
     }
 }
 //comment

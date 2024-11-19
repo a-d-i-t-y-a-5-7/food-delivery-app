@@ -18,7 +18,7 @@ export const addAddress = async (addressData) => {
     const response = await AxiosInstance.post(`User/add-address`, addressData);
     return response.data;
   } catch (error) {
-    throw new Error('Failed to add address.');
+    throw new Error("Failed to add address.");
   }
 };
 
@@ -26,7 +26,7 @@ export const updateAddress = async (addressId, addressData) => {
   try {
     await AxiosInstance.put(`User/update-address/${addressId}`, addressData);
   } catch (error) {
-    throw new Error('Failed to update address.');
+    throw new Error("Failed to update address.");
   }
 };
 
@@ -34,6 +34,6 @@ export const deleteAddress = async (addressId) => {
   try {
     await AxiosInstance.delete(`User/delete-Address/${addressId}`);
   } catch (error) {
-    throw new Error('Failed to delete address.');
+    throw new Error("Failed to delete address.");
   }
 };

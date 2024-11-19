@@ -19,7 +19,10 @@ export const AppRouter = () => {
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
         <Route path="/address" element={<Address/>}/>
       </Route>
-      <Route path='/restaurantOrders/:restaurantId' element={<RestaurantOrders/>}/>
+      <Route
+        path="/restaurantOrders/:restaurantId"
+        element={<RestaurantOrders />}
+      />
       <Route path="/menuItem" element={<MenuItem />}></Route>
       <Route path='/restaurantList' element={<RestaurantList/>}/>     
       <Route path="/addrestaurant" element={<AddRestaurant/>}></Route>

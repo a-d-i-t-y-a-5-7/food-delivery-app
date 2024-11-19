@@ -51,5 +51,20 @@ namespace backend.Repositories.Implementations
                     .ThenInclude(o => o.Customer)
                 .FirstOrDefault(dp => dp.Id == deliveryPartnerId);
         }
+
+        public DeliveryPartner GetDeliveryPartnerById(int id)
+        {
+            return _context.DeliveryPartners.Find(id);
+        }
+
+        public void UpdateDeliveryPartner(DeliveryPartner deliveryPartner)
+        {
+            _context.DeliveryPartners.Update(deliveryPartner);
+        }
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
     }
 }
