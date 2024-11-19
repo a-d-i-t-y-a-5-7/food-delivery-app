@@ -187,7 +187,7 @@ const Address = () => {
                 open={isModalVisible}
                 onCancel={handleModalCancel}
                 footer={null}
-                width={300}
+                width={400}
             >
                 <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
                     <Form.Item
