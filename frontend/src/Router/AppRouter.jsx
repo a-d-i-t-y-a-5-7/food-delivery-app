@@ -17,15 +17,15 @@ export const AppRouter = () => {
       <Route element={<BaseLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
+        <Route path="/address" element={<Address/>}/>
       </Route>
       <Route
         path="/restaurantOrders/:restaurantId"
         element={<RestaurantOrders />}
       />
       <Route path="/menuItem" element={<MenuItem />}></Route>
-      <Route path="/restaurantList" element={<RestaurantList />} />
-      <Route path="/address" element={<Address />} />
-      <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
+      <Route path='/restaurantList' element={<RestaurantList/>}/>     
+      <Route path="/addrestaurant" element={<AddRestaurant/>}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
     </Routes>
   );

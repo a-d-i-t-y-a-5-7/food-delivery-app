@@ -68,9 +68,15 @@ namespace backend.Repositories.Implementations
         }
         public async Task<List<Address>> GetAddressById(int userId, string role)
         {
-            return await _context.Addresses
-                .Where(a => a.EntityId == userId && a.EntityType == role)
-                .ToListAsync();
+            var addresses = await _context.Addresses
+            .Where(a => a.EntityId == userId && a.EntityType == role)
+            .ToListAsync();
+            if (addresses == null || !addresses.Any())
+            {
+                throw new Exception("No addresses found for the given user");
+            }
+
+            return addresses;
         }
 
         public async Task<List<Address>> GetAddressesById(int userId)
@@ -103,7 +109,7 @@ namespace backend.Repositories.Implementations
         
             if (existingAddress == null)
             {
-                throw new Exception("Address not found for the user.");
+                throw new KeyNotFoundException("Address not found for the user.");
             }
 
             
