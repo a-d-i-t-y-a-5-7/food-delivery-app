@@ -2,8 +2,12 @@ import { Layout, Menu, Select } from "antd";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import { Input, Avatar, Badge } from 'antd';
-import { UserOutlined, ShoppingCartOutlined, DownOutlined } from '@ant-design/icons';
+import { Input, Avatar, Badge } from "antd";
+import {
+  UserOutlined,
+  ShoppingCartOutlined,
+  DownOutlined,
+} from "@ant-design/icons";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -25,25 +29,52 @@ export const HeaderComponent = () => {
   };
 
   const handleMenuClick = (e) => {
-    setMenuVisible(false); 
+    setMenuVisible(false);
   };
 
   const menuItems = [
-    { key: "viewProfile", 
-    label: <Link to="/view-profile/:userId" onClick={handleMenuClick} style={{ textDecoration: 'none' }}>View Profile</Link> 
+    {
+      key: "viewProfile",
+      label: (
+        <Link
+          to="/view-profile/:userId"
+          onClick={handleMenuClick}
+          style={{ textDecoration: "none" }}
+        >
+          View Profile
+        </Link>
+      ),
     },
-    { key: "selectAddress", 
-    label: <Link to="/address" onClick={handleMenuClick} style={{ textDecoration: 'none' }}>Select Address</Link> 
+    {
+      key: "selectAddress",
+      label: (
+        <Link
+          to="/address"
+          onClick={handleMenuClick}
+          style={{ textDecoration: "none" }}
+        >
+          Select Address
+        </Link>
+      ),
     },
-    { key: "logout", 
-    label: <Link to="/login" onClick={handleMenuClick} style={{ textDecoration: 'none' }}>Logout</Link> 
+    {
+      key: "logout",
+      label: (
+        <Link
+          to="/login"
+          onClick={handleMenuClick}
+          style={{ textDecoration: "none" }}
+        >
+          Logout
+        </Link>
+      ),
     },
   ];
 
   return (
     <Header className="headerContainer">
       <div className="logo">
-        <img src="/assets/food1.jpg" alt='logo' />
+        <img src="/assets/food1.jpg" alt="logo" />
       </div>
 
       <div className="col-12 col-md-6 col-lg-6 search-bar">
@@ -67,22 +98,25 @@ export const HeaderComponent = () => {
         </div>
       </div>
 
-      <div className="header-icons" style={{ position: 'relative' }}>
-        <div onClick={toggleMenu} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+      <div className="header-icons" style={{ position: "relative" }}>
+        <div
+          onClick={toggleMenu}
+          style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+        >
           <Avatar icon={<UserOutlined />} size="large" />
           <DownOutlined style={{ marginLeft: 5 }} />
         </div>
-        
+
         {menuVisible && (
           <Menu
-            style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1 }}
+            style={{ position: "absolute", right: 0, top: "100%", zIndex: 1 }}
             items={menuItems}
             className="profile-menu"
           />
         )}
-        
+
         <Badge count={5} showZero>
-          <ShoppingCartOutlined style={{ fontSize: '28px', color: '#333' }} />
+          <ShoppingCartOutlined style={{ fontSize: "28px", color: "#333" }} />
         </Badge>
       </div>
     </Header>

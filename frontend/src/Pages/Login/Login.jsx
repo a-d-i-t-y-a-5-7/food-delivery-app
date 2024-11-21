@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { apiLogin } from "../../Helper/LoginHelper";
+import { setAuth } from "../../Redux/Slices/authSlice";
 import Login_Image from "../../assets/Login.jpg";
 import "./Login.css";
 
@@ -11,6 +13,7 @@ export const Login = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,6 +21,7 @@ export const Login = () => {
     try {
       const response = await apiLogin(formData);
       sessionStorage.setItem("accessToken", response?.token);
+      dispatch(setAuth());
       toast.success("Login Successful");
       navigate("/");
     } catch (error) {
