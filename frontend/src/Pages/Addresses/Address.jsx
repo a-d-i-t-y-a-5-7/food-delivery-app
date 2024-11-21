@@ -61,10 +61,10 @@ const Address = () => {
   const handleDeliverHere = (addressId) => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
-      (address) => address.id === addressId
+      (address) => address.id === addressId,
     );
     message.success(
-      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
     );
   };
 
@@ -81,8 +81,8 @@ const Address = () => {
           addresses.map((address) =>
             address.id === currentAddress.id
               ? { ...address, ...values }
-              : address
-          )
+              : address,
+          ),
         );
         message.success("Address updated successfully.");
       } else {

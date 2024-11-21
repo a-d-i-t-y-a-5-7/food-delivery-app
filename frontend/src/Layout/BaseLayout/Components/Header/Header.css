@@ -1,6 +1,6 @@
 .headerContainer {
   display: flex;
-  align-items: center; 
+  align-items: center;
   height: 70px;
   justify-content: space-between;
   padding: 10px 20px;
@@ -19,7 +19,7 @@
     flex: 1;
     max-width: 600px;
     margin: 0 auto;
-    padding-top: 5px; 
+    padding-top: 5px;
   }
 
   .header-icons {

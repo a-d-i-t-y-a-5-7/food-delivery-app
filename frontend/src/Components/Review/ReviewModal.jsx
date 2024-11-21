@@ -1,5 +1,6 @@
+import { Button, Input, Modal, Rate, Select } from "antd";
 import React, { useState } from "react";
-import { Modal, Rate, Input, Select, Button } from "antd";
+import { useSelector } from "react-redux";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -9,6 +10,8 @@ const ReviewModal = () => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [reviewType, setReviewType] = useState("");
+  const { userId, role } = useSelector((state) => state.auth);
+  console.log(userId, role);
 
   const handleOpenModal = () => {
     setIsModalVisible(true);
