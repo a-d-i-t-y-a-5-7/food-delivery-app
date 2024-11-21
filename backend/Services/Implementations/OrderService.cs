@@ -18,45 +18,15 @@ namespace backend.Services.Implementations
             }
         public async Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto)
         {
-            var foodItems = await _foodItemRepository.GetListOfMenuItemByRestaurantIdAsync(placeOrderDto.RestaurantId);
-
-            Order newOrder = new Order
+            try
             {
-                CustomerId = placeOrderDto.CustomerId,
-                RestaurantId = placeOrderDto.RestaurantId,
-                Address = placeOrderDto.AddressId,
-                CreatedAt = DateTime.Now,
-                Status = "Pending", 
-                PaymentStatus = "Pending", 
-                TotalAmount = 0
-            };
-
-            decimal totalAmount = 0;
-
-            foreach (var item in placeOrderDto.OrderItems)
-            {
-                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId);
-                if (foodItem == null)
-                {
-                    throw new Exception($"Food item with ID {item.FoodItemId} not found.");
-                }
-
-                totalAmount += foodItem.Price * item.Quantity;
-
-                newOrder.OrderItems.Add(new OrderItem
-                {
-                    FoodItemId = item.FoodItemId,
-                    Quantity = item.Quantity,
-                    Price = foodItem.Price
-                });
+                return await _orderRepository.PlaceOrderAsync(placeOrderDto);
             }
-
-            newOrder.TotalAmount = totalAmount;
-
-            _orderRepository.AddOrder(newOrder);
-            _orderRepository.SaveAsync();
-
-            return true;
+            catch (Exception ex)
+            {
+               
+                throw new Exception($"Error placing order: {ex.Message}");
+            }
         }
         public OrdersDto GetOrderByOrderId(int orderId)
         {

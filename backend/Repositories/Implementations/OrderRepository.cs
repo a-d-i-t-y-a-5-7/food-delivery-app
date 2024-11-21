@@ -14,10 +14,65 @@ namespace backend.Repositories.Implementations
         {
             _context = context;
         }
-        public void AddOrder(Order order)
+        public async Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto)
         {
-            _context.Orders.Add(order);
+
+            var foodItems = await _context.FoodItems
+                .Where(fi => fi.RestaurantId == placeOrderDto.RestaurantId)
+                .ToListAsync();
+
+            Order newOrder = new Order
+            {
+                CustomerId = placeOrderDto.CustomerId,
+                RestaurantId = placeOrderDto.RestaurantId,
+                Address = placeOrderDto.AddressId,
+                CreatedAt = DateTime.Now,
+                Status = "Pending", 
+                PaymentStatus = "Pending", 
+                TotalAmount = 0 
+            };
+
+            decimal totalAmount = 0;
+
+            
+            foreach (var item in placeOrderDto.OrderItems)
+            {
+              
+                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId);
+
+                if (foodItem == null)
+                {
+                  
+                    throw new Exception($"Food item with ID {item.FoodItemId} not found.");
+                }
+
+               
+                if (item.Quantity > foodItem.quantity)
+                {
+                    
+                    throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.quantity} items are available.");
+                }
+
+                
+                totalAmount += foodItem.Price * item.Quantity;
+                newOrder.OrderItems.Add(new OrderItem
+                {
+                    FoodItemId = item.FoodItemId,
+                    Quantity = item.Quantity,
+                    Price = foodItem.Price
+                });
+
+               
+                foodItem.quantity -= item.Quantity;
+            }
+
+            newOrder.TotalAmount = totalAmount;
+            _context.Orders.Add(newOrder);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
+
         public void AddDeliveryRequest(DeliveryRequest deliveryRequest)
         {
             _context.DeliveryRequests.Add(deliveryRequest);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Breadcrumb, Spin, Alert, Row, Col } from "antd";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { fetchRestaurants } from "../../Helper/UserHelper";
 
@@ -7,6 +8,7 @@ export const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getRestaurants = async () => {
@@ -27,6 +29,9 @@ export const Home = () => {
   if (loading) {
     return <Spin size="large" />;
   }
+  const handleCardClick = (restaurantId) => {
+    navigate(`/menuItem`);  
+  };
 
   return (
     <div className="container">
@@ -63,7 +68,8 @@ export const Home = () => {
                 <img
                   alt={restaurant.name}
                   src={restaurant.image_url}
-                  style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                  onClick={() => handleCardClick(restaurant.id)}
+                  style={{ width: "100%", height: "200px", objectFit: "cover" ,cursor: "pointer"}}
                 />
               }
               className="text-center"
@@ -72,7 +78,6 @@ export const Home = () => {
             >
               <h5 className="font-weight-bold">{restaurant.name}</h5>
               <p>{`Cuisine: ${restaurant.cuisine}, Delivery Time: ${restaurant.deliveryTime} min, Rating: ${restaurant.rating} ⭐`}</p>{" "}
-              {/* Comma-separated details */}
             </Card>
           </Col>
         ))}

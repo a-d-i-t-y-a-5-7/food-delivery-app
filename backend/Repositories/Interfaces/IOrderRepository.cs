@@ -5,7 +5,7 @@ namespace backend.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        void AddOrder(Order order);
+        Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto);
         void AddDeliveryRequest(DeliveryRequest deliveryRequest);
         Task SaveAsync();
         Order GetOrderByOrderId(int orderId);
