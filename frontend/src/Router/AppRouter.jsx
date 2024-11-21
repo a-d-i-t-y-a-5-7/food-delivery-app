@@ -8,6 +8,7 @@ import RestaurantList from "../Pages/RestaurantList/RestaurantList";
 import AddRestaurant from "../Pages/AddRestaurant/AddRestaurant";
 import MenuItem from "../Pages/MenuItem/MenuItem";
 import AddMenuItem from "../Pages/AddMenuItem/AddMenuItem";
+import ReviewModal from "../Components/Review/ReviewModal";
 
 export const AppRouter = () => {
   return (
@@ -17,16 +18,17 @@ export const AppRouter = () => {
       <Route element={<BaseLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
-        <Route path="/address" element={<Address/>}/>
+        <Route path="/address" element={<Address />} />
       </Route>
       <Route
         path="/restaurantOrders/:restaurantId"
         element={<RestaurantOrders />}
       />
       <Route path="/menuItem" element={<MenuItem />}></Route>
-      <Route path='/restaurantList' element={<RestaurantList/>}/>     
-      <Route path="/addrestaurant" element={<AddRestaurant/>}></Route>
+      <Route path="/restaurantList" element={<RestaurantList />} />
+      <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
+      <Route path="/review" element={<ReviewModal />}></Route>
     </Routes>
   );
 };

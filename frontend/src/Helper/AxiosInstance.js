@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const AxiosInstance = axios.create({
-  baseURL: "http://localhost:44357/api",
+  baseURL: "http://localhost:5227/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -20,6 +20,6 @@ AxiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 export default AxiosInstance;
