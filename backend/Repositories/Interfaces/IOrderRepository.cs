@@ -10,6 +10,7 @@ namespace backend.Repositories.Interfaces
         Task SaveAsync();
         Order GetOrderByOrderId(int orderId);
         public List<OrdersDto> GetOrderByUserId(int userId);
+        public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto);
         
     }
 }

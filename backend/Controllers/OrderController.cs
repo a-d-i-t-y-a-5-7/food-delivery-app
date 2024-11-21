@@ -112,5 +112,17 @@ namespace backend.Controllers
 
             return BadRequest(new { message = "Order not found or status update failed" });
         }
+        [HttpPut("update-order-acceptance")]
+        public IActionResult UpdateOrderAcceptance(UpdateOrderStatusDto statusDto)
+        {
+            bool result = _orderService.UpdateOrderAcceptance(statusDto);
+
+            if (result)
+            {
+                return StatusCode(200, new { message = "Order Acceptance Updated" });
+            }
+
+            return StatusCode(400, new { message = "Failed to update order acceptance" });
+        }
     }
 }

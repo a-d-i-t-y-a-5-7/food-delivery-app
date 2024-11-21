@@ -75,5 +75,18 @@ namespace backend.Repositories.Implementations
             return ordersDtos;
         }
 
+        public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto)
+        {
+            Order? order = _context.Orders.Find(statusDto.OrderId);
+            if(order==null || !order.Status.Equals("Pending"))
+            {
+                return false;
+            }
+
+            order.Status = statusDto.Status;
+            _context.SaveChanges();
+            return true;
+        }
+
     }
 }

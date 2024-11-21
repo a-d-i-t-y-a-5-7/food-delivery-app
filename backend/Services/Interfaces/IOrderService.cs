@@ -12,5 +12,6 @@ namespace backend.Services.Interfaces
         bool UpdateDeliveryTimeToOrder(int orderId, DateTime? DeliveredAt);
         bool UpdatePaymentStatus(int orderId, string? PaymentStatus);
         bool UpdateOrderStatus(UpdateOrderStatusDto updateOrderStatusDto);
+        public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto);
     }
 }
