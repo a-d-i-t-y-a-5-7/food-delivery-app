@@ -14,6 +14,14 @@ namespace backend.Repositories.Implementations
         {
             _context = context;
         }
+        public void AddDeliveryRequest(DeliveryRequest deliveryRequest)
+        {
+            _context.DeliveryRequests.Add(deliveryRequest);
+        }
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
         public async Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto)
         {
 
@@ -38,22 +46,13 @@ namespace backend.Repositories.Implementations
             foreach (var item in placeOrderDto.OrderItems)
             {
               
-                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId);
-
-                if (foodItem == null)
-                {
-                  
-                    throw new Exception($"Food item with ID {item.FoodItemId} not found.");
-                }
-
-               
+                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId) ?? throw new Exception($"Food item with ID {item.FoodItemId} not found.");
                 if (item.Quantity > foodItem.quantity)
                 {
                     
                     throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.quantity} items are available.");
                 }
-
-                
+              
                 totalAmount += foodItem.Price * item.Quantity;
                 newOrder.OrderItems.Add(new OrderItem
                 {
@@ -72,25 +71,69 @@ namespace backend.Repositories.Implementations
 
             return true;
         }
-
-        public void AddDeliveryRequest(DeliveryRequest deliveryRequest)
+        public async Task<bool> AssignDeliveryPartnerToOrderAsync(int orderId, int deliveryPartnerId)
         {
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+                return false;
+
+            order.DeliveryPartnerId = deliveryPartnerId;
+
+            var deliveryIncentive = (int)(order.TotalAmount * 0.10m);
+
+            var deliveryRequest = new DeliveryRequest
+            {
+                OrderId = orderId,
+                DeliveryPartnerId = deliveryPartnerId,
+                DeliveryInsentive = deliveryIncentive,
+                CreatedAt = DateTime.Now
+            };
+
             _context.DeliveryRequests.Add(deliveryRequest);
-        }
-        public async Task SaveAsync()
-        {
-            await _context.SaveChangesAsync();  
+
+           
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public Order GetOrderByOrderId(int orderId)
+
+
+        public OrdersDto GetOrderByOrderId(int orderId)
         {
-            return _context.Orders
+            var order = _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.FoodItem)
                 .Include(o => o.Customer)
                 .Include(o => o.Restaurant)
-                .Include(o => o.OrderItems) 
-                .ThenInclude(oi => oi.FoodItem) 
                 .FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null)
+                return null;
+
+            return new OrdersDto
+            {
+                OrderId = order.Id,
+                CustomerName = order.Customer?.Name,
+                Restaurantname = order.Restaurant?.Name,
+                TotalAmount = order.TotalAmount,
+                Status = order.Status,
+                PaymentStatus = order.PaymentStatus,
+                PickedAt = order.PickedAt,
+                DeliveredAt = order.DeliveredAt,
+                DeliveryPartnerId = order.DeliveryPartnerId,
+                OrderItems = order.OrderItems?.Select(item => new OrderItemDto
+                {
+                    Id = item.Id,
+                    FoodItemId = item.FoodItemId ?? 0,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                }).ToList() ?? new List<OrderItemDto>()
+            };
         }
+
 
         public List<OrdersDto> GetOrderByUserId(int userId)
         {
@@ -129,6 +172,36 @@ namespace backend.Repositories.Implementations
             }
             return ordersDtos;
         }
+        public async Task<bool> UpdatePickUpTimeToOrder(int orderId, DateTime? pickedAt)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null) return false;
+
+            order.PickedAt = pickedAt;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateDeliveryTimeToOrder(int orderId, DateTime? deliveredAt)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null) return false;
+
+            order.DeliveredAt = deliveredAt;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdatePaymentStatus(int orderId, string paymentStatus)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null) return false;
+
+            order.PaymentStatus = paymentStatus;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
 
     }
 }

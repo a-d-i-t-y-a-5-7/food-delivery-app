@@ -5,11 +5,16 @@ namespace backend.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto);
         void AddDeliveryRequest(DeliveryRequest deliveryRequest);
         Task SaveAsync();
-        Order GetOrderByOrderId(int orderId);
+        Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto);
+        OrdersDto GetOrderByOrderId(int orderId);
         public List<OrdersDto> GetOrderByUserId(int userId);
-        
+        public Task<bool> AssignDeliveryPartnerToOrderAsync(int orderId, int deliveryPartnerId);
+        Task<bool> UpdatePickUpTimeToOrder(int orderId, DateTime? pickedAt);
+        Task<bool> UpdateDeliveryTimeToOrder(int orderId, DateTime? deliveredAt);
+        Task<bool> UpdatePaymentStatus(int orderId, string? paymentStatus);
+
+
     }
 }
