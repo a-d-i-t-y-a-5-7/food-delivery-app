@@ -1,13 +1,16 @@
-import { Layout, Menu, Select } from "antd";
-import "./Header.css";
-import { Link } from "react-router-dom";
-import React, { useState } from "react";
-import { Input, Avatar, Badge } from "antd";
 import {
-  UserOutlined,
-  ShoppingCartOutlined,
   DownOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
+import { Avatar, Badge, Input, Layout, Menu, Select } from "antd";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { clearAuth } from "../../../../Redux/Slices/authSlice";
+import "./Header.css";
+import { Login } from "../../../../Pages";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -16,6 +19,9 @@ const { Option } = Select;
 export const HeaderComponent = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [selectedCuisine, setSelectedCuisine] = useState(null);
+  const { userId } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -32,12 +38,21 @@ export const HeaderComponent = () => {
     setMenuVisible(false);
   };
 
+  const handleLogout = (e) => {
+    dispatch(clearAuth());
+    setMenuVisible(false);
+    toast.success("Logout Sucessfull");
+    setTimeout(() => {
+      navigate("/login");
+    }, 100);
+  };
+
   const menuItems = [
     {
       key: "viewProfile",
       label: (
         <Link
-          to="/view-profile/:userId"
+          to="/view-profile"
           onClick={handleMenuClick}
           style={{ textDecoration: "none" }}
         >
@@ -60,11 +75,7 @@ export const HeaderComponent = () => {
     {
       key: "logout",
       label: (
-        <Link
-          to="/login"
-          onClick={handleMenuClick}
-          style={{ textDecoration: "none" }}
-        >
+        <Link onClick={handleLogout} style={{ textDecoration: "none" }}>
           Logout
         </Link>
       ),
@@ -74,7 +85,9 @@ export const HeaderComponent = () => {
   return (
     <Header className="headerContainer">
       <div className="logo">
-        <img src="/assets/food1.jpg" alt="logo" />
+        <Link to={"/"}>
+          <img src="/assets/food1.jpg" alt="logo" />
+        </Link>
       </div>
 
       <div className="col-12 col-md-6 col-lg-6 search-bar">
@@ -99,25 +112,44 @@ export const HeaderComponent = () => {
       </div>
 
       <div className="header-icons" style={{ position: "relative" }}>
-        <div
-          onClick={toggleMenu}
-          style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
-        >
-          <Avatar icon={<UserOutlined />} size="large" />
-          <DownOutlined style={{ marginLeft: 5 }} />
-        </div>
+        {userId ? (
+          <>
+            <div
+              onClick={toggleMenu}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Avatar icon={<UserOutlined />} size="large" />
+              <DownOutlined style={{ marginLeft: 5 }} />
+            </div>
 
-        {menuVisible && (
-          <Menu
-            style={{ position: "absolute", right: 0, top: "100%", zIndex: 1 }}
-            items={menuItems}
-            className="profile-menu"
-          />
+            {menuVisible && (
+              <Menu
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: "100%",
+                  zIndex: 1,
+                }}
+                items={menuItems}
+                className="profile-menu"
+              />
+            )}
+
+            <Badge count={5} showZero>
+              <ShoppingCartOutlined
+                style={{ fontSize: "28px", color: "#333" }}
+              />
+            </Badge>
+          </>
+        ) : (
+          <Link to="/login" className="btn border">
+            Login
+          </Link>
         )}
-
-        <Badge count={5} showZero>
-          <ShoppingCartOutlined style={{ fontSize: "28px", color: "#333" }} />
-        </Badge>
       </div>
     </Header>
   );

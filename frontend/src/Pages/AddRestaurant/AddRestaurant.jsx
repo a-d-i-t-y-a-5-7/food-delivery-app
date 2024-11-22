@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { addRestaurant } from "../../Helper/RestaurantHelper";
 
-function AddRestaurant() {
+export function AddRestaurant() {
   const resetFormData = {
     Name: "",
     PhoneNumber: "",
@@ -279,5 +279,3 @@ function AddRestaurant() {
     </div>
   );
 }
-
-export default AddRestaurant;

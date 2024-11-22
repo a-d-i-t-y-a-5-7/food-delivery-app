@@ -1,14 +1,19 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { BaseLayout } from "../Layout/BaseLayout";
-import { RestaurantOrders } from "../Pages/RestaurantOrders/RestaurantOrders";
-import { Home, Login, Register, ViewProfile } from "../Pages";
-import Address from "../Pages/Addresses/Address";
-import RestaurantList from "../Pages/RestaurantList/RestaurantList";
-import AddRestaurant from "../Pages/AddRestaurant/AddRestaurant";
-import MenuItem from "../Pages/MenuItem/MenuItem";
-import AddMenuItem from "../Pages/AddMenuItem/AddMenuItem";
 import ReviewModal from "../Components/Review/ReviewModal";
+import { BaseLayout } from "../Layout/BaseLayout";
+import {
+  AddMenuItem,
+  AddRestaurant,
+  Address,
+  Home,
+  Login,
+  MenuItem,
+  Register,
+  RestaurantList,
+  RestaurantOrders,
+  ViewProfile,
+} from "../Pages";
 
 export const AppRouter = () => {
   return (
@@ -17,7 +22,7 @@ export const AppRouter = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<BaseLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/view-profile/:userId" element={<ViewProfile />} />
+        <Route path="/view-profile" element={<ViewProfile />} />
         <Route path="/address" element={<Address />} />
       </Route>
       <Route

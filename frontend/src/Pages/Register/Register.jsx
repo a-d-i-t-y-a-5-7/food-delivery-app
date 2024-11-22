@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { handleRegister } from "../../Helper/RegisterHelper";
+import { handleRegister } from "../../Helper/UserHelper";
 import Signup_Image from "../../assets/Signup.jfif";
 import "./Register.css";
 

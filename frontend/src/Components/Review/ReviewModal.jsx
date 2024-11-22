@@ -94,5 +94,4 @@ const ReviewModal = () => {
     </div>
   );
 };
-
 export default ReviewModal;
