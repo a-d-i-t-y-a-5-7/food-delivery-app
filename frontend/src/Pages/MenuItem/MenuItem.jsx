@@ -25,7 +25,7 @@ function MenuItem() {
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:44357/api/FoodItem/GetListofmenuItemByRestaurant/1",
+          "http://localhost:5227/api/FoodItem/GetListofmenuItemByRestaurant/1",
         );
         setMenuItems(response.data);
         console.log(response.data);
@@ -74,7 +74,7 @@ function MenuItem() {
 
     try {
       const response = await axios.get(
-        "http://localhost:44357/api/FoodItem/GetListOfCuisineAndCategory",
+        "http://localhost:5227/api/FoodItem/GetListOfCuisineAndCategory",
       );
       setCuisines(response.data.cuisines);
       setCategories(response.data.categories);
@@ -111,7 +111,7 @@ function MenuItem() {
 
     try {
       await axios.put(
-        `http://localhost:44357/api/FoodItem/UpdateMenuItemById/${selectedItem.id}`,
+        `http://localhost:5227/api/FoodItem/UpdateMenuItemById/${selectedItem.id}`,
         formDataToSubmit,
         {
           headers: {
