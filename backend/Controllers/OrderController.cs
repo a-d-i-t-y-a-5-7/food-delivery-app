@@ -53,9 +53,9 @@ namespace backend.Controllers
             return Ok(new { orders });
         }
         [HttpPatch("assign-delivery-partner")]
-        public IActionResult AssignDeliveryPartner([FromBody] AssignDeliveryPartnerDto dto)
+        public async Task<IActionResult> AssignDeliveryPartner([FromBody] AssignDeliveryPartnerDto dto)
         {
-            var result = _orderService.AssignDeliveryPartnerToOrder(dto.OrderId, dto.DeliveryPartnerId);
+            var result = await _orderService.AssignDeliveryPartnerToOrderAsync(dto.OrderId, dto.DeliveryPartnerId);
 
             if (result)
             {
@@ -65,9 +65,9 @@ namespace backend.Controllers
             return BadRequest(new { message = "Failed to assign Delivery Partner" });
         }
         [HttpPatch("update-order-pickupTime")]
-        public IActionResult UpdateOrderPickUpTime([FromBody] UpdateOrderPickUpTimeDto dto)
+        public async Task<IActionResult> UpdateOrderPickUpTime([FromBody] UpdateOrderPickUpTimeDto dto)
         {
-            var result = _orderService.UpdatePickUpTimeToOrder(dto.OrderId, dto.PickedAt);
+            var result = await _orderService.UpdatePickUpTimeToOrder(dto.OrderId, dto.PickedAt);
 
             if (result)
             {
@@ -77,9 +77,9 @@ namespace backend.Controllers
             return BadRequest(new { message = "Failed to update PickUp Time" });
         }
         [HttpPatch("update-order-deliveryTime")]
-        public IActionResult UpdateOrderDeliveryUpTime([FromBody] UpdateOrderDeliveryTimeDto dto)
+        public async Task<IActionResult> UpdateOrderDeliveryUpTime([FromBody] UpdateOrderDeliveryTimeDto dto)
         {
-            var result = _orderService.UpdateDeliveryTimeToOrder(dto.OrderId, dto.DeliveredAt);
+            var result = await _orderService.UpdateDeliveryTimeToOrder(dto.OrderId, dto.DeliveredAt);
 
             if (result)
             {
@@ -88,10 +88,11 @@ namespace backend.Controllers
 
             return BadRequest(new { message = "Failed to update Delivery Time" });
         }
+
         [HttpPatch("update-paymentstatus")]
-        public IActionResult UpdatePaymentStatus([FromBody] UpdatePaymentStatusDto dto)
+        public async Task<IActionResult> UpdatePaymentStatus([FromBody] UpdatePaymentStatusDto dto)
         {
-            var result = _orderService.UpdatePaymentStatus(dto.OrderId, dto.PaymentStatus);
+            var result = await _orderService.UpdatePaymentStatus(dto.OrderId, dto.PaymentStatus);
 
             if (result)
             {

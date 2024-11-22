@@ -471,6 +471,28 @@ INSERT INTO City (CityName, StateID) VALUES
 ('Srinagar', 35), ('Jammu', 35), ('Anantnag', 35),
 ('Leh', 36), ('Kargil', 36);
 
+--Added Column Quantity to FoodItems Table and updated values
+
+  Alter table FoodItems add quantity int 
+
+  update FoodItems set quantity=5 where id=1
+  update FoodItems set quantity=5 where id=2
+  update FoodItems set quantity=5 where id=3
+  update FoodItems set quantity=5 where id=4
+  update FoodItems set quantity=5 where id=5
+
+  SELECT TOP (1000) [id]
+      ,[restaurant_id]
+      ,[name]
+      ,[description]
+      ,[cuisine_type_id]
+      ,[price]
+      ,[image_url]
+      ,[category_id]
+      ,[is_available]
+	  ,[quantity]
+  FROM [FoodDeliveryDB].[dbo].[FoodItems]
+
 
 
 -- ###########################################################         SELECTION QUERIES
