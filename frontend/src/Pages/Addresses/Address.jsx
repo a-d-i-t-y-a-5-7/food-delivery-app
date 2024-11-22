@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Button, message, Modal, Form, Input } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Modal, message } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
 import {
-  fetchAddresses,
   addAddress,
-  updateAddress,
   deleteAddress,
+  fetchAddresses,
+  updateAddress,
 } from "../../Helper/AddressHelper";
 
-const Address = () => {
+export const Address = () => {
   const [addresses, setAddresses] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentAddress, setCurrentAddress] = useState(null);
@@ -61,10 +61,10 @@ const Address = () => {
   const handleDeliverHere = (addressId) => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
-      (address) => address.id === addressId,
+      (address) => address.id === addressId
     );
     message.success(
-      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
     );
   };
 
@@ -81,8 +81,8 @@ const Address = () => {
           addresses.map((address) =>
             address.id === currentAddress.id
               ? { ...address, ...values }
-              : address,
-          ),
+              : address
+          )
         );
         message.success("Address updated successfully.");
       } else {
@@ -256,5 +256,3 @@ const Address = () => {
     </div>
   );
 };
-
-export default Address;

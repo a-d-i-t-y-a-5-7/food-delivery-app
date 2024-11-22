@@ -4,7 +4,7 @@ import { getRestaurantList } from "../../Helper/RestaurantHelper";
 import { useNavigate } from "react-router-dom";
 import { Card, Alert, Row, Col } from "antd";
 
-export default function RestaurantList() {
+export function RestaurantList() {
   const [restaurantList, setRestaurantList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();

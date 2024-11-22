@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
 
-function AddMenuItem() {
+export function AddMenuItem() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cuisines, setCuisines] = useState([]);
@@ -21,13 +21,13 @@ function AddMenuItem() {
     const fetchCuisineAndCategories = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:44357/api/FoodItem/GetListOfCuisineAndCategory",
+          "https://localhost:44357/api/FoodItem/GetListOfCuisineAndCategory"
         );
         setCuisines(response.data.cuisines);
         setCategories(response.data.categories);
       } catch (err) {
         setError(
-          `Failed to fetch cuisine and category data: ${err.message || err}`,
+          `Failed to fetch cuisine and category data: ${err.message || err}`
         );
         console.error(err);
       } finally {
@@ -78,7 +78,7 @@ function AddMenuItem() {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
       console.log(response);
       setFormData({
@@ -95,7 +95,7 @@ function AddMenuItem() {
     } catch (err) {
       if (err.response) {
         setError(
-          `Failed to add new menu item: ${err.response.data.errorMessage || err.message}`,
+          `Failed to add new menu item: ${err.response.data.errorMessage || err.message}`
         );
         console.error("Error Response:", err.response.data);
       } else {
@@ -262,5 +262,3 @@ function AddMenuItem() {
     </div>
   );
 }
-
-export default AddMenuItem;

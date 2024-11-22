@@ -34,7 +34,7 @@ const authSlice = createSlice({
     clearAuth: (state) => {
       state.userId = null;
       state.role = null;
-      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("accessToken");
     },
   },
 });

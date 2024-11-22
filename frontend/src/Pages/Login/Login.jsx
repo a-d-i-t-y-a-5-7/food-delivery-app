@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { apiLogin } from "../../Helper/LoginHelper";
+import { apiLogin } from "../../Helper/UserHelper";
 import { setAuth } from "../../Redux/Slices/authSlice";
 import Login_Image from "../../assets/Login.jpg";
 import "./Login.css";
