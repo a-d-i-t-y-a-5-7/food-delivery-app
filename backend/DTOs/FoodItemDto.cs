@@ -10,5 +10,6 @@
         public string? ImageUrl { get; set; }
         public int CategoryId { get; set; }
         public bool IsAvailable { get; set; }
+        public bool quantity {  get; set; }
     }
 }
