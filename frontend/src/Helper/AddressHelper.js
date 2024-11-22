@@ -6,10 +6,8 @@ export const fetchAddresses = async (userId, role) => {
       params: { userId, role },
     });
     return response.data;
-    
   } catch (error) {
-   
-    throw new Error(error.response.data.message || 'Internal Server Error');
+    throw new Error(error.response.data.message || "Internal Server Error");
   }
 };
 
