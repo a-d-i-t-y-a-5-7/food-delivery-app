@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 
-function MenuItem() {
+export function MenuItem() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
@@ -80,7 +80,7 @@ function MenuItem() {
       setCategories(response.data.categories);
     } catch (err) {
       setError(
-        `Failed to fetch cuisine and category data: ${err.message || err}`,
+        `Failed to fetch cuisine and category data: ${err.message || err}`
       );
       console.error(err);
     }
@@ -117,7 +117,7 @@ function MenuItem() {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
 
       setMenuItems((prevItems) =>
@@ -128,8 +128,8 @@ function MenuItem() {
                 ...formData,
                 image: formData.image ? formData.image.name : item.image,
               }
-            : item,
-        ),
+            : item
+        )
       );
       handleCloseModal();
     } catch (err) {
@@ -353,5 +353,3 @@ function MenuItem() {
     </div>
   );
 }
-
-export default MenuItem;
