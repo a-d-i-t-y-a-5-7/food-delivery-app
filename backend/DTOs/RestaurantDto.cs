@@ -13,6 +13,7 @@
             public bool? IsActive { get; set; }
             public DateTime? CreatedAt { get; set; }
             public string image_url { get; set; }
+            public int? DeliveryTime { get; set; }
             public List<string> Cuisine { get; set; }
     }
 }
