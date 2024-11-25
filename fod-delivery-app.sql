@@ -510,7 +510,6 @@ INSERT INTO City (CityName, StateID) VALUES
   FROM [FoodDeliveryDB].[dbo].[Restaurants]
 
 
-
 -- ###########################################################         SELECTION QUERIES
 
 
