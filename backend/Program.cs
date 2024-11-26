@@ -42,14 +42,33 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true
     };
 });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminLevel1", policy =>
+        policy.RequireRole("admin-level1"));
+
+    options.AddPolicy("AdminLevel2", policy =>
+        policy.RequireRole("admin-level2"));
+
+    options.AddPolicy("AdminLevel3", policy =>
+        policy.RequireRole("admin-level3"));
+
+    options.AddPolicy("DeliveryPartnerPolicy", policy =>
+        policy.RequireRole("delivery-partner"));
+
+    options.AddPolicy("RestaurantOwnerPolicy", policy =>
+        policy.RequireRole("restaurant-owner"));
+
+    options.AddPolicy("UserPolicy", policy =>
+        policy.RequireRole("user"));
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         builder => builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowCredentials().AllowAnyHeader());
 });
-
-
-
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodDeliveryDbContext>();
