@@ -8,7 +8,7 @@ export const getRestaurantList = async (ownerId) => {
         headers: {
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response;
   } catch (error) {
@@ -24,11 +24,33 @@ export const restaurantOrders = async (restaurantId) => {
         headers: {
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response;
   } catch (error) {
     throw new Error("Orders not found");
+  }
+};
+
+export const fetchReviewsByRestaurant = async (restaurantId) => {
+  try {
+    const response = await AxiosInstance.get(
+      `/Review/restaurant/${restaurantId}/reviews`
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Reviews not found");
+  }
+};
+
+export const fetchReviewsBydeliveryPartner = async (partnerId) => {
+  try {
+    const response = await AxiosInstance.get(
+      `Review/delivery-partner/${partnerId}/reviews`
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Reviews not found");
   }
 };
 
@@ -42,7 +64,7 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
     try {
       const response = await AxiosInstance.put(
         `/Order/update-status`,
-        orderStatusDto,
+        orderStatusDto
       );
       return response;
     } catch (error) {
@@ -59,7 +81,7 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
     try {
       const response = await AxiosInstance.put(
         `/Order/update-status`,
-        orderStatusDto,
+        orderStatusDto
       );
       return response;
     } catch (error) {
@@ -77,7 +99,7 @@ export const addRestaurant = async (restaurantDetails) => {
           "Content-Type": "multipart/form-data",
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response;
   } catch (error) {

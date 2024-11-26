@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import ReviewModal from "../Components/Review/ReviewModal";
 import { BaseLayout } from "../Layout/BaseLayout";
 import {
   AddMenuItem,
@@ -33,7 +32,6 @@ export const AppRouter = () => {
       <Route path="/restaurantList" element={<RestaurantList />} />
       <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
-      <Route path="/review" element={<ReviewModal />}></Route>
     </Routes>
   );
 };
