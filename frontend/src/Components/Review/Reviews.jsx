@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { ReviewCard } from "../Review/ReviewCard";
-import { fetchReviewsBydeliveryPartner } from "../../Helper/RestaurantHelper";
+import { ReviewCard } from "./ReviewCard";
 
-export const ReviewsByDeliveryPartner = ({ partnerId = 1 }) => {
+export const Reviews = ({ fetchReviews, entityId, emptyMessage }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -10,7 +9,7 @@ export const ReviewsByDeliveryPartner = ({ partnerId = 1 }) => {
   useEffect(() => {
     const getReviews = async () => {
       try {
-        const fetchedReviews = await fetchReviewsBydeliveryPartner(partnerId);
+        const fetchedReviews = await fetchReviews(entityId);
         setReviews(fetchedReviews);
       } catch (err) {
         setError("Failed to fetch reviews. Please try again later.");
@@ -20,7 +19,7 @@ export const ReviewsByDeliveryPartner = ({ partnerId = 1 }) => {
     };
 
     getReviews();
-  }, []);
+  }, [fetchReviews, entityId]);
 
   if (loading) return <p>Loading reviews...</p>;
   return (
@@ -36,9 +35,7 @@ export const ReviewsByDeliveryPartner = ({ partnerId = 1 }) => {
           ))}
         </div>
       ) : (
-        <p className="text-center">
-          No reviews available for this delivery partner.
-        </p>
+        <p className="text-center">{emptyMessage}</p>
       )}
     </div>
   );
