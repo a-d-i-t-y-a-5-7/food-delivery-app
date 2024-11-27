@@ -13,6 +13,7 @@ import {
   RestaurantOrders,
   ViewProfile,
 } from "../Pages";
+import { AddCuisine } from "../Components/Admin/AddCuisine";
 
 export const AppRouter = () => {
   return (
