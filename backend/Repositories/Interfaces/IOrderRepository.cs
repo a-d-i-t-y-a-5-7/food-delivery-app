@@ -10,6 +10,7 @@ namespace backend.Repositories.Interfaces
         Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto);
         OrdersDto GetOrderByOrderId(int orderId);
         public List<OrdersDto> GetOrderByUserId(int userId);
+        public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto);
         public Task<bool> AssignDeliveryPartnerToOrderAsync(int orderId, int deliveryPartnerId);
         Task<bool> UpdatePickUpTimeToOrder(int orderId, DateTime? pickedAt);
         Task<bool> UpdateDeliveryTimeToOrder(int orderId, DateTime? deliveredAt);
