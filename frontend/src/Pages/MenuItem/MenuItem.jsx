@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 
-function MenuItem() {
+export function MenuItem() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
@@ -25,7 +25,7 @@ function MenuItem() {
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:44357/api/FoodItem/GetListofmenuItemByRestaurant/1",
+          "http://localhost:44357/api/FoodItem/GetListofmenuItemByRestaurant/1"
         );
         setMenuItems(response.data);
         console.log(response.data);
@@ -74,13 +74,13 @@ function MenuItem() {
 
     try {
       const response = await axios.get(
-        "https://localhost:44357/api/FoodItem/GetListOfCuisineAndCategory",
+        "http://localhost:44357/api/FoodItem/GetListOfCuisineAndCategory"
       );
       setCuisines(response.data.cuisines);
       setCategories(response.data.categories);
     } catch (err) {
       setError(
-        `Failed to fetch cuisine and category data: ${err.message || err}`,
+        `Failed to fetch cuisine and category data: ${err.message || err}`
       );
       console.error(err);
     }
@@ -111,13 +111,13 @@ function MenuItem() {
 
     try {
       await axios.put(
-        `https://localhost:44357/api/FoodItem/UpdateMenuItemById/${selectedItem.id}`,
+        `http://localhost:44357/api/FoodItem/UpdateMenuItemById/${selectedItem.id}`,
         formDataToSubmit,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
 
       setMenuItems((prevItems) =>
@@ -128,8 +128,8 @@ function MenuItem() {
                 ...formData,
                 image: formData.image ? formData.image.name : item.image,
               }
-            : item,
-        ),
+            : item
+        )
       );
       handleCloseModal();
     } catch (err) {
@@ -353,5 +353,3 @@ function MenuItem() {
     </div>
   );
 }
-
-export default MenuItem;

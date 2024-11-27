@@ -18,130 +18,53 @@ namespace backend.Services.Implementations
             }
         public async Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto)
         {
-            var foodItems = await _foodItemRepository.GetListOfMenuItemByRestaurantIdAsync(placeOrderDto.RestaurantId);
-
-            Order newOrder = new Order
+            try
             {
-                CustomerId = placeOrderDto.CustomerId,
-                RestaurantId = placeOrderDto.RestaurantId,
-                Address = placeOrderDto.AddressId,
-                CreatedAt = DateTime.Now,
-                Status = "Pending", 
-                PaymentStatus = "Pending", 
-                TotalAmount = 0
-            };
-
-            decimal totalAmount = 0;
-
-            foreach (var item in placeOrderDto.OrderItems)
-            {
-                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId);
-                if (foodItem == null)
-                {
-                    throw new Exception($"Food item with ID {item.FoodItemId} not found.");
-                }
-
-                totalAmount += foodItem.Price * item.Quantity;
-
-                newOrder.OrderItems.Add(new OrderItem
-                {
-                    FoodItemId = item.FoodItemId,
-                    Quantity = item.Quantity,
-                    Price = foodItem.Price
-                });
+                return await _orderRepository.PlaceOrderAsync(placeOrderDto);
             }
-
-            newOrder.TotalAmount = totalAmount;
-
-            _orderRepository.AddOrder(newOrder);
-            _orderRepository.SaveAsync();
-
-            return true;
+            catch (Exception ex)
+            {
+               
+                throw new Exception($"Error placing order: {ex.Message}");
+            }
         }
         public OrdersDto GetOrderByOrderId(int orderId)
         {
-            var order = _orderRepository.GetOrderByOrderId(orderId);
-
-            if (order == null)
-                return null;
-
-            var orderDto = new OrdersDto
-            {
-                OrderId = order.Id,
-                CustomerName = order.Customer?.Name,
-                Restaurantname = order.Restaurant?.Name,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status,
-                PaymentStatus = order.PaymentStatus,
-                PickedAt = order.PickedAt,
-                DeliveredAt = order.DeliveredAt,
-                DeliveryPartnerId = order.DeliveryPartnerId,
-                OrderItems = order.OrderItems?.Select(item => new OrderItemDto
-                {
-                    Id = item.Id,
-                    FoodItemId = item.FoodItemId ?? 0,
-                    Quantity = item.Quantity,
-                    Price = item.Price,
-                }).ToList() ?? new List<OrderItemDto>()
-            };
-
-            return orderDto;
+            return _orderRepository.GetOrderByOrderId(orderId);
         }
 
         public List<OrdersDto> GetOrderByUserId(int userId)
         {
             return _orderRepository.GetOrderByUserId(userId);
         }
-        public bool AssignDeliveryPartnerToOrder(int orderId, int deliveryPartnerId)
+        public async Task<bool> AssignDeliveryPartnerToOrderAsync(int orderId, int deliveryPartnerId)
         {
-            var order = _orderRepository.GetOrderByOrderId(orderId);
-            if (order == null)
-                return false; 
-
-            order.DeliveryPartnerId = deliveryPartnerId;
-             var deliveryIncentive = (int)(order.TotalAmount * 0.10m);
-
-            var deliveryRequest = new DeliveryRequest
+            try
             {
-                OrderId = orderId,
-                DeliveryPartnerId = deliveryPartnerId,
-                DeliveryInsentive = deliveryIncentive,
-                CreatedAt = DateTime.Now
-            };
-            _orderRepository.AddDeliveryRequest(deliveryRequest);
-            _orderRepository.SaveAsync();
-
-            return true; 
+                return await _orderRepository.AssignDeliveryPartnerToOrderAsync(orderId, deliveryPartnerId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error assigning delivery partner: {ex.Message}");
+            }
         }
 
-        public bool UpdatePickUpTimeToOrder(int orderId, DateTime? pickedAt)
+        public async Task<bool> UpdatePickUpTimeToOrder(int orderId, DateTime? pickedAt)
         {
-            var order = _orderRepository.GetOrderByOrderId(orderId);
-            if (order == null) return false;
-
-            order.PickedAt = pickedAt;
-            _orderRepository.SaveAsync();
-            return true;
+            var result = await _orderRepository.UpdatePickUpTimeToOrder(orderId, pickedAt);
+            return result;
         }
-        public bool UpdateDeliveryTimeToOrder(int orderId, DateTime? deliveredAt)
-        {
-            var order = _orderRepository.GetOrderByOrderId(orderId);
-            if (order == null) return false;
 
-            order.DeliveredAt = deliveredAt;
-            _orderRepository.SaveAsync();
-            return true;
+        public async Task<bool> UpdateDeliveryTimeToOrder(int orderId, DateTime? deliveredAt)
+        {
+            var result = await _orderRepository.UpdateDeliveryTimeToOrder(orderId, deliveredAt);
+            return result;
         }
-        public bool UpdatePaymentStatus(int orderId, string paymentStatus)
+
+        public async Task<bool> UpdatePaymentStatus(int orderId, string paymentStatus)
         {
-            var order = _orderRepository.GetOrderByOrderId(orderId);
-
-            if (order == null) return false;
-
-            order.PaymentStatus = paymentStatus;
-
-            _orderRepository.SaveAsync();
-            return true;
+            var result = await _orderRepository.UpdatePaymentStatus(orderId, paymentStatus);
+            return result;
         }
         public bool UpdateOrderStatus(UpdateOrderStatusDto updateOrderStatusDto)
         {
