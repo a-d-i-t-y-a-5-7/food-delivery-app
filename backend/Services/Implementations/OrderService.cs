@@ -91,6 +91,10 @@ namespace backend.Services.Implementations
             _orderRepository.SaveAsync();
             return true;
         }
-
+        public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto)
+        {
+            bool result = _orderRepository.UpdateOrderAcceptance(statusDto);
+            return result;
+        }
     }  
 }
