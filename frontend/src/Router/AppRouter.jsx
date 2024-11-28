@@ -14,6 +14,8 @@ import {
   RestaurantOrders,
   ViewProfile,
 } from "../Pages";
+import AddToCart from "../Pages/AddToCart/AddToCart";
+
 
 export const AppRouter = () => {
   return (
@@ -24,16 +26,19 @@ export const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="/view-profile" element={<ViewProfile />} />
         <Route path="/address" element={<Address />} />
+        <Route path="/menuItem" element={<MenuItem />}></Route>
+        <Route path="/addtocart" element={<AddToCart/>}></Route>
       </Route>
       <Route
         path="/restaurantOrders/:restaurantId"
         element={<RestaurantOrders />}
       />
-      <Route path="/menuItem" element={<MenuItem />}></Route>
+      
       <Route path="/restaurantList" element={<RestaurantList />} />
       <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
       <Route path="/review" element={<ReviewModal />}></Route>
+      
     </Routes>
   );
 };

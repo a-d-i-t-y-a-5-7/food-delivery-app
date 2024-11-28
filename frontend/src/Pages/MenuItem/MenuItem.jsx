@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux"; 
+import { addToCart } from '../../Redux/Slices/cartSlice';
+import { fetchMenuItemsByRestaurant, fetchCuisineAndCategories,updateMenuItemById } from "../../Helper/MenuItemHelper";
 
 export function MenuItem() {
   const [loading, setLoading] = useState(true);
@@ -20,16 +24,17 @@ export function MenuItem() {
     isAvailable: "",
     image: null,
   });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { userId } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5227/api/FoodItem/GetListofmenuItemByRestaurant/1",
-        );
-        setMenuItems(response.data);
-        console.log(response.data);
-        setRestaurantId(response.data[0].restaurantId);
+        const menuItemsData = await fetchMenuItemsByRestaurant(1);
+        setMenuItems(menuItemsData);
+        setRestaurantId(menuItemsData[0]?.restaurantId || null);
       } catch (err) {
         setError(`Failed to fetch menu items: ${err.message || err}`);
         console.error(err);
@@ -73,15 +78,11 @@ export function MenuItem() {
     setShowModal(true);
 
     try {
-      const response = await axios.get(
-        "http://localhost:5227/api/FoodItem/GetListOfCuisineAndCategory",
-      );
-      setCuisines(response.data.cuisines);
-      setCategories(response.data.categories);
+      const { cuisines, categories } = await fetchCuisineAndCategories();
+      setCuisines(cuisines);
+      setCategories(categories);
     } catch (err) {
-      setError(
-        `Failed to fetch cuisine and category data: ${err.message || err}`
-      );
+      setError(`Failed to fetch cuisine and category data: ${err.message || err}`);
       console.error(err);
     }
   };
@@ -95,39 +96,18 @@ export function MenuItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formDataToSubmit = new FormData();
     formDataToSubmit.append("restaurantId", restaurantId);
-    formDataToSubmit.append("name", formData.name);
-    formDataToSubmit.append("description", formData.description);
-    formDataToSubmit.append("price", formData.price);
-    formDataToSubmit.append("cuisineTypeId", formData.cuisineTypeId);
-    formDataToSubmit.append("categoryId", formData.categoryId);
-    formDataToSubmit.append("isAvailable", formData.isAvailable);
-    console.log(formDataToSubmit);
-    if (formData.image) {
-      formDataToSubmit.append("image", formData.image);
-    }
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value) formDataToSubmit.append(key, value);
+    });
 
     try {
-      await axios.put(
-        `http://localhost:5227/api/FoodItem/UpdateMenuItemById/${selectedItem.id}`,
-        formDataToSubmit,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
+      await updateMenuItemById(selectedItem.id, formDataToSubmit);
       setMenuItems((prevItems) =>
         prevItems.map((item) =>
           item.id === selectedItem.id
-            ? {
-                ...item,
-                ...formData,
-                image: formData.image ? formData.image.name : item.image,
-              }
+            ? { ...item, ...formData, image: formData.image?.name || item.image }
             : item
         )
       );
@@ -137,6 +117,35 @@ export function MenuItem() {
       console.error(err);
     }
   };
+  const handleMenuClick = (item) => {
+    if (!userId) {
+      toast.error("No cart available. Please login first.", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 5000);
+      return;
+    }
+  
+    dispatch(addToCart({ 
+      id: item.id, 
+      name: item.name, 
+      price: item.price, 
+      imageUrl: item.imageUrl, 
+      availableQuantity: item.quantity,
+    }));
+  
+    toast.success("Item added to the cart.", {
+      position: "top-right",
+      autoClose: 2000,
+    });
+  
+    setTimeout(() => {
+      navigate("/addtocart");
+    }, 500);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -145,7 +154,8 @@ export function MenuItem() {
   if (error) {
     return <div>{error}</div>;
   }
-
+  
+  
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Menu Items</h2>
@@ -175,11 +185,18 @@ export function MenuItem() {
                     Price: {item.price ? item.price : "N/A"}/-
                   </span>
                 </div>
-                <button
+                {/* <button
                   className="btn btn-primary w-100"
                   onClick={() => handleEditClick(item)}
                 >
                   Edit
+                </button> */}
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={ () => handleMenuClick(item)}
+                
+                >
+                  ADD
                 </button>
               </div>
             </div>

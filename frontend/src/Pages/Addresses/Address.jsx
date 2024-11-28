@@ -1,7 +1,9 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, message } from "antd";
+import { Button, Form, Input, Modal} from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import {
   addAddress,
   deleteAddress,
@@ -15,6 +17,7 @@ export const Address = () => {
   const [currentAddress, setCurrentAddress] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [form] = Form.useForm();
+  const cartItems = useSelector((state) => state.cart.items);
 
   useEffect(() => {
     const loadAddresses = async () => {
@@ -23,7 +26,7 @@ export const Address = () => {
         console.log(addressData);
         setAddresses(addressData);
       } catch (error) {
-        message.error(error.message);
+        toast.error(error.message);
       }
     };
     loadAddresses();
@@ -52,9 +55,9 @@ export const Address = () => {
     try {
       await deleteAddress(addressId);
       setAddresses(addresses.filter((address) => address.id !== addressId));
-      message.success("Address deleted successfully.");
+      toast.success("Address deleted successfully.");
     } catch (error) {
-      message.error(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -63,7 +66,7 @@ export const Address = () => {
     const selectedAddress = addresses.find(
       (address) => address.id === addressId
     );
-    message.success(
+    toast.success(
       `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
     );
   };
@@ -84,7 +87,7 @@ export const Address = () => {
               : address
           )
         );
-        message.success("Address updated successfully.");
+        toast.success("Address updated successfully.");
       } else {
         const newAddress = await addAddress({
           entityId: 21,
@@ -92,14 +95,20 @@ export const Address = () => {
           ...values,
         });
         setAddresses([...addresses, newAddress]);
-        message.success("Address added successfully.");
+        toast.success("Address added successfully.");
       }
     } catch (error) {
-      message.error(error.message);
+      toast.error(error.message);
     }
     setIsModalVisible(false);
   };
-
+  const handlePlaceOrder = () => {
+    if (!selectedAddressId) {
+      toast.warning("Please select a delivery address.");
+      return;
+    }
+    toast.success(`Order placed successfully!`);  
+  };
   return (
     <div
       className="container "
@@ -108,8 +117,7 @@ export const Address = () => {
       <div className="row">
         <div className="col-md-8">
           <h2 className="text-left mb-4">Select a Delivery Address</h2>
-
-          <div className="row">
+           <div className="row">
             {addresses.map((address) => (
               <div className="col-12 col-md-6 mb-4" key={address.id}>
                 <div
@@ -119,10 +127,7 @@ export const Address = () => {
                     maxWidth: "450px",
                     margin: "auto",
                     background: "white",
-                    //"linear-gradient(to right, rgb(235, 87, 87), rgb(0, 0, 0))",
-
                     color: "black",
-                    //"white",
                   }}
                 >
                   <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
@@ -185,20 +190,36 @@ export const Address = () => {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card p-3" style={{ marginTop: "60px" }}>
-            <h5>Offers</h5>
-            <div className="d-flex justify-content-between align-items-center">
-              <img
-                src="https://img.pikbest.com/origin/09/07/51/74NpIkbEsTIXv.jpg!bw700"
-                style={{ width: "100%", height: "400px" }}
-                alt="offer"
-              />
-            </div>
-            <div className="text-center mt-2">
-              <button className="btn btn-primary mt-2"> Order Now</button>
-            </div>
+        <div className="card p-3" style={{ marginTop: "60px" }}>
+          <h5>Your Order</h5>
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="d-flex justify-content-between align-items-center mb-2"
+              >
+                <span>
+                  {item.name} x {item.quantityInCart}
+                </span>
+                <span>₹{item.price * item.quantityInCart}</span>
+              </div>
+            ))
+          ) : (
+            <p>No items in your cart</p>
+          )}
+          <hr />
+          <div className="d-flex justify-content-between">
+            <h6>Total:</h6>
+            <h6>₹{cartItems.reduce((total, item) => total + item.price * item.quantityInCart, 0)}</h6>
+          </div>
+          <div className="text-center mt-2">
+            <button className="btn btn-primary mt-2" onClick={handlePlaceOrder}>
+              Place Order
+            </button>
           </div>
         </div>
+        </div>
+
       </div>
       <Modal
         title={currentAddress ? "Update Address" : "Add New Address"}
