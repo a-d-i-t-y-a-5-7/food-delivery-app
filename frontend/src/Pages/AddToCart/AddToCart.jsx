@@ -69,14 +69,14 @@ const AddToCart = () => {
                             <p className="mb-1 text-muted">Price: ₹{item.price}</p>
                             <div className="d-flex align-items-center gap-3 mt-2">
                               <button
-                                className="btn btn-outline-secondary btn-sm"
+                                className="btn btn-outline-danger btn-sm"
                                 onClick={() => dispatch(decrementQuantity(item.id))}
                               >
                                 -
                               </button>
                               <span>{item.quantityInCart}</span>
                               <button
-                                className="btn btn-outline-secondary btn-sm"
+                                className="btn btn-outline-danger btn-sm"
                                 onClick={() => handleIncrementQuantity(item)}
                               >
                                 +

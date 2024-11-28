@@ -3,13 +3,16 @@ import { Button, Form, Input, Modal} from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   addAddress,
   deleteAddress,
   fetchAddresses,
   updateAddress,
 } from "../../Helper/AddressHelper";
+import { incrementQuantity, decrementQuantity } from "../../Redux/Slices/cartSlice";
+
+import { placeOrder } from "../../Helper/OrderHelper";
 
 export const Address = () => {
   const [addresses, setAddresses] = useState([]);
@@ -17,20 +20,25 @@ export const Address = () => {
   const [currentAddress, setCurrentAddress] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [form] = Form.useForm();
+
+  const userId = useSelector((state) => state.auth.userId);
   const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loadAddresses = async () => {
       try {
-        const addressData = await fetchAddresses(21, "USER");
+        const addressData = await fetchAddresses(userId, "USER");
         console.log(addressData);
         setAddresses(addressData);
       } catch (error) {
         toast.error(error.message);
       }
     };
-    loadAddresses();
-  }, []);
+    if (userId) {
+      loadAddresses();
+    }
+  }, [userId]);
 
   const handleAdd = () => {
     setCurrentAddress(null);
@@ -40,14 +48,7 @@ export const Address = () => {
 
   const handleUpdate = (address) => {
     setCurrentAddress(address);
-    form.setFieldsValue({
-      addressLine1: address.addressLine1,
-      addressLine2: address.addressLine2,
-      city: address.city,
-      state: address.state,
-      zipCode: address.zipCode,
-      country: address.country,
-    });
+    form.setFieldsValue(address);
     setIsModalVisible(true);
   };
 
@@ -90,7 +91,7 @@ export const Address = () => {
         toast.success("Address updated successfully.");
       } else {
         const newAddress = await addAddress({
-          entityId: 21,
+          entityId: userId,
           entityType: "USER",
           ...values,
         });
@@ -102,13 +103,38 @@ export const Address = () => {
     }
     setIsModalVisible(false);
   };
-  const handlePlaceOrder = () => {
+  const handleIncrementQuantity = (item) => {
+    if (item.quantityInCart < item.availableQuantity) {
+      dispatch(incrementQuantity(item.id));
+    } else {
+      toast.error(`Out of stock: Only ${item.availableQuantity} items are available.`);
+    }
+  };
+  const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
       toast.warning("Please select a delivery address.");
       return;
     }
-    toast.success(`Order placed successfully!`);  
+
+    const orderData = {
+      customerId: userId,
+      restaurantId: 1, 
+      addressId: selectedAddressId,
+      orderItems: cartItems.map((item) => ({ 
+        foodItemId: item.id, 
+        quantity: item.quantityInCart,
+      })),
+    };
+
+    try {
+      const response = await placeOrder(orderData);
+      toast.success(`Order placed successfully! Order ID: ${response.orderId}`);
+      console.log("Placed order",response);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
+
   return (
     <div
       className="container "
@@ -198,9 +224,20 @@ export const Address = () => {
                 key={item.id}
                 className="d-flex justify-content-between align-items-center mb-2"
               >
+                <span>{item.name} </span>
                 <span>
-                  {item.name} x {item.quantityInCart}
-                </span>
+                <div className="d-flex align-items-center gap-3 mt-2">
+                <button className="btn btn-outline-danger btn-sm"
+                  onClick={() => dispatch(decrementQuantity(item.id))}
+                >-</button>
+                <span>{item.quantityInCart}</span>
+                <button
+                className="btn btn-outline-danger btn-sm"
+                onClick={() => handleIncrementQuantity(item)}
+                >
+                +
+                </button> 
+                </div></span>
                 <span>₹{item.price * item.quantityInCart}</span>
               </div>
             ))
