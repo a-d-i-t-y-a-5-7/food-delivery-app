@@ -22,7 +22,8 @@ public partial class FoodItem
     public int? CategoryId { get; set; }
 
     public bool? IsAvailable { get; set; }
-    public int? quantity { get; set; }
+
+    public int? Quantity { get; set; }
 
     public virtual Category? Category { get; set; }
 

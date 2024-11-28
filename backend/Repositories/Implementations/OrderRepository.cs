@@ -47,10 +47,10 @@ namespace backend.Repositories.Implementations
             {
               
                 var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId) ?? throw new Exception($"Food item with ID {item.FoodItemId} not found.");
-                if (item.Quantity > foodItem.quantity)
+                if (item.Quantity > foodItem.Quantity)
                 {
                     
-                    throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.quantity} items are available.");
+                    throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
                 }
               
                 totalAmount += foodItem.Price * item.Quantity;
@@ -62,7 +62,7 @@ namespace backend.Repositories.Implementations
                 });
 
                
-                foodItem.quantity -= item.Quantity;
+                foodItem.Quantity -= item.Quantity;
             }
 
             newOrder.TotalAmount = totalAmount;
