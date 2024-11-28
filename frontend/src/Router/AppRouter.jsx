@@ -15,6 +15,7 @@ import {
 } from "../Pages";
 import { MyOrders } from "../Pages/MyOrders/MyOrders";
 import { DeliveryPartnerAssignedOrders } from "../Pages/DeliveryPartnerAsssignedOrders/DeliveryPartnerAssignedOrders";
+import { AddCuisine } from "../Components/Admin/AddCuisine";
 
 export const AppRouter = () => {
   return (
