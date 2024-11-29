@@ -4,9 +4,10 @@ import { toast } from "react-toastify";
 import { userOrders } from "../../Helper/OrderHelper";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const myOrders = () => {
+const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const userId = useSelector((state) => state.auth.userId);
+  const cartItems = useSelector((state) => state.cart.items);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -27,38 +28,35 @@ const myOrders = () => {
   return (
     <div className="container" style={{ padding: "20px" }}>
       <h2 className="text-left mb-4">Your Orders</h2>
-      {orders.length > 0 ? (
-        <div>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Restaurant Name</th>
-                <th>Total Amount</th>
-                <th>Order Status</th>
-                <th>Payment Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.orderId}>
-                  <td>{order.orderId}</td>
-                  <td>{order.customerName}</td>
-                  <td>{order.restaurantname}</td>
-                  <td>₹{order.totalAmount}</td>
-                  <td>{order.status}</td>
-                  <td>{order.paymentStatus}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="row">
+                {orders.map((order) => (
+                  <div key={order.orderId} className="col-md-6 mb-2">
+                    <div className="card" style={{ borderRadius: "10px", overflow: "hidden" }}>
+                      <div className="d-flex">
+                        <div className="container p-3 d-flex align-items-center">
+                          <div className="ms-3">
+                            <h5>{order.restaurantname}</h5>
+                            <div className="mt-2">
+                              <p className="text-muted">
+                                Total: ₹{order.totalAmount}
+                              </p>
+                              <p className="text-muted">
+                                Order Status: ₹{order.status}
+                              </p>
+                              <p className="text-muted">
+                                Payment Status: ₹{order.paymentStatus}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
         </div>
-      ) : (
-        <p>No orders found.</p>
-      )}
-    </div>
-  );
-};
+        </div>
+  )
+  };
+  
 
-export default myOrders;
+export default MyOrders;
