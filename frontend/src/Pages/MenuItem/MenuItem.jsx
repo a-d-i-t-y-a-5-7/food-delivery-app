@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux"; 
-import { addToCart } from '../../Redux/Slices/cartSlice';
-import { fetchMenuItemsByRestaurant, fetchCuisineAndCategories,updateMenuItemById } from "../../Helper/MenuItemHelper";
-
-export function MenuItem() {
+import React, { useEffect, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { updateMenuItem, getCuisinesAndCategoryList, fetchMenuItemsDetail } from '../../Helper/MenuItem';
+import './MenuItem.css'
+function MenuItem() {
+  const resetFormData = {
+    name: '',
+    description: '',
+    price: '',
+    cuisineTypeId: '',
+    categoryId: '',
+    isAvailable: '',
+    image: null,
+  }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
@@ -15,34 +20,26 @@ export function MenuItem() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [restaurantId, setRestaurantId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    cuisineTypeId: "",
-    categoryId: "",
-    isAvailable: "",
-    image: null,
-  });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [formData, setFormData] = useState(resetFormData);
 
-  const { userId } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    const fetchMenuItems = async () => {
-      try {
-        const menuItemsData = await fetchMenuItemsByRestaurant(1);
-        setMenuItems(menuItemsData);
-        setRestaurantId(menuItemsData[0]?.restaurantId || null);
-      } catch (err) {
-        setError(`Failed to fetch menu items: ${err.message || err}`);
-        console.error(err);
-      } finally {
-        setLoading(false);
+  const fetchMenuItems = async () => {
+    try {
+      const response = await fetchMenuItemsDetail(1);
+      if (response.status === 200) {
+        setMenuItems(response.data);
+        setRestaurantId(response.data[0].restaurantId);
       }
-    };
-
+      else {
+        setMenuItems([]);
+      }
+    } catch (error) {
+      setError(`Failed to fetch menu items: ${error.message || error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchMenuItems();
   }, []);
 
@@ -63,7 +60,12 @@ export function MenuItem() {
       }));
     }
   };
-
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedItem(null);
+    setCuisines([]);
+    setCategories([]);
+  };
   const handleEditClick = async (item) => {
     setSelectedItem(item);
     setFormData({
@@ -76,44 +78,53 @@ export function MenuItem() {
       image: null,
     });
     setShowModal(true);
-
     try {
-      const { cuisines, categories } = await fetchCuisineAndCategories();
-      setCuisines(cuisines);
-      setCategories(categories);
-    } catch (err) {
-      setError(`Failed to fetch cuisine and category data: ${err.message || err}`);
-      console.error(err);
+      const response = await getCuisinesAndCategoryList();
+      if (response.status === 200) {
+        setCuisines(response.data.cuisines);
+        setCategories(response.data.categories);
+      }
+      else {
+        alert("failed to get Cuisines and Category Details");
+      }
     }
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedItem(null);
-    setCuisines([]);
-    setCategories([]);
+    catch (error) {
+      if (error.response.status === 400 || 500) {
+        alert(`${error.response?.data?.errorMessage || 'Unknown error'}`);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append("restaurantId", restaurantId);
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) formDataToSubmit.append(key, value);
+    const MenuItemDetails = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== undefined && formData[key] !== null) {
+        MenuItemDetails.append(key, formData[key]);
+      }
     });
-
+    if (formData.image) {
+      MenuItemDetails.append('image', formData.image);
+    }
     try {
-      await updateMenuItemById(selectedItem.id, formDataToSubmit);
-      setMenuItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === selectedItem.id
-            ? { ...item, ...formData, image: formData.image?.name || item.image }
-            : item
-        )
-      );
-      handleCloseModal();
+      const response = await updateMenuItem(selectedItem.id, MenuItemDetails)
+      if (response.status === 200) {
+        console.log('Menu Item Updated Successfully', response);
+        alert('Menu Item Updated Successfully');
+        setShowModal(false);
+        setFormData(resetFormData);
+         fetchMenuItems();
+        console.log(response);
+      }
+      else {
+        alert("Failed to Update Menu Item")
+        setFormData(resetFormData);
+        setShowModal(false);
+      }
     } catch (err) {
-      setError(`Failed to update menu item: ${err.message || err}`);
+      alert(`Failed to update menu item: ${err.message || err}`);
+      setFormData(resetFormData);
+      setShowModal(false);
       console.error(err);
     }
   };
@@ -205,14 +216,9 @@ export function MenuItem() {
       </div>
 
       {showModal && (
-        <div
-          className="modal fade show"
-          style={{ display: "block" }}
-          tabIndex="-1"
-          aria-labelledby="editModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
+        <div className='modal-backdrop-blur'>
+        <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+          <div className="modal-dialog modal-lg mt-5">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="editModalLabel">
@@ -365,6 +371,7 @@ export function MenuItem() {
               </form>
             </div>
           </div>
+        </div>
         </div>
       )}
     </div>

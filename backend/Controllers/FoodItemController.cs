@@ -1,4 +1,5 @@
 ﻿using backend.DTOs;
+using backend.Helper;
 using backend.Models;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -38,47 +39,16 @@ namespace backend.Controllers
             }
             try
             {
-                if (image != null && image.Length > 0)
+                bool response = await _foodItemServices.AddMenuItem(restaurantId, foodItemDto,image);
+                if (response)
                 {
-                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "..", "frontend", "public", "uploads","menuitem");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                    var imagePath = Path.Combine(uploadsFolder, image.FileName);
-
-                    using (var stream = new FileStream(imagePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-                    string imageUrl = $"/uploads/menuitem/{image.FileName}";
-                    foodItemDto.ImageUrl = imageUrl;
+                    return StatusCode(201,new { succeessMessage = "MenuItem Added Successfully"});
                 }
-                FoodItem newFoodItem = new FoodItem
+                else
                 {
-                    RestaurantId = foodItemDto.RestaurantId,
-                    Name = foodItemDto.Name,
-                    Description = foodItemDto.Description,
-                    CuisineTypeId = foodItemDto.CuisineTypeId,
-                    Price = foodItemDto.Price,
-                    ImageUrl = foodItemDto.ImageUrl,
-                    CategoryId = foodItemDto.CategoryId,
-                    IsAvailable = foodItemDto.IsAvailable
-                };
-                FoodItem newlyAddedfoodItem = await _foodItemServices.AddMenuItemAsync(restaurantId,newFoodItem);
-                var result = new
-                {
-                    Id = newlyAddedfoodItem.Id,
-                    RestaurantId = newlyAddedfoodItem.RestaurantId,
-                    Name = newlyAddedfoodItem.Name,
-                    Description = newlyAddedfoodItem.Description,
-                    CuisineTypeId = newlyAddedfoodItem.CuisineTypeId,
-                    Price = newlyAddedfoodItem.Price,
-                    ImageUrl = newlyAddedfoodItem.ImageUrl,
-                    CategoryId = newlyAddedfoodItem.CategoryId,
-                    IsAvailable = newlyAddedfoodItem.IsAvailable
-                };
-                return Ok(new { succeessMessage = "MenuItem Added Successfully", response = result });
+                    return BadRequest(new { errorMessage = "Failed To add Menu Item" });
+                }
+
             }
             catch (ArgumentException ex)
             {
@@ -86,7 +56,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
+                return StatusCode(500, new { errorMessage = "Internal Server Error."+ ex.Message });
             }
 
         }
@@ -100,34 +70,7 @@ namespace backend.Controllers
             }
             try
             {
-                if (image != null && image.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "..", "frontend", "public", "uploads", "menuitem");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                    var imagePath = Path.Combine(uploadsFolder, image.FileName);
-
-                    using (var stream = new FileStream(imagePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-                    string imageUrl = $"/uploads/menuitem/{image.FileName}";
-                    foodItemDto.ImageUrl = imageUrl;
-                }
-
-                FoodItem UpdateFoodItem = new FoodItem
-                {
-                    Name = foodItemDto.Name,
-                    Description = foodItemDto.Description,
-                    CuisineTypeId = foodItemDto.CuisineTypeId,
-                    Price = foodItemDto.Price,
-                    ImageUrl = foodItemDto.ImageUrl,
-                    CategoryId = foodItemDto.CategoryId,
-                    IsAvailable = foodItemDto.IsAvailable
-                };
-               bool isFoodItemUpdated = await _foodItemServices.UpdateMenuItembyIdAsync(menuItemId, UpdateFoodItem);
+                bool isFoodItemUpdated = await _foodItemServices.UpdateMenuItembyIdAsync(menuItemId, foodItemDto, image);
                 if (isFoodItemUpdated)
                 {
                     return Ok(new { succeessMessage = "MenuItem Updated Successfully" });
@@ -139,7 +82,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
+                return StatusCode(500, new { errorMessage = "Internal Server Error."+ ex.Message });
             }
         }
 
@@ -161,28 +104,101 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
+                return StatusCode(500, new { errorMessage = "Internal Server Error."+ ex.Message });
             }
 
         }
         [HttpGet("GetListOfCuisineAndCategory")]
-        public async Task<IActionResult> GetListOfCuisineAndCategory() {
+        public async Task<IActionResult> GetListOfCuisineAndCategory()
+        {
             try
             {
                 CuisineAndCategoryListDto cuisineAndCategoryList = await _foodItemServices.GetCategoryAndCuisineList();
-                if(cuisineAndCategoryList != null)
+                if (cuisineAndCategoryList != null)
                 {
                     return Ok(cuisineAndCategoryList);
                 }
                 return NotFound();
-               
+
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
+                return StatusCode(500, new { errorMessage = "Internal Server Error."+ ex.Message });
 
             }
 
+        }
+
+        [HttpPatch("UpdateMenuItemPrice/{menuItemId}")]
+        public async Task<IActionResult> UpdateMenuItemPrice(int menuItemId, [FromBody] FoodItemPriceDto foodItemPriceDto)
+        {
+            try
+            {
+                if (menuItemId <= 0 || foodItemPriceDto.Price <= 0)
+                {
+                    return BadRequest(new { errorMesasge = "Please Provied Valid Data" });
+                }
+                bool result = await _foodItemServices.UpdateMenuItemPrice(menuItemId, foodItemPriceDto);
+                if (result)
+                {
+                    return Ok(new { message = "Menu Item Price Updated Succesfully" });
+                }
+
+                return BadRequest(new { errorMessage = "Failed to update Menu Item Price" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = "Internal Server Error."+ ex.Message });
+            }
+        }
+
+        [HttpPost("AddCategory")]
+        public async Task<IActionResult> AddCategory(string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return BadRequest(new { errorMessage = "Category can't be null" });
+            }
+            if (int.TryParse(categoryName, out _))
+            {
+                return BadRequest(new { errorMessage = "Category name cannot be a number" });
+            }
+            try
+            {
+                bool result = await _foodItemServices.AddCategory(categoryName);
+                if (result)
+                {
+                    return Ok(new { message = "new category added" });
+                }
+                return BadRequest(new { errorMessage = "Failed To Add Category" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { errorMessage = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = "Internal Server Error."+ ex.Message });
+            }
+
+
+        }
+        [HttpGet("GetAllCategoriesList")]
+        public async Task<IActionResult> GetAllCategoryList()
+        {
+            try
+            {
+                IEnumerable<CategoryDto> categoriesList = await _foodItemServices.GetAllCategoryList();
+                if (!categoriesList.Any())
+                {
+                    return NotFound(new { errorMessage = "Categories List Not Found" });
+                }
+                return Ok(categoriesList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = "Internal Server Error."+ex.Message });
+            }
         }
     }
 }

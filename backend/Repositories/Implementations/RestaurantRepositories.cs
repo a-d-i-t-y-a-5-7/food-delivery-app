@@ -1,7 +1,9 @@
 ﻿using backend.DTOs;
+using backend.Helper;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -86,7 +88,7 @@ namespace backend.Repositories.Implementations
             }
             return ordersDtos;
         }
-        public async Task<RestaurantsDto> AddRestaurantAsync(RestaurantsDto restaurantDto)
+        public async Task<bool> AddRestaurantAsync(RestaurantsDto restaurantDto,IFormFile image)
         {
 
             bool IsPhonenoExits = await _Dbcontext.Restaurants.AnyAsync(u => u.PhoneNumber == restaurantDto.PhoneNumber);
@@ -112,20 +114,27 @@ namespace backend.Repositories.Implementations
                     ZipCode = restaurantDto.Pincode,
                     Country = "INDIA"
                 };
-                Restaurant newrestaurant = new Restaurant
+                Restaurant newRestaurant = new Restaurant
                 {
                     OwnerId = restaurantDto.OwnerId,    
                     Name = restaurantDto.Name,
                     PhoneNumber = restaurantDto.PhoneNumber,
                     OpeningTime = restaurantDto.OpeningTime,
                     ClosingTime = restaurantDto.ClosingTime,
-                    ImageUrl = restaurantDto.image_url
                 };
-
+                  if (image != null && image.Length > 0)
+                {
+                    HelperClass helper = new HelperClass();
+                    string? imageUrl = await helper.UploadImageAsync(image);
+                    if (imageUrl != null)
+                    {
+                        newRestaurant.ImageUrl = imageUrl;
+                    }
+                }
                 _Dbcontext.Add(address);
-                _Dbcontext.Add(newrestaurant);
+                _Dbcontext.Add(newRestaurant);
                 await _Dbcontext.SaveChangesAsync();
-                return restaurantDto;
+                return true;
             }
             catch (Exception ex)
             {
