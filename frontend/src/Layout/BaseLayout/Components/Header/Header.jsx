@@ -20,6 +20,7 @@ export const HeaderComponent = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [selectedCuisine, setSelectedCuisine] = useState(null);
   const { userId } = useSelector((state) => state.auth);
+  const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -69,6 +70,18 @@ export const HeaderComponent = () => {
           style={{ textDecoration: "none" }}
         >
           Select Address
+        </Link>
+      ),
+    },
+    {
+      key: "myOrders",
+      label: (
+        <Link
+          to="/myOrders"
+          onClick={handleMenuClick}
+          style={{ textDecoration: "none" }}
+        >
+          My Orders
         </Link>
       ),
     },
@@ -139,11 +152,13 @@ export const HeaderComponent = () => {
               />
             )}
 
-            <Badge count={5} showZero>
-              <ShoppingCartOutlined
-                style={{ fontSize: "28px", color: "#333" }}
-              />
-            </Badge>
+          <Link to="/addtocart" style={{ marginLeft: 10 }}>
+              <Badge count={cartItems.length} showZero>
+                  <ShoppingCartOutlined
+                      style={{ fontSize: "28px", color: "#333" }}
+                    />
+              </Badge>
+          </Link>
           </>
         ) : (
           <Link to="/login" className="btn border">

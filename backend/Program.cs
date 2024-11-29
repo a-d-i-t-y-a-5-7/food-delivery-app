@@ -70,6 +70,10 @@ builder.Services.AddCors(options =>
         builder => builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowCredentials().AllowAnyHeader());
 });
 
+
+
+
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<FoodDeliveryDbContext>();
@@ -92,7 +96,8 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-
+builder.Services.AddScoped<ICouponManagementRepository, CouponManagementRepository>();
+builder.Services.AddScoped<ICouponManagementService, CouponManagementService>();
 builder.Services.AddScoped<ICuisineRepository, CuisineRepository>();
 builder.Services.AddScoped<ICuisineService, CuisineService>();
 

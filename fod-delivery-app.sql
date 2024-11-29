@@ -493,6 +493,21 @@ INSERT INTO City (CityName, StateID) VALUES
 	  ,[quantity]
   FROM [FoodDeliveryDB].[dbo].[FoodItems]
 
+  -- Added DeliveryTime column in Restaurants Table
+  Alter table Restaurants add DeliveryTime int;
+  SELECT TOP (1000) [id]
+      ,[owner_id]
+      ,[name]
+      ,[phone_number]
+      ,[rating]
+      ,[opening_time]
+      ,[closing_time]
+      ,[is_approved]
+      ,[is_active]
+      ,[created_at]
+      ,[image_url]
+	  ,[DeliveryTime]
+  FROM [FoodDeliveryDB].[dbo].[Restaurants]
 
 
 -- ###########################################################         SELECTION QUERIES

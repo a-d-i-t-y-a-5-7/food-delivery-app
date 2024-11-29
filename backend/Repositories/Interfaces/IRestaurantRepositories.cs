@@ -8,7 +8,7 @@ namespace backend.Repositories.Interfaces
         public List<Restaurant> GetRestaurants(int ownerId);
         public List<RestaurantDto> GetAllRestaurants();
         public List<OrdersDto> GetOrders(int restaurantId);
-        Task<RestaurantsDto> AddRestaurantAsync(RestaurantsDto restaurant);
+        Task<bool> AddRestaurantAsync(RestaurantsDto restaurant, IFormFile formFile);
         public Restaurant? GetRestaurantById(int restaurantId);
         void DeleteRestaurant(Restaurant restaurant);
         public void Save();

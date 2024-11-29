@@ -1,43 +1,43 @@
-import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { addMenuItem, getCuisinesAndCategoryList } from '../../Helper/MenuItem';
 
-export function AddMenuItem() {
+ export function AddMenuItem() {
+  const resetForm = {
+    name: '',
+    description: '',
+    price: '',
+    cuisineTypeId: '',
+    categoryId: '',
+    isAvailable: 'true',
+    image: null,
+  }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cuisines, setCuisines] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    cuisineTypeId: "",
-    categoryId: "",
-    isAvailable: "true",
-    image: null,
-  });
+  const [formData, setFormData] = useState(resetForm);
 
   useEffect(() => {
-    const fetchCuisineAndCategories = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://localhost:44357/api/FoodItem/GetListOfCuisineAndCategory"
-        );
-        setCuisines(response.data.cuisines);
-        setCategories(response.data.categories);
-      } catch (err) {
-        setError(
-          `Failed to fetch cuisine and category data: ${err.message || err}`
-        );
-        console.error(err);
+        const response = await getCuisinesAndCategoryList();
+        if (response.status === 200) {
+          setCuisines(response.data.cuisines);
+          setCategories(response.data.categories);
+        }
+      }
+      catch (error) {
+        if (error.response?.status === 400 || 500) {
+          alert(`${error.response?.data?.errorMessage || 'failed to fetch cuisine category List'}`);
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCuisineAndCategories();
+    fetchData();
   }, []);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -58,50 +58,32 @@ export function AddMenuItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append("restaurantId", 1);
-    formDataToSubmit.append("name", formData.name);
-    formDataToSubmit.append("description", formData.description);
-    formDataToSubmit.append("price", formData.price);
-    formDataToSubmit.append("cuisineTypeId", formData.cuisineTypeId);
-    formDataToSubmit.append("categoryId", formData.categoryId);
-    formDataToSubmit.append("isAvailable", formData.isAvailable);
+    const MenuItemDetails = new FormData();
+    Object.keys(formData).forEach((key) => {
+      MenuItemDetails.append(key, formData[key]);
+    });
+
     if (formData.image) {
-      formDataToSubmit.append("image", formData.image);
+      MenuItemDetails.append('image', formData.image);
     }
-
     try {
-      const response = await axios.post(
-        "https://localhost:44357/api/FoodItem/AddmenuItem/1",
-        formDataToSubmit,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await addMenuItem(MenuItemDetails, 2);
       console.log(response);
-      setFormData({
-        name: "",
-        description: "",
-        price: "",
-        cuisineTypeId: "",
-        categoryId: "",
-        isAvailable: "true",
-        image: null,
-      });
-
-      alert("Menu item added successfully!");
-    } catch (err) {
-      if (err.response) {
-        setError(
-          `Failed to add new menu item: ${err.response.data.errorMessage || err.message}`
-        );
-        console.error("Error Response:", err.response.data);
-      } else {
-        setError(`Failed to add new menu item:- ${err.message}`);
-        console.error("Error:", err.message);
+      if (response.status === 201) {
+        setFormData(resetForm);
+        alert('Menu item added successfully!');
+        console.log(response);
       }
+      else {
+        alert('Failed To Add Menu Item Please try again later.');
+      }
+    } catch (error) {
+      if (error.response.status === 400 || 500) {
+        alert(`Failed to add menu Item: ${error.response?.data?.errorMessage || 'Unknown error'}`);
+      } else {
+        alert('An unexpected error occurred. Please try again later.');
+        console.error(error);
+      };
     }
   };
 
@@ -229,7 +211,7 @@ export function AddMenuItem() {
             className="form-control"
             name="image"
             onChange={handleFileChange}
-            required
+          // required
           />
           {formData.image && (
             <small className="form-text text-muted">
