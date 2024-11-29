@@ -35,24 +35,24 @@ namespace backend.Repositories.Implementations
                 RestaurantId = placeOrderDto.RestaurantId,
                 Address = placeOrderDto.AddressId,
                 CreatedAt = DateTime.Now,
-                Status = "Pending", 
-                PaymentStatus = "Pending", 
-                TotalAmount = 0 
+                Status = "Pending",
+                PaymentStatus = "Pending",
+                TotalAmount = 0
             };
 
             decimal totalAmount = 0;
 
-            
+
             foreach (var item in placeOrderDto.OrderItems)
             {
-              
+
                 var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId) ?? throw new Exception($"Food item with ID {item.FoodItemId} not found.");
                 if (item.Quantity > foodItem.Quantity)
                 {
-                    
+
                     throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
                 }
-              
+
                 totalAmount += foodItem.Price * item.Quantity;
                 newOrder.OrderItems.Add(new OrderItem
                 {
@@ -61,7 +61,7 @@ namespace backend.Repositories.Implementations
                     Price = foodItem.Price
                 });
 
-               
+
                 foodItem.Quantity -= item.Quantity;
             }
 
@@ -93,7 +93,7 @@ namespace backend.Repositories.Implementations
 
             _context.DeliveryRequests.Add(deliveryRequest);
 
-           
+
             await _context.SaveChangesAsync();
 
             return true;
@@ -138,8 +138,8 @@ namespace backend.Repositories.Implementations
         public List<OrdersDto> GetOrderByUserId(int userId)
         {
             var orders = _context.Orders
-                .Include(o => o.OrderItems) 
-                .ThenInclude(oi => oi.FoodItem) 
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.FoodItem)
                 .Where(o => o.CustomerId == userId)
                 .ToList();
 
@@ -206,7 +206,7 @@ namespace backend.Repositories.Implementations
         public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto)
         {
             Order? order = _context.Orders.Find(statusDto.OrderId);
-            if(order==null || !order.Status.Equals("Pending"))
+            if (order == null || !order.Status.Equals("Pending"))
             {
                 return false;
             }

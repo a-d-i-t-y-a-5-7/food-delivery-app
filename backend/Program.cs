@@ -71,26 +71,47 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<FoodDeliveryDbContext>();
+
 builder.Services.AddScoped<IRestaurantRepositories, RestaurantRepositories>();
 builder.Services.AddScoped<IRestaurantServices, RestaurantServices>();
+
 builder.Services.AddScoped<IDeliveryPartnerRepository, DeliveryPartnerRepository>();
 builder.Services.AddScoped<IDeliveryPartnerServices, DeliveryPartnerServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddScoped<IFoodItemRepository, FoodItemRepository>();
 builder.Services.AddScoped<IFoodItemServices, FoodItemServices>();
+
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+
 builder.Services.AddScoped<ICuisineRepository, CuisineRepository>();
 builder.Services.AddScoped<ICuisineService, CuisineService>();
+
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+
 builder.Services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
 builder.Services.AddScoped<IDeliveryRequestService, DeliveryRequestService>();
+
+builder.Services.AddScoped<IDisputeRepository, DisputeRepository>();
+builder.Services.AddScoped<IDisputeService, DisputeService>();
+
+
+
+
+
+
+
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

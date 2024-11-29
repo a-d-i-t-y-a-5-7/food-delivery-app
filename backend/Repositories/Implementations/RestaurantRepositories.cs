@@ -16,7 +16,7 @@ namespace backend.Repositories.Implementations
         }
         public List<RestaurantDto> GetAllRestaurants()
         {
-            
+
             var restaurants = _Dbcontext.Restaurants.ToList();
             var cuisines = _Dbcontext.Cuisines.ToList();
             var restaurantCuisines = _Dbcontext.RestaurantCuisines.ToList();
@@ -30,12 +30,12 @@ namespace backend.Repositories.Implementations
                 OpeningTime = r.OpeningTime,
                 ClosingTime = r.ClosingTime,
                 IsApproved = r.IsApproved,
-                IsActive= r.IsActive,
+                IsActive = r.IsActive,
                 image_url = r.ImageUrl,
                 Cuisine = restaurantCuisines
                     .Where(rc => rc.RestaurantId == r.Id)
                     .Select(rc => cuisines.FirstOrDefault(c => c.Id == rc.CuisineId)?.CuisineName)
-                    .Where(cuisineName => cuisineName != null) 
+                    .Where(cuisineName => cuisineName != null)
                     .ToList()
             }).ToList();
 
@@ -52,9 +52,9 @@ namespace backend.Repositories.Implementations
         {
             List<Order>? orders = _Dbcontext.Orders.Where(o => o.RestaurantId == restaurantId).ToList();
             List<OrdersDto> ordersDtos = new List<OrdersDto>();
-            if(orders != null && orders.Count > 0)
+            if (orders != null && orders.Count > 0)
             {
-                for(int i=0; i<orders.Count; i++)
+                for (int i = 0; i < orders.Count; i++)
                 {
                     OrdersDto dto = new OrdersDto
                     {
@@ -98,7 +98,7 @@ namespace backend.Repositories.Implementations
                 };
                 Restaurant newrestaurant = new Restaurant
                 {
-                    OwnerId = restaurantDto.OwnerId,    
+                    OwnerId = restaurantDto.OwnerId,
                     Name = restaurantDto.Name,
                     PhoneNumber = restaurantDto.PhoneNumber,
                     OpeningTime = restaurantDto.OpeningTime,
@@ -138,12 +138,12 @@ namespace backend.Repositories.Implementations
         public bool UpdateRestaurant(string token, RestaurantDto restaurant)
         {
             int id = ReturnIdFromToken(token);
-            if(id == restaurant.OwnerId)
+            if (id == restaurant.OwnerId)
             {
                 Restaurant? rest = _Dbcontext.Restaurants.Find(restaurant.Id);
-                if(rest!=null)
+                if (rest != null)
                 {
-                    rest.Name  = restaurant.Name;
+                    rest.Name = restaurant.Name;
                     rest.PhoneNumber = restaurant.PhoneNumber;
                     rest.OpeningTime = restaurant.OpeningTime;
                     rest.ClosingTime = restaurant.ClosingTime;
@@ -176,7 +176,7 @@ namespace backend.Repositories.Implementations
             int id = ReturnIdFromToken(token);
             Restaurant? restaurant = _Dbcontext.Restaurants.Find(restaurantId);
 
-            if(restaurant != null && id == restaurant.OwnerId)
+            if (restaurant != null && id == restaurant.OwnerId)
             {
                 if (restaurant.IsActive != null && restaurant.IsActive == true)
                 {

@@ -100,7 +100,7 @@ namespace backend.Repositories.Implementations
                 IEnumerable<Category> categories = await _Dbcontext.Categories.ToListAsync();
                 if (cuisines.Any() && categories.Any())
                 {
-                   return  new CuisineAndCategoryListDto
+                    return new CuisineAndCategoryListDto
                     {
                         Cuisines = cuisines,
                         Categories = categories
@@ -113,6 +113,6 @@ namespace backend.Repositories.Implementations
                 throw new Exception("Failed to fetch Details from database.", ex);
             }
         }
-        
+
     }
 }
