@@ -16,8 +16,8 @@ namespace backend.Repositories.Implementations
 
         public bool AddCuisine(CuisineDto cuisine)
         {
-            Cuisine? checkIfPresent = _context.Cuisines.FirstOrDefault(c => c.CuisineName!= null && cuisine.CuisineName != null && c.CuisineName.ToLower() == cuisine.CuisineName.ToLower());
-            if(checkIfPresent == null)
+            Cuisine? checkIfPresent = _context.Cuisines.FirstOrDefault(c => c.CuisineName != null && cuisine.CuisineName != null && c.CuisineName.ToLower() == cuisine.CuisineName.ToLower());
+            if (checkIfPresent == null)
             {
                 Cuisine newCuisine = new Cuisine
                 {
@@ -36,9 +36,9 @@ namespace backend.Repositories.Implementations
             List<Cuisine> cuisines = _context.Cuisines.ToList();
             List<CuisineDto> cuisinesDtoList = new List<CuisineDto>();
 
-            if(cuisines!=null && cuisines.Count > 0)
+            if (cuisines != null && cuisines.Count > 0)
             {
-                for(int i=0; i<cuisines.Count; i++)
+                for (int i = 0; i < cuisines.Count; i++)
                 {
                     CuisineDto dto = new CuisineDto
                     {
