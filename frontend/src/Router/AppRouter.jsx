@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import ReviewModal from "../Components/Review/ReviewModal";
 import { BaseLayout } from "../Layout/BaseLayout";
 import {
   AddMenuItem,
@@ -14,6 +13,9 @@ import {
   RestaurantOrders,
   ViewProfile,
 } from "../Pages";
+import { MyOrders } from "../Pages/MyOrders/MyOrders";
+import { DeliveryPartnerAssignedOrders } from "../Pages/DeliveryPartnerAsssignedOrders/DeliveryPartnerAssignedOrders";
+import { AddCuisine } from "../Components/Admin/AddCuisine";
 import AddToCart from "../Pages/AddToCart/AddToCart";
 
 export const AppRouter = () => {
@@ -37,8 +39,8 @@ export const AppRouter = () => {
       <Route path="/restaurantList" element={<RestaurantList />} />
       <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
-      <Route path="/review" element={<ReviewModal />}></Route>
-      
+      <Route path="/myOrders" element={<MyOrders />}></Route>
+      <Route path="/myAssignedOrders" element={<DeliveryPartnerAssignedOrders />}></Route>
     </Routes>
   );
 };
