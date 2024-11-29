@@ -16,7 +16,6 @@ import {
 } from "../Pages";
 import AddToCart from "../Pages/AddToCart/AddToCart";
 
-
 export const AppRouter = () => {
   return (
     <Routes>
@@ -28,6 +27,7 @@ export const AppRouter = () => {
         <Route path="/address" element={<Address />} />
         <Route path="/menuItem" element={<MenuItem />}></Route>
         <Route path="/addtocart" element={<AddToCart/>}></Route>
+    
       </Route>
       <Route
         path="/restaurantOrders/:restaurantId"

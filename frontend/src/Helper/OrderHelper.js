@@ -1,4 +1,5 @@
 import AxiosInstance from "./AxiosInstance";
+
 export const placeOrder = async (orderData) => {
     try {
       const response = await AxiosInstance.post(`/Order/place-order`, orderData, {
@@ -11,3 +12,5 @@ export const placeOrder = async (orderData) => {
       throw new Error("Failed to place the order. Please check the order data.");
     }
   };
+  
+ 
