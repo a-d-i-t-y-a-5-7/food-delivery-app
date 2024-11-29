@@ -20,15 +20,34 @@ namespace backend.Services.Implementations
             return result;
         }
 
-        public async Task<FoodItem> AddMenuItemAsync(int restaurantId, FoodItem foodItem)
+        public async Task<bool> AddMenuItem(int restaurantId, FoodItemDto foodItemDto, IFormFile image)
         {
-            FoodItem newFoodItem = await _foodItemRepo.AddMenuItemAsync(restaurantId,foodItem);
-            return newFoodItem;
+            FoodItem newFoodItem = new FoodItem
+            {
+                RestaurantId = restaurantId,
+                Name = foodItemDto.Name,
+                Description = foodItemDto.Description,
+                CuisineTypeId = foodItemDto.CuisineTypeId,
+                Price = foodItemDto.Price,
+                CategoryId = foodItemDto.CategoryId,
+                IsAvailable = foodItemDto.IsAvailable
+            };
+            bool result = await _foodItemRepo.AddMenuItemAsync(newFoodItem,image);
+            return result;
         }
 
-        public async Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItem foodItem)
+        public async Task<bool> UpdateMenuItembyIdAsync(int menuItemId ,FoodItemDto foodItemDto,IFormFile file)
         {
-            bool UpdatedFoodItem = await _foodItemRepo.UpdateMenuItembyIdAsync(menuItemId, foodItem);
+            FoodItem UpdateFoodItem = new FoodItem
+            {
+                Name = foodItemDto.Name,
+                Description = foodItemDto.Description,
+                CuisineTypeId = foodItemDto.CuisineTypeId,
+                Price = foodItemDto.Price,
+                CategoryId = foodItemDto.CategoryId,
+                IsAvailable = foodItemDto.IsAvailable
+            };
+            bool UpdatedFoodItem = await _foodItemRepo.UpdateMenuItembyIdAsync(menuItemId , UpdateFoodItem,file);
             return UpdatedFoodItem;
         }
 
@@ -42,5 +61,24 @@ namespace backend.Services.Implementations
             CuisineAndCategoryListDto cuisineAndCategoryListDto = await _foodItemRepo.GetCuisineAndCategoryList();
             return cuisineAndCategoryListDto;
         }
+
+        public async Task<bool> UpdateMenuItemPrice(int menuItemId, FoodItemPriceDto foodItemPriceDto)
+        {
+            bool result = await _foodItemRepo.UpdateMenuItemPriceAsync(menuItemId,foodItemPriceDto);
+            return result;
+        }
+
+        public async Task<bool> AddCategory(string categoryName)
+        {
+            bool result  = await _foodItemRepo.AddCategoryAsync(categoryName);  
+            return result;
+        }
+
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoryList()
+        {
+            IEnumerable<CategoryDto> categoryDtosList = await _foodItemRepo.GetAllCategoryAsync();
+            return categoryDtosList;
+        }
+
     }
 }

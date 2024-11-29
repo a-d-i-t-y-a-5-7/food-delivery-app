@@ -6,11 +6,12 @@ namespace backend.Services.Interfaces
     public interface IFoodItemServices
     {
         public bool DeleteFoodItem(int id);
-        Task<FoodItem> AddMenuItemAsync(int restaurantId, FoodItem foodItemdItem);
-
-        Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItem foodItem);
+        Task<bool> AddMenuItem(int restaurantId, FoodItemDto foodItemdItem, IFormFile formFile);
+        Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItemDto foodItem,IFormFile formFile);
         Task<IEnumerable<FoodItem>> GetListOfMenuItemByRestaurantIdAsync(int resturentId);
         Task<CuisineAndCategoryListDto> GetCategoryAndCuisineList();
+        Task<bool> UpdateMenuItemPrice(int menuItemId, FoodItemPriceDto foodItemPriceDto);
+        Task<bool> AddCategory(string categoryName);
+        Task<IEnumerable<CategoryDto>> GetAllCategoryList();
     }
-
 }

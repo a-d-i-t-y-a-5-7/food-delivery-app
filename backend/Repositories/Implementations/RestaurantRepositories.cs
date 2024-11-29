@@ -1,7 +1,9 @@
 ﻿using backend.DTOs;
+using backend.Helper;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -18,7 +20,7 @@ namespace backend.Repositories.Implementations
         }
         public List<RestaurantDto> GetAllRestaurants()
         {
-            
+
             var restaurants = _Dbcontext.Restaurants.ToList();
             var cuisines = _Dbcontext.Cuisines.ToList();
             var restaurantCuisines = _Dbcontext.RestaurantCuisines.ToList();
@@ -68,9 +70,9 @@ namespace backend.Repositories.Implementations
         {
             List<Order>? orders = _Dbcontext.Orders.Where(o => o.RestaurantId == restaurantId).ToList();
             List<OrdersDto> ordersDtos = new List<OrdersDto>();
-            if(orders != null && orders.Count > 0)
+            if (orders != null && orders.Count > 0)
             {
-                for(int i=0; i<orders.Count; i++)
+                for (int i = 0; i < orders.Count; i++)
                 {
                     OrdersDto dto = new OrdersDto
                     {
@@ -86,7 +88,7 @@ namespace backend.Repositories.Implementations
             }
             return ordersDtos;
         }
-        public async Task<RestaurantsDto> AddRestaurantAsync(RestaurantsDto restaurantDto)
+        public async Task<bool> AddRestaurantAsync(RestaurantsDto restaurantDto,IFormFile image)
         {
 
             bool IsPhonenoExits = await _Dbcontext.Restaurants.AnyAsync(u => u.PhoneNumber == restaurantDto.PhoneNumber);
@@ -112,20 +114,27 @@ namespace backend.Repositories.Implementations
                     ZipCode = restaurantDto.Pincode,
                     Country = "INDIA"
                 };
-                Restaurant newrestaurant = new Restaurant
+                Restaurant newRestaurant = new Restaurant
                 {
-                    OwnerId = restaurantDto.OwnerId,    
+                    OwnerId = restaurantDto.OwnerId,
                     Name = restaurantDto.Name,
                     PhoneNumber = restaurantDto.PhoneNumber,
                     OpeningTime = restaurantDto.OpeningTime,
                     ClosingTime = restaurantDto.ClosingTime,
-                    ImageUrl = restaurantDto.image_url
                 };
-
+                  if (image != null && image.Length > 0)
+                {
+                    HelperClass helper = new HelperClass();
+                    string? imageUrl = await helper.UploadImageAsync(image);
+                    if (imageUrl != null)
+                    {
+                        newRestaurant.ImageUrl = imageUrl;
+                    }
+                }
                 _Dbcontext.Add(address);
-                _Dbcontext.Add(newrestaurant);
+                _Dbcontext.Add(newRestaurant);
                 await _Dbcontext.SaveChangesAsync();
-                return restaurantDto;
+                return true;
             }
             catch (Exception ex)
             {
@@ -154,12 +163,12 @@ namespace backend.Repositories.Implementations
         public bool UpdateRestaurant(string token, RestaurantDto restaurant)
         {
             int id = ReturnIdFromToken(token);
-            if(id == restaurant.OwnerId)
+            if (id == restaurant.OwnerId)
             {
                 Restaurant? rest = _Dbcontext.Restaurants.Find(restaurant.Id);
-                if(rest!=null)
+                if (rest != null)
                 {
-                    rest.Name  = restaurant.Name;
+                    rest.Name = restaurant.Name;
                     rest.PhoneNumber = restaurant.PhoneNumber;
                     rest.OpeningTime = restaurant.OpeningTime;
                     rest.ClosingTime = restaurant.ClosingTime;
@@ -192,7 +201,7 @@ namespace backend.Repositories.Implementations
             int id = ReturnIdFromToken(token);
             Restaurant? restaurant = _Dbcontext.Restaurants.Find(restaurantId);
 
-            if(restaurant != null && id == restaurant.OwnerId)
+            if (restaurant != null && id == restaurant.OwnerId)
             {
                 if (restaurant.IsActive != null && restaurant.IsActive == true)
                 {

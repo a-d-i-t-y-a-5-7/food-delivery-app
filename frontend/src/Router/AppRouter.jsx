@@ -14,9 +14,8 @@ import {
   ViewProfile,
 } from "../Pages";
 
-import { DeliveryPartnerAssignedOrders } from "../Pages/DeliveryPartnerAsssignedOrders/DeliveryPartnerAssignedOrders";
-import { AddCuisine } from "../Components/Admin/AddCuisine";
 import AddToCart from "../Pages/AddToCart/AddToCart";
+import { DeliveryPartnerAssignedOrders } from "../Pages/DeliveryPartnerAsssignedOrders/DeliveryPartnerAssignedOrders";
 import MyOrders from "../Pages/MyOrders/MyOrders";
 
 export const AppRouter = () => {
@@ -29,21 +28,22 @@ export const AppRouter = () => {
         <Route path="/view-profile" element={<ViewProfile />} />
         <Route path="/address" element={<Address />} />
         <Route path="/menuItem" element={<MenuItem />}></Route>
-        <Route path="/addtocart" element={<AddToCart/>}></Route>
-        <Route path="/myOrders" element={<MyOrders/>}></Route>
-        
-    
+        <Route path="/addtocart" element={<AddToCart />}></Route>
+        <Route path="/myOrders" element={<MyOrders />}></Route>
       </Route>
       <Route
         path="/restaurantOrders/:restaurantId"
         element={<RestaurantOrders />}
       />
-      
+
       <Route path="/restaurantList" element={<RestaurantList />} />
       <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
-      
-      <Route path="/myAssignedOrders" element={<DeliveryPartnerAssignedOrders />}></Route>
+
+      <Route
+        path="/myAssignedOrders"
+        element={<DeliveryPartnerAssignedOrders />}
+      ></Route>
     </Routes>
   );
 };

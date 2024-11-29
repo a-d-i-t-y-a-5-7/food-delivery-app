@@ -1,12 +1,27 @@
-import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux"; 
-import { addToCart } from '../../Redux/Slices/cartSlice';
-import { fetchMenuItemsByRestaurant, fetchCuisineAndCategories,updateMenuItemById } from "../../Helper/MenuItemHelper";
+import {
+  fetchMenuItemsDetail,
+  getCuisinesAndCategoryList,
+  updateMenuItem,
+} from "../../Helper/MenuItem";
+import { addToCart } from "../../Redux/Slices/cartSlice";
+import "./MenuItem.css";
 
 export function MenuItem() {
+  const resetFormData = {
+    name: "",
+    description: "",
+    price: "",
+    cuisineTypeId: "",
+    categoryId: "",
+    isAvailable: "",
+    image: null,
+  };
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
@@ -15,34 +30,28 @@ export function MenuItem() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [restaurantId, setRestaurantId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    cuisineTypeId: "",
-    categoryId: "",
-    isAvailable: "",
-    image: null,
-  });
+  const [formData, setFormData] = useState(resetFormData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { userId } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    const fetchMenuItems = async () => {
-      try {
-        const menuItemsData = await fetchMenuItemsByRestaurant(1);
-        setMenuItems(menuItemsData);
-        setRestaurantId(menuItemsData[0]?.restaurantId || null);
-      } catch (err) {
-        setError(`Failed to fetch menu items: ${err.message || err}`);
-        console.error(err);
-      } finally {
-        setLoading(false);
+  const fetchMenuItems = async () => {
+    try {
+      const response = await fetchMenuItemsDetail(1);
+      if (response.status === 200) {
+        setMenuItems(response.data);
+        setRestaurantId(response.data[0].restaurantId);
+      } else {
+        setMenuItems([]);
       }
-    };
-
+    } catch (error) {
+      setError(`Failed to fetch menu items: ${error.message || error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchMenuItems();
   }, []);
 
@@ -64,6 +73,12 @@ export function MenuItem() {
     }
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedItem(null);
+    setCuisines([]);
+    setCategories([]);
+  };
   const handleEditClick = async (item) => {
     setSelectedItem(item);
     setFormData({
@@ -76,44 +91,50 @@ export function MenuItem() {
       image: null,
     });
     setShowModal(true);
-
     try {
-      const { cuisines, categories } = await fetchCuisineAndCategories();
-      setCuisines(cuisines);
-      setCategories(categories);
-    } catch (err) {
-      setError(`Failed to fetch cuisine and category data: ${err.message || err}`);
-      console.error(err);
+      const response = await getCuisinesAndCategoryList();
+      if (response.status === 200) {
+        setCuisines(response.data.cuisines);
+        setCategories(response.data.categories);
+      } else {
+        alert("failed to get Cuisines and Category Details");
+      }
+    } catch (error) {
+      if (error.response.status === 400 || 500) {
+        alert(`${error.response?.data?.errorMessage || "Unknown error"}`);
+      }
     }
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedItem(null);
-    setCuisines([]);
-    setCategories([]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append("restaurantId", restaurantId);
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) formDataToSubmit.append(key, value);
+    const MenuItemDetails = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== undefined && formData[key] !== null) {
+        MenuItemDetails.append(key, formData[key]);
+      }
     });
-
+    if (formData.image) {
+      MenuItemDetails.append("image", formData.image);
+    }
     try {
-      await updateMenuItemById(selectedItem.id, formDataToSubmit);
-      setMenuItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === selectedItem.id
-            ? { ...item, ...formData, image: formData.image?.name || item.image }
-            : item
-        )
-      );
-      handleCloseModal();
+      const response = await updateMenuItem(selectedItem.id, MenuItemDetails);
+      if (response.status === 200) {
+        console.log("Menu Item Updated Successfully", response);
+        alert("Menu Item Updated Successfully");
+        setShowModal(false);
+        setFormData(resetFormData);
+        fetchMenuItems();
+        console.log(response);
+      } else {
+        alert("Failed to Update Menu Item");
+        setFormData(resetFormData);
+        setShowModal(false);
+      }
     } catch (err) {
-      setError(`Failed to update menu item: ${err.message || err}`);
+      alert(`Failed to update menu item: ${err.message || err}`);
+      setFormData(resetFormData);
+      setShowModal(false);
       console.error(err);
     }
   };
@@ -128,20 +149,22 @@ export function MenuItem() {
       }, 5000);
       return;
     }
-  
-    dispatch(addToCart({ 
-      id: item.id, 
-      name: item.name, 
-      price: item.price, 
-      imageUrl: item.imageUrl, 
-      availableQuantity: item.quantity,
-    }));
-  
+
+    dispatch(
+      addToCart({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        imageUrl: item.imageUrl,
+        availableQuantity: item.quantity,
+      })
+    );
+
     toast.success("Item added to the cart.", {
       position: "top-right",
       autoClose: 2000,
     });
-  
+
     setTimeout(() => {
       navigate("/addtocart");
     }, 500);
@@ -154,8 +177,7 @@ export function MenuItem() {
   if (error) {
     return <div>{error}</div>;
   }
-  
-  
+
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Menu Items</h2>
@@ -185,16 +207,15 @@ export function MenuItem() {
                     Price: {item.price ? item.price : "N/A"}/-
                   </span>
                 </div>
-                {/* <button
+                <button
                   className="btn btn-primary w-100"
                   onClick={() => handleEditClick(item)}
                 >
                   Edit
-                </button> */}
+                </button>
                 <button
                   className="btn btn-primary w-100"
-                  onClick={ () => handleMenuClick(item)}
-                
+                  onClick={() => handleMenuClick(item)}
                 >
                   ADD
                 </button>
@@ -205,164 +226,166 @@ export function MenuItem() {
       </div>
 
       {showModal && (
-        <div
-          className="modal fade show"
-          style={{ display: "block" }}
-          tabIndex="-1"
-          aria-labelledby="editModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="editModalLabel">
-                  Edit Menu Item
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={handleCloseModal}
-                ></button>
-              </div>
-              <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label htmlFor="name" className="form-label">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="form-control"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="description" className="form-label">
-                      Description
-                    </label>
-                    <textarea
-                      id="description"
-                      className="form-control"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="price" className="form-label">
-                      Price
-                    </label>
-                    <input
-                      type="number"
-                      id="price"
-                      className="form-control"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="cuisineTypeId" className="form-label">
-                      Cuisine Type
-                    </label>
-                    <select
-                      id="cuisineTypeId"
-                      className="form-control"
-                      name="cuisineTypeId"
-                      value={formData.cuisineTypeId}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="">Select Cuisine Type</option>
-                      {cuisines.length > 0 ? (
-                        cuisines.map((cuisine) => (
-                          <option key={cuisine.id} value={cuisine.id}>
-                            {cuisine.cuisineName}
-                          </option>
-                        ))
-                      ) : (
-                        <option disabled>Loading cuisines...</option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="categoryId" className="form-label">
-                      Category Type
-                    </label>
-                    <select
-                      id="categoryId"
-                      className="form-control"
-                      name="categoryId"
-                      value={formData.categoryId}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="">Select Category Type</option>
-                      {categories.length > 0 ? (
-                        categories.map((category) => (
-                          <option key={category.id} value={category.id}>
-                            {category.categoryName}
-                          </option>
-                        ))
-                      ) : (
-                        <option disabled>Loading categories...</option>
-                      )}
-                    </select>
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="image" className="form-label">
-                      Upload Image
-                    </label>
-                    <input
-                      type="file"
-                      id="image"
-                      className="form-control"
-                      name="image"
-                      onChange={handleFileChange}
-                    />
-                    {formData.image && (
-                      <small className="form-text text-muted">
-                        {formData.image.name}
-                      </small>
-                    )}
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="isAvailable" className="form-label">
-                      Available
-                    </label>
-                    <select
-                      id="isAvailable"
-                      className="form-select"
-                      name="isAvailable"
-                      value={formData.isAvailable}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="modal-footer">
+        <div className="modal-backdrop-blur">
+          <div
+            className="modal fade show"
+            style={{ display: "block" }}
+            tabIndex="-1"
+            aria-labelledby="editModalLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog modal-lg mt-5">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="editModalLabel">
+                    Edit Menu Item
+                  </h5>
                   <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn-close"
                     onClick={handleCloseModal}
-                  >
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn btn-primary">
-                    Save changes
-                  </button>
+                  ></button>
                 </div>
-              </form>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
+                  <div className="modal-body">
+                    <div className="mb-3">
+                      <label htmlFor="name" className="form-label">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        className="form-control"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="description" className="form-label">
+                        Description
+                      </label>
+                      <textarea
+                        id="description"
+                        className="form-control"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="price" className="form-label">
+                        Price
+                      </label>
+                      <input
+                        type="number"
+                        id="price"
+                        className="form-control"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="cuisineTypeId" className="form-label">
+                        Cuisine Type
+                      </label>
+                      <select
+                        id="cuisineTypeId"
+                        className="form-control"
+                        name="cuisineTypeId"
+                        value={formData.cuisineTypeId}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Cuisine Type</option>
+                        {cuisines.length > 0 ? (
+                          cuisines.map((cuisine) => (
+                            <option key={cuisine.id} value={cuisine.id}>
+                              {cuisine.cuisineName}
+                            </option>
+                          ))
+                        ) : (
+                          <option disabled>Loading cuisines...</option>
+                        )}
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="categoryId" className="form-label">
+                        Category Type
+                      </label>
+                      <select
+                        id="categoryId"
+                        className="form-control"
+                        name="categoryId"
+                        value={formData.categoryId}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Category Type</option>
+                        {categories.length > 0 ? (
+                          categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                              {category.categoryName}
+                            </option>
+                          ))
+                        ) : (
+                          <option disabled>Loading categories...</option>
+                        )}
+                      </select>
+                    </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="image" className="form-label">
+                        Upload Image
+                      </label>
+                      <input
+                        type="file"
+                        id="image"
+                        className="form-control"
+                        name="image"
+                        onChange={handleFileChange}
+                      />
+                      {formData.image && (
+                        <small className="form-text text-muted">
+                          {formData.image.name}
+                        </small>
+                      )}
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="isAvailable" className="form-label">
+                        Available
+                      </label>
+                      <select
+                        id="isAvailable"
+                        className="form-select"
+                        name="isAvailable"
+                        value={formData.isAvailable}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={handleCloseModal}
+                    >
+                      Cancel
+                    </button>
+                    <button type="submit" className="btn btn-primary">
+                      Save changes
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>

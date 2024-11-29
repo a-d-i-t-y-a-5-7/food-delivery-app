@@ -1,13 +1,9 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { fetchCuisineAndCategories, addMenuItem } from "../../Helper/MenuItemHelper";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { addMenuItem, getCuisinesAndCategoryList } from "../../Helper/MenuItem";
 
 export function AddMenuItem() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [cuisines, setCuisines] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [formData, setFormData] = useState({
+  const resetForm = {
     name: "",
     description: "",
     price: "",
@@ -15,16 +11,27 @@ export function AddMenuItem() {
     categoryId: "",
     isAvailable: "true",
     image: null,
-  });
+  };
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [cuisines, setCuisines] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [formData, setFormData] = useState(resetForm);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchCuisineAndCategories();
-        setCuisines(data.cuisines);
-        setCategories(data.categories);
-      } catch (err) {
-        setError(err.message);
+        const response = await getCuisinesAndCategoryList();
+        if (response.status === 200) {
+          setCuisines(response.data.cuisines);
+          setCategories(response.data.categories);
+        }
+      } catch (error) {
+        if (error.response?.status === 400 || 500) {
+          alert(
+            `${error.response?.data?.errorMessage || "failed to fetch cuisine category List"}`
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -32,7 +39,6 @@ export function AddMenuItem() {
 
     fetchData();
   }, []);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -53,33 +59,34 @@ export function AddMenuItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append("restaurantId", 1);
-    formDataToSubmit.append("name", formData.name);
-    formDataToSubmit.append("description", formData.description);
-    formDataToSubmit.append("price", formData.price);
-    formDataToSubmit.append("cuisineTypeId", formData.cuisineTypeId);
-    formDataToSubmit.append("categoryId", formData.categoryId);
-    formDataToSubmit.append("isAvailable", formData.isAvailable);
-    if (formData.image) {
-      formDataToSubmit.append("image", formData.image);
-    }
+    const MenuItemDetails = new FormData();
+    Object.keys(formData).forEach((key) => {
+      MenuItemDetails.append(key, formData[key]);
+    });
 
+    if (formData.image) {
+      MenuItemDetails.append("image", formData.image);
+    }
     try {
-      await addMenuItem(formDataToSubmit);
-      alert("Menu item added successfully!");
-      setFormData({
-        name: "",
-        description: "",
-        price: "",
-        cuisineTypeId: "",
-        categoryId: "",
-        isAvailable: "true",
-        image: null,
-      });
-    } catch (err) {
-      setError(err.message);
-    }     
+      const response = await addMenuItem(MenuItemDetails, 2);
+      console.log(response);
+      if (response.status === 201) {
+        setFormData(resetForm);
+        alert("Menu item added successfully!");
+        console.log(response);
+      } else {
+        alert("Failed To Add Menu Item Please try again later.");
+      }
+    } catch (error) {
+      if (error.response.status === 400 || 500) {
+        alert(
+          `Failed to add menu Item: ${error.response?.data?.errorMessage || "Unknown error"}`
+        );
+      } else {
+        alert("An unexpected error occurred. Please try again later.");
+        console.error(error);
+      }
+    }
   };
 
   if (loading) {
@@ -206,7 +213,7 @@ export function AddMenuItem() {
             className="form-control"
             name="image"
             onChange={handleFileChange}
-            required
+            // required
           />
           {formData.image && (
             <small className="form-text text-muted">
