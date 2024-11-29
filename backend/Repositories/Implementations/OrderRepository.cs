@@ -49,8 +49,9 @@ namespace backend.Repositories.Implementations
                 var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId) ?? throw new Exception($"Food item with ID {item.FoodItemId} not found.");
                 if (item.Quantity > foodItem.Quantity)
                 {
-                    
-                    throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
+
+                    Exception exception = new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
+                    throw exception;
                 }
               
                 totalAmount += foodItem.Price * item.Quantity;
