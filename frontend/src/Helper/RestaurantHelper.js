@@ -71,7 +71,7 @@ export const addRestaurant = async (restaurantDetails) => {
         return response;
     }
     catch (error) {
-        throw new error("Failed to Add Restaurant Details")
+        throw error
     }
 }
 

@@ -3,6 +3,11 @@ using backend.Models;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Net.Http;
+using System.Net;
+using backend.Helper;
 
 namespace backend.Controllers
 {
@@ -40,7 +45,7 @@ namespace backend.Controllers
         {
             List<Restaurant> restaurants = _restaurantServices.GetRestaurants(ownerId);
 
-            if(restaurants.IsNullOrEmpty())
+            if (restaurants.IsNullOrEmpty())
             {
                 return StatusCode(404, new { message = "Owner Not Found" });
             }
@@ -60,43 +65,23 @@ namespace backend.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> AddRestaurant([FromForm] RestaurantsDto restaurantDto ,IFormFile? image)
+        public async Task<IActionResult> AddRestaurant([FromForm] RestaurantsDto restaurantDto, IFormFile? image)
         {
-            if (restaurantDto == null && image == null)
+            if (restaurantDto == null)
             {
                 return BadRequest("Invalid User Data");
             }
             try
-            {
-                if (image != null && image.Length > 0)
+            {              
+                bool response = await _restaurantServices.AddRestaurant(restaurantDto,image);
+                if (response)
                 {
-                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "..", "frontend", "public", "uploads","restaurant");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                    var imagePath = Path.Combine(uploadsFolder, image.FileName);
-
-                    using (var stream = new FileStream(imagePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-                   string imageUrl = $"/uploads/restaurant/{image.FileName}";
-                    restaurantDto.image_url = imageUrl;
+                    return StatusCode(201, new { successMessage = "Restaurant created successfully." });
                 }
-                RestaurantsDto newRestaurant = await _restaurantServices.AddRestaurantAsync(restaurantDto);
-
-                var result = new
+                else
                 {
-                    Name = newRestaurant.Name,
-                    PhoneNumber = newRestaurant.PhoneNumber,
-                    Rating = newRestaurant.Rating,
-                    OpeningTime = newRestaurant.OpeningTime,
-                    ClosingTime = newRestaurant.ClosingTime,
-                    ImageUrl = newRestaurant.image_url
-                };
-
-                return Ok(new { successMessage = "Restaurant Added Successfully", restaurant = result });
+                    return BadRequest(new { errorMessage = "Failed to add Restaurant" });
+                }
             }
             catch (ArgumentException ex)
             {
@@ -107,7 +92,7 @@ namespace backend.Controllers
                 return StatusCode(500, new { errorMessage = "Internal Server Error.", ex.Message });
             }
         }
-    
+
 
         [HttpPut("approve-reject/{id}/{status}")]
         public IActionResult UpdateRestaurantApprovalStatus(int id, bool status)

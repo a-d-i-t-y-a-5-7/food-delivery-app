@@ -51,7 +51,7 @@ builder.Services.AddCors(options =>
 
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddDbContext<FoodDeliveryDbContext>();
 builder.Services.AddScoped<IRestaurantRepositories, RestaurantRepositories>();
 builder.Services.AddScoped<IRestaurantServices, RestaurantServices>();
@@ -66,6 +66,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<ICouponManagementRepository, CouponManagementRepository>();
+builder.Services.AddScoped<ICouponManagementService, CouponManagementService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

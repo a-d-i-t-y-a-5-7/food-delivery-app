@@ -24,7 +24,7 @@ const Address = () => {
     }, []);
 
     const handleAdd = () => {
-        setCurrentAddress(null);
+        setCurrentAddress(null);  
         form.resetFields();
         setIsModalVisible(true);
     };

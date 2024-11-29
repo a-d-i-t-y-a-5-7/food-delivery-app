@@ -1,5 +1,4 @@
-/* Global styles */
-.menu-container {
+/* .menu-container {
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -55,5 +54,16 @@
   
   .menu-card strong {
     font-weight: bold;
+  }
+   */
+   .modal-backdrop-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    backdrop-filter: blur(8px); /* Apply blur effect */
+    z-index: 1040; /* Ensure it is behind the modal */
   }
   

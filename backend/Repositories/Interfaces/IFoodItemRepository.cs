@@ -6,9 +6,14 @@ namespace backend.Repositories.Interfaces
     public interface IFoodItemRepository
     {
         public bool DeleteFoodItem(int id);
-        Task<FoodItem> AddMenuItemAsync(int restaurantId, FoodItem foodItemdItem);
-        Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItem foodItem);
+        Task<bool> AddMenuItemAsync(FoodItem foodItemdItem,IFormFile formFile);
+        Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItem foodItem,IFormFile formFile);
+        Task UpdateMenuItem(FoodItem foodItem);
         Task<IEnumerable<FoodItem>> GetListOfMenuItemByRestaurantIdAsync(int resturentId);
+        Task<FoodItem?> GetMenuItemByIdAsync(int menuItemId);
         Task<CuisineAndCategoryListDto> GetCuisineAndCategoryList();
+        Task<bool> UpdateMenuItemPriceAsync(int menuItemId,FoodItemPriceDto foodItemPriceDto);
+        Task<bool> AddCategoryAsync(string  categoryName);
+        Task<IEnumerable<CategoryDto>> GetAllCategoryAsync();
     }
 }

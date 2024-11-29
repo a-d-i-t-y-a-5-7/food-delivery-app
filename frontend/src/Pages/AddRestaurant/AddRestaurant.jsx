@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { addRestaurant } from '../../Helper/RestaurantHelper';
 
-
 function AddRestaurant() {
     const resetFormData = {
         Name: '',
@@ -46,21 +45,28 @@ function AddRestaurant() {
             setErrors(validationError);
             return;
         }
-        const formDataToSubmit = new FormData();
+        const newRestaurantDetails = new FormData();
         Object.keys(formData).forEach((key) => {
-            formDataToSubmit.append(key, formData[key]);
+            newRestaurantDetails.append(key, formData[key]);
         });
-        formDataToSubmit.append("OwnerId", 1);
 
+        newRestaurantDetails.append("OwnerId", 1);
         try {
-            const response = await addRestaurant(formDataToSubmit);
-            console.log('Restaurant Added Successfully', response);
-            alert('Restaurant added successfully!');
-            setFormData(resetFormData);
+            const response = await addRestaurant(newRestaurantDetails);
+            if (response.status === 201) {
+                console.log('Restaurant Added Successfully', response);
+                alert('Restaurant added successfully!');
+                setFormData(resetFormData);
+            } else {
+                alert('Failed To Register new Restaurant. Please try again later.');
+            }
+
         } catch (error) {
-            alert('Failed to add restaurant. Please try again.');
-            console.log(error);
-            console.error('Error creating restaurant:', error.message);
+            if (error.response.status === 400 || 500) {
+                alert(`Failed to add Restaurant : ${error.response?.data?.errorMessage || 'Unknown error'}`);
+            } else {
+                alert('An unexpected error occurred. Please try again later.');
+            };
         }
     };
 
