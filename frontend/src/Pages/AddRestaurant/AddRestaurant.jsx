@@ -84,6 +84,13 @@ export function AddRestaurant() {
         };
       }
     };
+    const handleFocus = (e) => {
+      const { name } = e.target;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "",
+      }));
+    };
 
     return (
       <div className="newRestaurant-container">

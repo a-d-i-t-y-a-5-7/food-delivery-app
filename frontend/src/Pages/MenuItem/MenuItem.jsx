@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   fetchMenuItemsDetail,
@@ -12,6 +12,7 @@ import { addToCart } from "../../Redux/Slices/cartSlice";
 import "./MenuItem.css";
 
 export function MenuItem() {
+  const { restaurantId } = useParams();
   const resetFormData = {
     name: "",
     description: "",
@@ -28,7 +29,7 @@ export function MenuItem() {
   const [cuisines, setCuisines] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [restaurantId, setRestaurantId] = useState(null);
+  // const [restaurantId, setRestaurantId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(resetFormData);
   const navigate = useNavigate();
@@ -38,10 +39,9 @@ export function MenuItem() {
 
   const fetchMenuItems = async () => {
     try {
-      const response = await fetchMenuItemsDetail(1);
+      const response = await fetchMenuItemsDetail(restaurantId); 
       if (response.status === 200) {
         setMenuItems(response.data);
-        setRestaurantId(response.data[0].restaurantId);
       } else {
         setMenuItems([]);
       }
@@ -51,9 +51,10 @@ export function MenuItem() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchMenuItems();
-  }, []);
+  }, [restaurantId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -156,6 +157,7 @@ export function MenuItem() {
         name: item.name,
         price: item.price,
         imageUrl: item.imageUrl,
+        description: item.description,
         availableQuantity: item.quantity,
       })
     );
@@ -207,12 +209,12 @@ export function MenuItem() {
                     Price: {item.price ? item.price : "N/A"}/-
                   </span>
                 </div>
-                <button
+                {/* <button
                   className="btn btn-primary w-100"
                   onClick={() => handleEditClick(item)}
                 >
                   Edit
-                </button>
+                </button> */}
                 <button
                   className="btn btn-primary w-100"
                   onClick={() => handleMenuClick(item)}

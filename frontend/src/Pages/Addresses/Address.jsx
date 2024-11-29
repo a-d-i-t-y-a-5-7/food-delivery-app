@@ -2,6 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal} from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
+import Swal from 'sweetalert2'; 
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -127,8 +128,15 @@ export const Address = () => {
 
     try {
       const response = await placeOrder(orderData);
-      toast.success(`Order placed successfully! Order ID: ${response.orderId}`);
-      console.log("Placed order",response);
+      Swal.fire({
+        title: 'Order Placed!',
+        text: `Your order has been successfully placed. Order ID: ${response.orderId}`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'colored-toast',
+        },
+      });
     } catch (error) {
       toast.error(error.message);
     }

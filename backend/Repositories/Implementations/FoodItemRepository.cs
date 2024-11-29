@@ -18,6 +18,28 @@ namespace backend.Repositories.Implementations
         {
             _Dbcontext = context;
         }
+        public FoodItem GetFoodItemById(int id)
+        {
+            var item = _Dbcontext.FoodItems
+                .FirstOrDefault(o => o.Id == id);
+
+            if (item == null)
+                return null;
+
+            return new FoodItem
+            {
+                Id = item.Id,
+                Name = item.Name,
+                RestaurantId = item.RestaurantId,
+                Description = item.Description,
+                ImageUrl = item.ImageUrl,
+                Price = item.Price,
+                CategoryId = item.CategoryId,
+                CuisineTypeId = item.CuisineTypeId,
+                IsAvailable = item.IsAvailable,
+                Quantity = item.Quantity,  
+            };
+        }
 
         public bool DeleteFoodItem(int id)
         {

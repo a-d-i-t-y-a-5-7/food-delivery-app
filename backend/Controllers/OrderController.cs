@@ -23,7 +23,7 @@ namespace backend.Controllers
             var result = await _orderService.PlaceOrderAsync(placeOrderDto);
             if (result)
             {
-                return Ok(new { message = "Order placed successfully" });
+                return Ok(new { message = "Order placed successfully", placeOrderDto.OrderId });
             }
             return BadRequest(new { message = "Failed to place order" });
         }

@@ -35,9 +35,9 @@ const AddToCart = () => {
 
   return (
     <div className="container mt-4" style={{ maxWidth: "1200px" }}>
-      <h2 className="text-left mb-4">Items in your Cart</h2>
+      <h2 className="text-left mb-4">Cart Items</h2>
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-12">
           {cartItems.length === 0 ? (
             <div className="text-center">
               <p>No items in your cart</p>
@@ -58,14 +58,15 @@ const AddToCart = () => {
                             alt={item.name}
                             className="img-fluid"
                             style={{
-                              width: "150px",
-                              height: "120px",
+                              width: "200px",
+                              height: "150px",
                               objectFit: "cover",
-                              borderRadius: "8px",
+                              borderRadius: "10px",
                             }}
                           />
-                          <div className="ms-3">
+                          <div className="ms-5">
                             <h5>{item.name}</h5>
+                            <h6>{item.description}</h6>
                             <p className="mb-1 text-muted">Price: ₹{item.price}</p>
                             <div className="d-flex align-items-center gap-3 mt-2">
                               <button
@@ -83,8 +84,9 @@ const AddToCart = () => {
                               </button>
                             </div>
                             <div className="mt-2">
-                              <p className="text-muted">
+                              <p className="text-muted"><strong>
                                 Total: ₹{item.price * item.quantityInCart}
+                                </strong>
                               </p>
                             </div>
                           </div>
@@ -95,19 +97,19 @@ const AddToCart = () => {
                 ))}
               </div>
 
-              <div className="text-center">
-                <button className="btn btn-primary" onClick={handleCheckout}>
-                  Proceed to Checkout
-                </button>
-                <button className="btn btn-danger ms-2" onClick={handleClearCart}>
+              <div className="d-flex justify-content-center mt-3 gap-3">
+                <button className="btn btn-danger" onClick={handleClearCart}>
                   Clear Cart
+                </button>
+                <button className="btn btn-primary" onClick={handleCheckout}>
+                  Checkout
                 </button>
               </div>
             </div>
           )}
         </div>
 
-        <div className="col-md-4">
+        {/* <div className="col-md-4">
           <div className="card p-3">
             <h5>Special Offers</h5>
             <div className="d-flex justify-content-between align-items-center">
@@ -123,7 +125,7 @@ const AddToCart = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

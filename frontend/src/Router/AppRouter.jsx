@@ -27,7 +27,7 @@ export const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="/view-profile" element={<ViewProfile />} />
         <Route path="/address" element={<Address />} />
-        <Route path="/menuItem" element={<MenuItem />}></Route>
+        <Route path="menuItem/:restaurantId" element={<MenuItem />}></Route>
         <Route path="/addtocart" element={<AddToCart />}></Route>
         <Route path="/myOrders" element={<MyOrders />}></Route>
       </Route>
