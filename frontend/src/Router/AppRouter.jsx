@@ -13,10 +13,11 @@ import {
   RestaurantOrders,
   ViewProfile,
 } from "../Pages";
-import { MyOrders } from "../Pages/MyOrders/MyOrders";
+
 import { DeliveryPartnerAssignedOrders } from "../Pages/DeliveryPartnerAsssignedOrders/DeliveryPartnerAssignedOrders";
 import { AddCuisine } from "../Components/Admin/AddCuisine";
 import AddToCart from "../Pages/AddToCart/AddToCart";
+import MyOrders from "../Pages/MyOrders/MyOrders";
 
 export const AppRouter = () => {
   return (
@@ -29,6 +30,8 @@ export const AppRouter = () => {
         <Route path="/address" element={<Address />} />
         <Route path="/menuItem" element={<MenuItem />}></Route>
         <Route path="/addtocart" element={<AddToCart/>}></Route>
+        <Route path="/myOrders" element={<MyOrders/>}></Route>
+        
     
       </Route>
       <Route
@@ -39,7 +42,7 @@ export const AppRouter = () => {
       <Route path="/restaurantList" element={<RestaurantList />} />
       <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
       <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
-      <Route path="/myOrders" element={<MyOrders />}></Route>
+      
       <Route path="/myAssignedOrders" element={<DeliveryPartnerAssignedOrders />}></Route>
     </Routes>
   );

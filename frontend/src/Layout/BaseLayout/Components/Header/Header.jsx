@@ -74,6 +74,18 @@ export const HeaderComponent = () => {
       ),
     },
     {
+      key: "myOrders",
+      label: (
+        <Link
+          to="/myOrders"
+          onClick={handleMenuClick}
+          style={{ textDecoration: "none" }}
+        >
+          My Orders
+        </Link>
+      ),
+    },
+    {
       key: "logout",
       label: (
         <Link onClick={handleLogout} style={{ textDecoration: "none" }}>

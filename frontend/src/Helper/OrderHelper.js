@@ -1,17 +1,17 @@
 import AxiosInstance from "./AxiosInstance";
 
-export const fetchMyOrders = async (id) => {
-    try {
-        const response = await AxiosInstance.get(`/Order/get-orders/${id}`, {
-            headers: {
-                "Include-Authorization": true
-            }
-        });
-        return response;
-    } catch (error) {
-        throw new Error("Orders not found");
-    }
+export const userOrders = async (userId) => {
+  try {
+    const response = await AxiosInstance.get(`/Order/get-orders/${userId}`, {
+      headers: {
+        "Include-Authorization": true,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Orders not found");
   }
+};
 
 export const placeOrder = async (orderData) => {
     try {
