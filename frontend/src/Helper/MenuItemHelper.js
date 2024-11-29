@@ -3,13 +3,13 @@ import AxiosInstance from "./AxiosInstance";
 export const fetchMenuItemsByRestaurant = async (restaurantId) => {
   try {
     const response = await AxiosInstance.get(
-      `/FoodItem/GetListofmenuItemByRestaurant/${restaurantId}`
+      `/FoodItem/GetListofmenuItemByRestaurant/${restaurantId}`,
     );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch menu items:", error);
     throw new Error(
-      error.response?.data?.errorMessage || "Failed to fetch menu items."
+      error.response?.data?.errorMessage || "Failed to fetch menu items.",
     );
   }
 };
@@ -17,7 +17,7 @@ export const fetchMenuItemsByRestaurant = async (restaurantId) => {
 export const fetchCuisineAndCategories = async () => {
   try {
     const response = await AxiosInstance.get(
-      "/FoodItem/GetListOfCuisineAndCategory"
+      "/FoodItem/GetListOfCuisineAndCategory",
     );
     return {
       cuisines: response.data.cuisines,
@@ -26,7 +26,7 @@ export const fetchCuisineAndCategories = async () => {
   } catch (error) {
     console.error("Failed to fetch cuisine and category data:", error);
     throw new Error(
-      error.response?.data?.errorMessage || "Failed to fetch data."
+      error.response?.data?.errorMessage || "Failed to fetch data.",
     );
   }
 };
@@ -40,13 +40,13 @@ export const addMenuItem = async (formData) => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {
     console.error("Failed to add new menu item:", error);
     throw new Error(
-      error.response?.data?.errorMessage || "Failed to add new menu item."
+      error.response?.data?.errorMessage || "Failed to add new menu item.",
     );
   }
 };
@@ -60,13 +60,13 @@ export const updateMenuItemById = async (menuItemId, formData) => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {
     console.error("Failed to update menu item:", error);
     throw new Error(
-      error.response?.data?.errorMessage || "Failed to update menu item."
+      error.response?.data?.errorMessage || "Failed to update menu item.",
     );
   }
 };

@@ -10,7 +10,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { clearAuth } from "../../../../Redux/Slices/authSlice";
 import "./Header.css";
-import { Login } from "../../../../Pages";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -53,23 +52,11 @@ export const HeaderComponent = () => {
       key: "viewProfile",
       label: (
         <Link
-          to="/view-profile"
+          to={`/users/${userId}`}
           onClick={handleMenuClick}
           style={{ textDecoration: "none" }}
         >
-          View Profile
-        </Link>
-      ),
-    },
-    {
-      key: "selectAddress",
-      label: (
-        <Link
-          to="/address"
-          onClick={handleMenuClick}
-          style={{ textDecoration: "none" }}
-        >
-          Select Address
+          Profile
         </Link>
       ),
     },
@@ -152,13 +139,13 @@ export const HeaderComponent = () => {
               />
             )}
 
-          <Link to="/addtocart" style={{ marginLeft: 10 }}>
+            <Link to="/addtocart" style={{ marginLeft: 10 }}>
               <Badge count={cartItems.length} showZero>
-                  <ShoppingCartOutlined
-                      style={{ fontSize: "28px", color: "#333" }}
-                    />
+                <ShoppingCartOutlined
+                  style={{ fontSize: "28px", color: "#333" }}
+                />
               </Badge>
-          </Link>
+            </Link>
           </>
         ) : (
           <Link to="/login" className="btn border">

@@ -1,0 +1,54 @@
+.ProfileCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  min-width: 35%;
+  padding: 10px;
+  align-items: center;
+  border-radius: 8px;
+  margin: 10px;
+  position: relative;
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  border-radius: 8px;
+  background-color: antiquewhite;
+  justify-content: space-between;
+  background-image: url("https://th.bing.com/th/id/OIP.iyy8dA04muVERQ3Q710xfAHaE7?rs=1&pid=ImgDetMain");
+  padding: 10px;
+  margin: 8px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.avatar {
+  margin: 10px;
+  border-radius: 50%;
+  border: 2px solid black;
+}
+
+.details {
+  width: 60%;
+}
+
+#editButton {
+  position: absolute;
+  right: 25px;
+  top: 15px;
+  margin-left: auto;
+  background-color: #e53935;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.tabs-section {
+  flex: 1;
+}

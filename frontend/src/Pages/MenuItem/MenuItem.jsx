@@ -157,7 +157,7 @@ export function MenuItem() {
         price: item.price,
         imageUrl: item.imageUrl,
         availableQuantity: item.quantity,
-      })
+      }),
     );
 
     toast.success("Item added to the cart.", {

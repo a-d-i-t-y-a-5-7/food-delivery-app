@@ -69,19 +69,20 @@ export function AddRestaurant() {
       try {
         const response = await addRestaurant(newRestaurantDetails);
         if (response.status === 201) {
-          console.log('Restaurant Added Successfully', response);
-          alert('Restaurant added successfully!');
+          console.log("Restaurant Added Successfully", response);
+          alert("Restaurant added successfully!");
           setFormData(resetFormData);
         } else {
-          alert('Failed To Register new Restaurant. Please try again later.');
+          alert("Failed To Register new Restaurant. Please try again later.");
         }
-
       } catch (error) {
         if (error.response.status === 400 || 500) {
-          alert(`Failed to add Restaurant : ${error.response?.data?.errorMessage || 'Unknown error'}`);
+          alert(
+            `Failed to add Restaurant : ${error.response?.data?.errorMessage || "Unknown error"}`,
+          );
         } else {
-          alert('An unexpected error occurred. Please try again later.');
-        };
+          alert("An unexpected error occurred. Please try again later.");
+        }
       }
     };
 
@@ -187,7 +188,9 @@ export function AddRestaurant() {
                   required
                 />
                 {errors.State && (
-                  <small className="form-text text-danger">{errors.State}</small>
+                  <small className="form-text text-danger">
+                    {errors.State}
+                  </small>
                 )}
               </div>
 
@@ -276,7 +279,9 @@ export function AddRestaurant() {
                   className="form-control"
                 />
                 {errors.Image && (
-                  <small className="form-text text-danger">{errors.Image}</small>
+                  <small className="form-text text-danger">
+                    {errors.Image}
+                  </small>
                 )}
               </div>
 
@@ -290,5 +295,5 @@ export function AddRestaurant() {
         </div>
       </div>
     );
-  }
+  };
 }
