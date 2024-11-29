@@ -29,7 +29,7 @@ export function AddMenuItem() {
       } catch (error) {
         if (error.response?.status === 400 || 500) {
           alert(
-            `${error.response?.data?.errorMessage || "failed to fetch cuisine category List"}`
+            `${error.response?.data?.errorMessage || "failed to fetch cuisine category List"}`,
           );
         }
       } finally {
@@ -80,7 +80,7 @@ export function AddMenuItem() {
     } catch (error) {
       if (error.response.status === 400 || 500) {
         alert(
-          `Failed to add menu Item: ${error.response?.data?.errorMessage || "Unknown error"}`
+          `Failed to add menu Item: ${error.response?.data?.errorMessage || "Unknown error"}`,
         );
       } else {
         alert("An unexpected error occurred. Please try again later.");
