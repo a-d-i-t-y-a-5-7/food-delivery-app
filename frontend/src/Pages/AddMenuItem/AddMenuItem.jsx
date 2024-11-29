@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { addMenuItem, getCuisinesAndCategoryList } from '../../Helper/MenuItem';
+import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { addMenuItem, getCuisinesAndCategoryList } from "../../Helper/MenuItem";
 
-function AddMenuItem() {
+export function AddMenuItem() {
   const resetForm = {
-    name: '',
-    description: '',
-    price: '',
-    cuisineTypeId: '',
-    categoryId: '',
-    isAvailable: 'true',
+    name: "",
+    description: "",
+    price: "",
+    cuisineTypeId: "",
+    categoryId: "",
+    isAvailable: "true",
     image: null,
-  }
+  };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cuisines, setCuisines] = useState([]);
@@ -26,10 +26,11 @@ function AddMenuItem() {
           setCuisines(response.data.cuisines);
           setCategories(response.data.categories);
         }
-      }
-      catch (error) {
+      } catch (error) {
         if (error.response?.status === 400 || 500) {
-          alert(`${error.response?.data?.errorMessage || 'failed to fetch cuisine category List'}`);
+          alert(
+            `${error.response?.data?.errorMessage || "failed to fetch cuisine category List"}`
+          );
         }
       } finally {
         setLoading(false);
@@ -64,26 +65,27 @@ function AddMenuItem() {
     });
 
     if (formData.image) {
-      MenuItemDetails.append('image', formData.image);
+      MenuItemDetails.append("image", formData.image);
     }
     try {
       const response = await addMenuItem(MenuItemDetails, 2);
       console.log(response);
       if (response.status === 201) {
         setFormData(resetForm);
-        alert('Menu item added successfully!');
+        alert("Menu item added successfully!");
         console.log(response);
-      }
-      else {
-        alert('Failed To Add Menu Item Please try again later.');
+      } else {
+        alert("Failed To Add Menu Item Please try again later.");
       }
     } catch (error) {
       if (error.response.status === 400 || 500) {
-        alert(`Failed to add menu Item: ${error.response?.data?.errorMessage || 'Unknown error'}`);
+        alert(
+          `Failed to add menu Item: ${error.response?.data?.errorMessage || "Unknown error"}`
+        );
       } else {
-        alert('An unexpected error occurred. Please try again later.');
+        alert("An unexpected error occurred. Please try again later.");
         console.error(error);
-      };
+      }
     }
   };
 
@@ -211,7 +213,7 @@ function AddMenuItem() {
             className="form-control"
             name="image"
             onChange={handleFileChange}
-          // required
+            // required
           />
           {formData.image && (
             <small className="form-text text-muted">
