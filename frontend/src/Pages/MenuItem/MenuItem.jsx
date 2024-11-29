@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   fetchMenuItemsDetail,
@@ -28,32 +28,27 @@ export function MenuItem() {
   const [cuisines, setCuisines] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [restaurantId, setRestaurantId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(resetFormData);
+  const { restaurantId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { userId } = useSelector((state) => state.auth);
 
   const fetchMenuItems = async () => {
     try {
-      const response = await fetchMenuItemsDetail(1);
-      if (response.status === 200) {
-        setMenuItems(response.data);
-        setRestaurantId(response.data[0].restaurantId);
-      } else {
-        setMenuItems([]);
-      }
+      const response = await fetchMenuItemsDetail(restaurantId);
+      setMenuItems(response);
     } catch (error) {
       setError(`Failed to fetch menu items: ${error.message || error}`);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchMenuItems();
-  }, []);
+  }, [restaurantId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -157,72 +152,72 @@ export function MenuItem() {
         price: item.price,
         imageUrl: item.imageUrl,
         availableQuantity: item.quantity,
-      }),
+      })
     );
-
     toast.success("Item added to the cart.", {
       position: "top-right",
       autoClose: 2000,
     });
-
-    setTimeout(() => {
-      navigate("/addtocart");
-    }, 500);
   };
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Menu Items</h2>
       <div className="row">
-        {menuItems.map((item) => (
-          <div key={item.id} className="col-md-4 d-flex justify-content-center">
+        {menuItems.length > 0 ? (
+          menuItems.map((item) => (
             <div
-              className="card shadow-sm p-3 mb-4 bg-white rounded"
-              style={{ width: "18rem" }}
+              key={item.id}
+              className="col-md-4 d-flex justify-content-center"
             >
-              <img
-                src={item.imageUrl}
-                alt={item.name}
-                className="card-img-top rounded"
-                style={{ height: "180px", objectFit: "cover" }}
-              />
-              <div className="card-body text-center">
-                <h5 className="card-title mb-2">{item.name}</h5>
-                <p
-                  className="card-text text-muted mb-2"
-                  style={{ fontSize: "0.9rem" }}
-                >
-                  {item.description}
-                </p>
-                <div className="my-3">
-                  <span className="text-secondary fw-bold">
-                    Price: {item.price ? item.price : "N/A"}/-
-                  </span>
+              <div
+                className="card shadow-sm p-3 mb-4 bg-white rounded"
+                style={{ width: "18rem" }}
+              >
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="card-img-top rounded"
+                  style={{ height: "180px", objectFit: "cover" }}
+                />
+                <div className="card-body text-center">
+                  <h5 className="card-title mb-2">{item.name}</h5>
+                  <p
+                    className="card-text text-muted mb-2"
+                    style={{ fontSize: "0.9rem" }}
+                  >
+                    {item.description}
+                  </p>
+                  <div className="my-3">
+                    <span className="text-secondary fw-bold">
+                      Price: {item.price || "N/A"}/-
+                    </span>
+                  </div>
+                  <button
+                    className="btn btn-primary w-100 mb-2"
+                    onClick={() => handleEditClick(item)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={() => handleMenuClick(item)}
+                  >
+                    ADD
+                  </button>
                 </div>
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={() => handleEditClick(item)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={() => handleMenuClick(item)}
-                >
-                  ADD
-                </button>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="text-center mt-4">
+            <p className="text-muted">No Menu Items Available</p>
           </div>
-        ))}
+        )}
       </div>
 
       {showModal && (
