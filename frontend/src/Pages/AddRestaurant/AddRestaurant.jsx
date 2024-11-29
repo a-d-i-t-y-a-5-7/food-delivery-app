@@ -78,7 +78,7 @@ export function AddRestaurant() {
       } catch (error) {
         if (error.response.status === 400 || 500) {
           alert(
-            `Failed to add Restaurant : ${error.response?.data?.errorMessage || "Unknown error"}`,
+            `Failed to add Restaurant : ${error.response?.data?.errorMessage || "Unknown error"}`
           );
         } else {
           alert("An unexpected error occurred. Please try again later.");

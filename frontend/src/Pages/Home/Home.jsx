@@ -30,7 +30,7 @@ export const Home = () => {
     return <Spin size="large" />;
   }
   const handleCardClick = (restaurantId) => {
-    navigate(`/menuItem`);
+    navigate(`/menuItem/${restaurantId}`);
   };
 
   return (
