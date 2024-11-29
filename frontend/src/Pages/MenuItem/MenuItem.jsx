@@ -71,10 +71,10 @@ function MenuItem() {
     setFormData({
       name: item.name,
       description: item.description,
-      price: item.price || '',
-      cuisineTypeId: item.cuisineTypeId || '',
-      categoryId: item.categoryId || '',
-      isAvailable: item.isAvailable || '',
+      price: item.price || "",
+      cuisineTypeId: item.cuisineTypeId || "",
+      categoryId: item.categoryId || "",
+      isAvailable: item.isAvailable || "",
       image: null,
     });
     setShowModal(true);
@@ -143,22 +143,33 @@ function MenuItem() {
       <div className="row">
         {menuItems.map((item) => (
           <div key={item.id} className="col-md-4 d-flex justify-content-center">
-            <div className="card shadow-sm p-3 mb-4 bg-white rounded" style={{ width: '18rem' }}>
+            <div
+              className="card shadow-sm p-3 mb-4 bg-white rounded"
+              style={{ width: "18rem" }}
+            >
               <img
                 src={item.imageUrl}
                 alt={item.name}
                 className="card-img-top rounded"
-                style={{ height: '180px', objectFit: 'cover' }}
+                style={{ height: "180px", objectFit: "cover" }}
               />
               <div className="card-body text-center">
                 <h5 className="card-title mb-2">{item.name}</h5>
-                <p className="card-text text-muted mb-2" style={{ fontSize: '0.9rem' }}>
+                <p
+                  className="card-text text-muted mb-2"
+                  style={{ fontSize: "0.9rem" }}
+                >
                   {item.description}
                 </p>
                 <div className="my-3">
-                  <span className="text-secondary fw-bold">Price: {item.price ? item.price : 'N/A'}/-</span>
+                  <span className="text-secondary fw-bold">
+                    Price: {item.price ? item.price : "N/A"}/-
+                  </span>
                 </div>
-                <button className="btn btn-primary w-100" onClick={() => handleEditClick(item)}>
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={() => handleEditClick(item)}
+                >
                   Edit
                 </button>
               </div>
@@ -173,13 +184,21 @@ function MenuItem() {
           <div className="modal-dialog modal-lg mt-5">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="editModalLabel">Edit Menu Item</h5>
-                <button type="button" className="btn-close" onClick={handleCloseModal}></button>
+                <h5 className="modal-title" id="editModalLabel">
+                  Edit Menu Item
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={handleCloseModal}
+                ></button>
               </div>
               <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="modal-body">
                   <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Name</label>
+                    <label htmlFor="name" className="form-label">
+                      Name
+                    </label>
                     <input
                       type="text"
                       id="name"
@@ -191,7 +210,9 @@ function MenuItem() {
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Description</label>
+                    <label htmlFor="description" className="form-label">
+                      Description
+                    </label>
                     <textarea
                       id="description"
                       className="form-control"
@@ -202,7 +223,9 @@ function MenuItem() {
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="price" className="form-label">Price</label>
+                    <label htmlFor="price" className="form-label">
+                      Price
+                    </label>
                     <input
                       type="number"
                       id="price"
@@ -214,7 +237,9 @@ function MenuItem() {
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="cuisineTypeId" className="form-label">Cuisine Type</label>
+                    <label htmlFor="cuisineTypeId" className="form-label">
+                      Cuisine Type
+                    </label>
                     <select
                       id="cuisineTypeId"
                       className="form-control"
@@ -236,7 +261,9 @@ function MenuItem() {
                     </select>
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="categoryId" className="form-label">Category Type</label>
+                    <label htmlFor="categoryId" className="form-label">
+                      Category Type
+                    </label>
                     <select
                       id="categoryId"
                       className="form-control"
@@ -259,7 +286,9 @@ function MenuItem() {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="image" className="form-label">Upload Image</label>
+                    <label htmlFor="image" className="form-label">
+                      Upload Image
+                    </label>
                     <input
                       type="file"
                       id="image"
@@ -267,10 +296,16 @@ function MenuItem() {
                       name="image"
                       onChange={handleFileChange}
                     />
-                    {formData.image && <small className="form-text text-muted">{formData.image.name}</small>}
+                    {formData.image && (
+                      <small className="form-text text-muted">
+                        {formData.image.name}
+                      </small>
+                    )}
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="isAvailable" className="form-label">Available</label>
+                    <label htmlFor="isAvailable" className="form-label">
+                      Available
+                    </label>
                     <select
                       id="isAvailable"
                       className="form-select"
@@ -285,8 +320,16 @@ function MenuItem() {
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Cancel</button>
-                  <button type="submit" className="btn btn-primary">Save changes</button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleCloseModal}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Save changes
+                  </button>
                 </div>
               </form>
             </div>
@@ -297,5 +340,3 @@ function MenuItem() {
     </div>
   );
 }
-
-export default MenuItem;

@@ -98,10 +98,16 @@ function AddMenuItem() {
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Add New Menu Item</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data" className="shadow p-4 rounded bg-light">
+      <form
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        className="shadow p-4 rounded bg-light"
+      >
         <div className="row mb-3">
           <div className="col-md-6">
-            <label htmlFor="name" className="form-label">Name</label>
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -114,7 +120,9 @@ function AddMenuItem() {
           </div>
 
           <div className="col-md-6">
-            <label htmlFor="price" className="form-label">Price (INR)</label>
+            <label htmlFor="price" className="form-label">
+              Price (INR)
+            </label>
             <input
               type="number"
               id="price"
@@ -128,7 +136,9 @@ function AddMenuItem() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="description" className="form-label">Description</label>
+          <label htmlFor="description" className="form-label">
+            Description
+          </label>
           <textarea
             id="description"
             className="form-control"
@@ -141,7 +151,9 @@ function AddMenuItem() {
 
         <div className="row mb-3">
           <div className="col-md-6">
-            <label htmlFor="cuisineTypeId" className="form-label">Cuisine Type</label>
+            <label htmlFor="cuisineTypeId" className="form-label">
+              Cuisine Type
+            </label>
             <select
               id="cuisineTypeId"
               className="form-select"
@@ -164,7 +176,9 @@ function AddMenuItem() {
           </div>
 
           <div className="col-md-6">
-            <label htmlFor="categoryId" className="form-label">Category Type</label>
+            <label htmlFor="categoryId" className="form-label">
+              Category Type
+            </label>
             <select
               id="categoryId"
               className="form-select"
@@ -188,7 +202,9 @@ function AddMenuItem() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="image" className="form-label">Upload Image</label>
+          <label htmlFor="image" className="form-label">
+            Upload Image
+          </label>
           <input
             type="file"
             id="image"
@@ -197,11 +213,17 @@ function AddMenuItem() {
             onChange={handleFileChange}
           // required
           />
-          {formData.image && <small className="form-text text-muted">{formData.image.name}</small>}
+          {formData.image && (
+            <small className="form-text text-muted">
+              {formData.image.name}
+            </small>
+          )}
         </div>
 
         <div className="mb-3">
-          <label htmlFor="isAvailable" className="form-label">Available</label>
+          <label htmlFor="isAvailable" className="form-label">
+            Available
+          </label>
           <select
             id="isAvailable"
             className="form-select"
@@ -215,10 +237,10 @@ function AddMenuItem() {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary w-100 py-2">Add Menu Item</button>
+        <button type="submit" className="btn btn-primary w-100 py-2">
+          Add Menu Item
+        </button>
       </form>
     </div>
   );
 }
-
-export default AddMenuItem;

@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using backend.Repositories.Implementations;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
@@ -47,5 +48,22 @@ namespace backend.Services.Implementations
 
             return dto;
         }
+
+        public bool ToggleIsActiveStatus(int id)
+        {
+            var deliveryPartner = _deliveryPartnerRepo.GetDeliveryPartnerById(id);
+            if (deliveryPartner == null)
+            {
+                return false;
+            }
+
+            deliveryPartner.IsActive = !deliveryPartner.IsActive; // Toggle the status
+            _deliveryPartnerRepo.UpdateDeliveryPartner(deliveryPartner);
+            _deliveryPartnerRepo.Save();
+
+            return true;
+        }
+
     }
+
 }

@@ -19,6 +19,8 @@ public partial class User
 
     public int? RoleId { get; set; }
 
+    public virtual ICollection<Admin> Admins { get; set; } = new List<Admin>();
+
     public virtual ICollection<DeliveryPartner> DeliveryPartners { get; set; } = new List<DeliveryPartner>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();

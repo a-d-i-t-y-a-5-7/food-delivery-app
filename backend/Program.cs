@@ -42,6 +42,28 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true
     };
 });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminLevel1", policy =>
+        policy.RequireRole("admin-level1"));
+
+    options.AddPolicy("AdminLevel2", policy =>
+        policy.RequireRole("admin-level2"));
+
+    options.AddPolicy("AdminLevel3", policy =>
+        policy.RequireRole("admin-level3"));
+
+    options.AddPolicy("DeliveryPartnerPolicy", policy =>
+        policy.RequireRole("delivery-partner"));
+
+    options.AddPolicy("RestaurantOwnerPolicy", policy =>
+        policy.RequireRole("restaurant-owner"));
+
+    options.AddPolicy("UserPolicy", policy =>
+        policy.RequireRole("user"));
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -52,6 +74,7 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodDeliveryDbContext>();
 builder.Services.AddScoped<IRestaurantRepositories, RestaurantRepositories>();
 builder.Services.AddScoped<IRestaurantServices, RestaurantServices>();
@@ -68,6 +91,13 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<ICouponManagementRepository, CouponManagementRepository>();
 builder.Services.AddScoped<ICouponManagementService, CouponManagementService>();
+builder.Services.AddScoped<ICuisineRepository, CuisineRepository>();
+builder.Services.AddScoped<ICuisineService, CuisineService>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
+builder.Services.AddScoped<IDeliveryRequestService, DeliveryRequestService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

@@ -1,38 +1,37 @@
-import axios from 'axios';
-const BASE_URL = 'https://localhost:44357/api/User';
+import AxiosInstance from "./AxiosInstance";
 
 export const fetchAddresses = async (userId, role) => {
   try {
-    const response = await axios.get(`${BASE_URL}/get-address`, {
+    const response = await AxiosInstance.get(`User/get-address`, {
       params: { userId, role },
     });
     return response.data;
   } catch (error) {
-    throw new Error('Failed to fetch addresses.');
+    throw new Error(error.response.data.message || "Internal Server Error");
   }
 };
 
 export const addAddress = async (addressData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/add-address`, addressData);
+    const response = await AxiosInstance.post(`/User/add-address`, addressData);
     return response.data;
   } catch (error) {
-    throw new Error('Failed to add address.');
+    throw new Error("Failed to add address.");
   }
 };
 
 export const updateAddress = async (addressId, addressData) => {
   try {
-    await axios.put(`${BASE_URL}/update-address/${addressId}`, addressData);
+    await AxiosInstance.put(`/User/update-address/${addressId}`, addressData);
   } catch (error) {
-    throw new Error('Failed to update address.');
+    throw new Error("Failed to update address.");
   }
 };
 
 export const deleteAddress = async (addressId) => {
   try {
-    await axios.delete(`${BASE_URL}/delete-Address/${addressId}`);
+    await AxiosInstance.delete(`/User/delete-Address/${addressId}`);
   } catch (error) {
-    throw new Error('Failed to delete address.');
+    throw new Error("Failed to delete address.");
   }
 };

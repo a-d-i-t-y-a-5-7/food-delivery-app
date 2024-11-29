@@ -378,13 +378,21 @@ VALUES
     (13, 'Sushi Spot', '9876232345', 4.7, '10:00', '21:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2022/03/04/00/47/wine-7046276_640.jpg'),
     (14, 'Taco Town', '9809874516', 4.3, '10:30', '23:30', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2017/07/08/16/33/taco-2484868_640.jpg'),
     (15, 'Pizza Mania', '7887623410', 4.8, '08:00', '22:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2018/03/07/18/42/menu-3206749_640.jpg');
+    (16, 'Desi Tadka', '9876543210', 4.4, '10:00', '23:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2023/09/28/10/26/indian-restaurant-8281116_1280.jpg'),
+	(17, 'The Indian Tadka', '9822712437', 4.2, '11:00', '22:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2021/11/03/08/31/india-6765030_1280.jpg'),
+    (18, 'The Chinese World', '7654328901', 4.3, '12:00', '23:00', 1, 1, GETDATE(), 'https://cdn.pixabay.com/photo/2016/03/27/21/34/restaurant-1284351_640.jpg');
 
   INSERT INTO RestaurantCuisines (restaurant_id, cuisine_id) VALUES
-(4,1),(4,2),(4,3),(4,4),
+  (4,1),(4,2),(4,3),(4,4),
   (5,3),(5,4),
   (6,4),
   (7,4),
-  (8,4);
+  (8,4),
+  (9,3),
+  (10,1),
+  (11,1),
+  (12,2), (12,3);
+  
 	 
 
 INSERT INTO State (StateName) VALUES
@@ -462,6 +470,28 @@ INSERT INTO City (CityName, StateID) VALUES
 ('Pondicherry', 34), ('Karaikal', 34),
 ('Srinagar', 35), ('Jammu', 35), ('Anantnag', 35),
 ('Leh', 36), ('Kargil', 36);
+
+--Added Column Quantity to FoodItems Table and updated values
+
+  Alter table FoodItems add quantity int 
+
+  update FoodItems set quantity=5 where id=1
+  update FoodItems set quantity=5 where id=2
+  update FoodItems set quantity=5 where id=3
+  update FoodItems set quantity=5 where id=4
+  update FoodItems set quantity=5 where id=5
+
+  SELECT TOP (1000) [id]
+      ,[restaurant_id]
+      ,[name]
+      ,[description]
+      ,[cuisine_type_id]
+      ,[price]
+      ,[image_url]
+      ,[category_id]
+      ,[is_available]
+	  ,[quantity]
+  FROM [FoodDeliveryDB].[dbo].[FoodItems]
 
 
 

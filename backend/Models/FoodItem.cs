@@ -23,6 +23,8 @@ public partial class FoodItem
 
     public bool? IsAvailable { get; set; }
 
+    public int? Quantity { get; set; }
+
     public virtual Category? Category { get; set; }
 
     public virtual Cuisine? CuisineType { get; set; }
