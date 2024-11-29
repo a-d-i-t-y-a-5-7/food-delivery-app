@@ -22,9 +22,6 @@ export function MenuItem() {
     image: null,
   };
 
-  const { userId } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
@@ -34,6 +31,10 @@ export function MenuItem() {
   const [restaurantId, setRestaurantId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(resetFormData);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { userId } = useSelector((state) => state.auth);
 
   const fetchMenuItems = async () => {
     try {
@@ -71,6 +72,7 @@ export function MenuItem() {
       }));
     }
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedItem(null);
@@ -205,12 +207,12 @@ export function MenuItem() {
                     Price: {item.price ? item.price : "N/A"}/-
                   </span>
                 </div>
-                {/* <button
+                <button
                   className="btn btn-primary w-100"
                   onClick={() => handleEditClick(item)}
                 >
                   Edit
-                </button> */}
+                </button>
                 <button
                   className="btn btn-primary w-100"
                   onClick={() => handleMenuClick(item)}
