@@ -1,6 +1,6 @@
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
+import { fetchCuisineAndCategories, addMenuItem } from "../../Helper/MenuItemHelper";
 
 export function AddMenuItem() {
   const [loading, setLoading] = useState(true);
@@ -18,24 +18,19 @@ export function AddMenuItem() {
   });
 
   useEffect(() => {
-    const fetchCuisineAndCategories = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://localhost:44357/api/FoodItem/GetListOfCuisineAndCategory"
-        );
-        setCuisines(response.data.cuisines);
-        setCategories(response.data.categories);
+        const data = await fetchCuisineAndCategories();
+        setCuisines(data.cuisines);
+        setCategories(data.categories);
       } catch (err) {
-        setError(
-          `Failed to fetch cuisine and category data: ${err.message || err}`
-        );
-        console.error(err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCuisineAndCategories();
+    fetchData();
   }, []);
 
   const handleInputChange = (e) => {
@@ -71,16 +66,8 @@ export function AddMenuItem() {
     }
 
     try {
-      const response = await axios.post(
-        "https://localhost:44357/api/FoodItem/AddmenuItem/1",
-        formDataToSubmit,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log(response);
+      await addMenuItem(formDataToSubmit);
+      alert("Menu item added successfully!");
       setFormData({
         name: "",
         description: "",
@@ -90,19 +77,9 @@ export function AddMenuItem() {
         isAvailable: "true",
         image: null,
       });
-
-      alert("Menu item added successfully!");
     } catch (err) {
-      if (err.response) {
-        setError(
-          `Failed to add new menu item: ${err.response.data.errorMessage || err.message}`
-        );
-        console.error("Error Response:", err.response.data);
-      } else {
-        setError(`Failed to add new menu item:- ${err.message}`);
-        console.error("Error:", err.message);
-      }
-    }
+      setError(err.message);
+    }     
   };
 
   if (loading) {

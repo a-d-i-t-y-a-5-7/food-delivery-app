@@ -26,6 +26,7 @@ public partial class Restaurant
     public DateTime? CreatedAt { get; set; }
 
     public string? ImageUrl { get; set; }
+    public int? DeliveryTime { get; set; }
 
     public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
 

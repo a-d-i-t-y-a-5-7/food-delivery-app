@@ -9,6 +9,7 @@
         public DateTime? OpeningTime { get; set; }
         public DateTime? ClosingTime { get; set; }
         public string? image_url { get; set; }
+        public decimal? DeliveryTime { get; set; }
         public string StreetAddress { get; set; }
         public string AdditionalAddress { get; set; }
         public string City { get; set; }
