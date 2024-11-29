@@ -128,6 +128,35 @@ function MenuItem() {
       console.error(err);
     }
   };
+  const handleMenuClick = (item) => {
+    if (!userId) {
+      toast.error("No cart available. Please login first.", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 5000);
+      return;
+    }
+  
+    dispatch(addToCart({ 
+      id: item.id, 
+      name: item.name, 
+      price: item.price, 
+      imageUrl: item.imageUrl, 
+      availableQuantity: item.quantity,
+    }));
+  
+    toast.success("Item added to the cart.", {
+      position: "top-right",
+      autoClose: 2000,
+    });
+  
+    setTimeout(() => {
+      navigate("/addtocart");
+    }, 500);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -136,7 +165,8 @@ function MenuItem() {
   if (error) {
     return <div>{error}</div>;
   }
-
+  
+  
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Menu Items</h2>
@@ -166,11 +196,18 @@ function MenuItem() {
                     Price: {item.price ? item.price : "N/A"}/-
                   </span>
                 </div>
-                <button
+                {/* <button
                   className="btn btn-primary w-100"
                   onClick={() => handleEditClick(item)}
                 >
                   Edit
+                </button> */}
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={ () => handleMenuClick(item)}
+                
+                >
+                  ADD
                 </button>
               </div>
             </div>

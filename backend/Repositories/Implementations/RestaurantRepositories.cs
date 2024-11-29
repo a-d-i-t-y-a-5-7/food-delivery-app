@@ -5,6 +5,8 @@ using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Net;
 
 namespace backend.Repositories.Implementations
 {
@@ -22,28 +24,42 @@ namespace backend.Repositories.Implementations
             var restaurants = _Dbcontext.Restaurants.ToList();
             var cuisines = _Dbcontext.Cuisines.ToList();
             var restaurantCuisines = _Dbcontext.RestaurantCuisines.ToList();
-            var restaurantDtos = restaurants.Select(r => new RestaurantDto
+            var orders = _Dbcontext.Orders.ToList();
+            var restaurantDtos = restaurants.Select(r =>
             {
-                Id = r.Id,
-                OwnerId = r.OwnerId,
-                Name = r.Name,
-                PhoneNumber = r.PhoneNumber,
-                Rating = r.Rating,
-                OpeningTime = r.OpeningTime,
-                ClosingTime = r.ClosingTime,
-                IsApproved = r.IsApproved,
-                IsActive= r.IsActive,
-                image_url = r.ImageUrl,
-                Cuisine = restaurantCuisines
-                    .Where(rc => rc.RestaurantId == r.Id)
-                    .Select(rc => cuisines.FirstOrDefault(c => c.Id == rc.CuisineId)?.CuisineName)
-                    .Where(cuisineName => cuisineName != null) 
-                    .ToList()
+                var deliveryTime = (int)orders
+                    .Where(o => o.RestaurantId == r.Id && o.PickedAt.HasValue && o.DeliveredAt.HasValue)
+                    .Select(o => (o.DeliveredAt.Value - o.PickedAt.Value).TotalMinutes)
+                    .DefaultIfEmpty(30) 
+                    .Average();
+
+                r.DeliveryTime = deliveryTime;  
+
+                return new RestaurantDto
+                {
+                    Id = r.Id,
+                    OwnerId = r.OwnerId,
+                    Name = r.Name,
+                    PhoneNumber = r.PhoneNumber,
+                    Rating = r.Rating,
+                    OpeningTime = r.OpeningTime,
+                    ClosingTime = r.ClosingTime,
+                    IsApproved = r.IsApproved,
+                    IsActive = r.IsActive,
+                    image_url = r.ImageUrl,
+                    DeliveryTime = deliveryTime,
+                    Cuisine = restaurantCuisines
+                        .Where(rc => rc.RestaurantId == r.Id)
+                        .Select(rc => cuisines.FirstOrDefault(c => c.Id == rc.CuisineId)?.CuisineName)
+                        .Where(cuisineName => cuisineName != null)
+                        .ToList()
+                };
             }).ToList();
+
+            _Dbcontext.SaveChanges();
 
             return restaurantDtos;
         }
-
         public List<Restaurant> GetRestaurants(int ownerId)
         {
             List<Restaurant>? restaurants = _Dbcontext.Restaurants.Where(r => r.OwnerId == ownerId).ToList();

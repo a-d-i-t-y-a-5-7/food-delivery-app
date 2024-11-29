@@ -19,7 +19,7 @@ function AddMenuItem() {
   const [formData, setFormData] = useState(resetForm);
 
   useEffect(() => {
-    const fetchCuisineAndCategories = async () => {
+    const fetchData = async () => {
       try {
         const response = await getCuisinesAndCategoryList();
         if (response.status === 200) {
@@ -36,7 +36,7 @@ function AddMenuItem() {
       }
     };
 
-    fetchCuisineAndCategories();
+    fetchData();
   }, []);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
