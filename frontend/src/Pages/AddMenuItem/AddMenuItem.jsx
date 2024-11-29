@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { addMenuItem, getCuisinesAndCategoryList } from '../../Helper/MenuItem';
 
-function AddMenuItem() {
+ export function AddMenuItem() {
   const resetForm = {
     name: '',
     description: '',

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { updateMenuItem, getCuisinesAndCategoryList, fetchMenuItemsDetail } from '../../Helper/MenuItem';
 import './MenuItem.css'
-function MenuItem() {
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useSelector,useDispatch } from 'react-redux';
+import { addToCart } from '../../Redux/Slices/cartSlice';
+export function MenuItem() {
   const resetFormData = {
     name: '',
     description: '',
@@ -21,7 +25,10 @@ function MenuItem() {
   const [restaurantId, setRestaurantId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(resetFormData);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+ 
+  const { userId } = useSelector((state) => state.auth);
 
   const fetchMenuItems = async () => {
     try {
@@ -60,6 +67,7 @@ function MenuItem() {
       }));
     }
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedItem(null);
@@ -196,12 +204,12 @@ function MenuItem() {
                     Price: {item.price ? item.price : "N/A"}/-
                   </span>
                 </div>
-                {/* <button
+                <button
                   className="btn btn-primary w-100"
                   onClick={() => handleEditClick(item)}
                 >
                   Edit
-                </button> */}
+                </button>
                 <button
                   className="btn btn-primary w-100"
                   onClick={ () => handleMenuClick(item)}
