@@ -10,11 +10,12 @@ import {
 
 export const AddToCart = () => {
   const cartItems = useSelector((state) => state.cart.items);
+  const userId = useSelector((state) => state.auth.userId);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
   const handleClearCart = () => {
@@ -122,27 +123,6 @@ export const AddToCart = () => {
             </div>
           )}
         </div>
-
-        {/* <div className="col-md-4">
-          <div className="card p-3">
-            <h5>Special Offers</h5>
-            <div className="d-flex justify-content-between align-items-center">
-              <img
-                src="https://img.pikbest.com/origin/09/07/51/74NpIkbEsTIXv.jpg!bw700"
-                style={{ width: "100%", height: "400px" }}
-                alt="offer"
-              />
-            </div>
-            <div className="text-center mt-2">
-              <button
-                className="btn btn-primary mt-2"
-                onClick={handleBrowseRestaurants}
-              >
-                Order Now
-              </button>
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
   );

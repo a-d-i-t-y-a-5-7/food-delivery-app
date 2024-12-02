@@ -130,6 +130,9 @@ namespace backend.Repositories.Implementations
                 {
                     Id = item.Id,
                     FoodItemId = item.FoodItemId ?? 0,
+                    FoodItemName = item.FoodItem?.Name,  
+                    FoodItemImageUrl = item.FoodItem?.ImageUrl,
+                    Description = item.FoodItem?.Description,
                     Quantity = item.Quantity,
                     Price = item.Price,
                 }).ToList() ?? new List<OrderItemDto>()
@@ -165,6 +168,9 @@ namespace backend.Repositories.Implementations
                         {
                             Id = item.Id,
                             FoodItemId = item.FoodItemId ?? 0,
+                            FoodItemName = item.FoodItem?.Name, 
+                            FoodItemImageUrl = item.FoodItem?.ImageUrl,
+                            Description = item.FoodItem?.Description,
                             Quantity = item.Quantity,
                             Price = item.Price,
                         }).ToList()
