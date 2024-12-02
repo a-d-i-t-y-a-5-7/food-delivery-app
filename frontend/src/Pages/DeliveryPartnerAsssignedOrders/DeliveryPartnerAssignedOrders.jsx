@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { fetchMyAssignedOrders } from '../../Helper/DeliveryPartnerHelper';
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { fetchMyAssignedOrders } from "../../Helper/DeliveryPartnerHelper";
 
 export const DeliveryPartnerAssignedOrders = () => {
-
   const deliveryPartnerId = useSelector((state) => state.auth.userId);
 
   const [myAssignedOrders, setMyAssignedOrders] = useState([]);
@@ -11,7 +10,7 @@ export const DeliveryPartnerAssignedOrders = () => {
   const getMyAssignedOrders = async () => {
     const response = await fetchMyAssignedOrders(deliveryPartnerId);
     setMyAssignedOrders(response.data.orders);
-  }
+  };
 
   useEffect(() => {
     getMyAssignedOrders();
@@ -38,20 +37,18 @@ export const DeliveryPartnerAssignedOrders = () => {
               <td>{order.restaurantName}</td>
               <td>{order.totalAmount}</td>
               <td>{order.status}</td>
-              {order.status === 'Pending' ? 
-                            <td>
-                            <button>
-                              Accept
-                            </button>
-                            <button>
-                              Reject
-                            </button>
-                          </td>  
-              :''}
+              {order.status === "Pending" ? (
+                <td>
+                  <button>Accept</button>
+                  <button>Reject</button>
+                </td>
+              ) : (
+                ""
+              )}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};

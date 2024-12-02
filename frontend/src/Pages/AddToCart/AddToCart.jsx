@@ -2,9 +2,13 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { clearCart, incrementQuantity, decrementQuantity } from "../../Redux/Slices/cartSlice";
+import {
+  clearCart,
+  incrementQuantity,
+  decrementQuantity,
+} from "../../Redux/Slices/cartSlice";
 
-const AddToCart = () => {
+export const AddToCart = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,18 +22,20 @@ const AddToCart = () => {
   };
 
   const handleCheckout = () => {
-    navigate('/address');
+    navigate("/address");
   };
 
   const handleBrowseRestaurants = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleIncrementQuantity = (item) => {
     if (item.quantityInCart < item.availableQuantity) {
       dispatch(incrementQuantity(item.id));
     } else {
-      toast.error(`Out of stock: Only ${item.availableQuantity} items are available.`);
+      toast.error(
+        `Out of stock: Only ${item.availableQuantity} items are available.`,
+      );
     }
   };
 
@@ -41,7 +47,10 @@ const AddToCart = () => {
           {cartItems.length === 0 ? (
             <div className="text-center">
               <p>No items in your cart</p>
-              <button className="btn btn-primary mt-3" onClick={handleBrowseRestaurants}>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={handleBrowseRestaurants}
+              >
                 Browse Restaurants
               </button>
             </div>
@@ -50,7 +59,10 @@ const AddToCart = () => {
               <div className="row">
                 {cartItems.map((item) => (
                   <div key={item.id} className="col-md-6 mb-4">
-                    <div className="card" style={{ borderRadius: "10px", overflow: "hidden" }}>
+                    <div
+                      className="card"
+                      style={{ borderRadius: "10px", overflow: "hidden" }}
+                    >
                       <div className="d-flex">
                         <div className="container p-3 d-flex align-items-center">
                           <img
@@ -71,7 +83,9 @@ const AddToCart = () => {
                             <div className="d-flex align-items-center gap-3 mt-2">
                               <button
                                 className="btn btn-outline-danger btn-sm"
-                                onClick={() => dispatch(decrementQuantity(item.id))}
+                                onClick={() =>
+                                  dispatch(decrementQuantity(item.id))
+                                }
                               >
                                 -
                               </button>
@@ -120,7 +134,10 @@ const AddToCart = () => {
               />
             </div>
             <div className="text-center mt-2">
-              <button className="btn btn-primary mt-2" onClick={handleBrowseRestaurants}>
+              <button
+                className="btn btn-primary mt-2"
+                onClick={handleBrowseRestaurants}
+              >
                 Order Now
               </button>
             </div>
@@ -130,5 +147,3 @@ const AddToCart = () => {
     </div>
   );
 };
-
-export default AddToCart;

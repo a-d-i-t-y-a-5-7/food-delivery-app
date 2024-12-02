@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal} from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2'; 
@@ -11,7 +11,10 @@ import {
   fetchAddresses,
   updateAddress,
 } from "../../Helper/AddressHelper";
-import { incrementQuantity, decrementQuantity } from "../../Redux/Slices/cartSlice";
+import {
+  incrementQuantity,
+  decrementQuantity,
+} from "../../Redux/Slices/cartSlice";
 import { placeOrder } from "../../Helper/OrderHelper";
 
 export const Address = () => {
@@ -65,10 +68,10 @@ export const Address = () => {
   const handleDeliverHere = (addressId) => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
-      (address) => address.id === addressId
+      (address) => address.id === addressId,
     );
     toast.success(
-      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
     );
   };
 
@@ -85,8 +88,8 @@ export const Address = () => {
           addresses.map((address) =>
             address.id === currentAddress.id
               ? { ...address, ...values }
-              : address
-          )
+              : address,
+          ),
         );
         toast.success("Address updated successfully.");
       } else {
@@ -107,7 +110,9 @@ export const Address = () => {
     if (item.quantityInCart < item.availableQuantity) {
       dispatch(incrementQuantity(item.id));
     } else {
-      toast.error(`Out of stock: Only ${item.availableQuantity} items are available.`);
+      toast.error(
+        `Out of stock: Only ${item.availableQuantity} items are available.`,
+      );
     }
   };
   const handlePlaceOrder = async () => {
@@ -118,10 +123,10 @@ export const Address = () => {
 
     const orderData = {
       customerId: userId,
-      restaurantId: 1, 
+      restaurantId: 1,
       addressId: selectedAddressId,
-      orderItems: cartItems.map((item) => ({ 
-        foodItemId: item.id, 
+      orderItems: cartItems.map((item) => ({
+        foodItemId: item.id,
         quantity: item.quantityInCart,
       })),
     };
@@ -150,7 +155,7 @@ export const Address = () => {
       <div className="row">
         <div className="col-md-8">
           <h2 className="text-left mb-4">Select a Delivery Address</h2>
-           <div className="row">
+          <div className="row">
             {addresses.map((address) => (
               <div className="col-12 col-md-6 mb-4" key={address.id}>
                 <div
@@ -223,47 +228,59 @@ export const Address = () => {
           </div>
         </div>
         <div className="col-md-4">
-        <div className="card p-3" style={{ marginTop: "60px" }}>
-          <h5>Your Order</h5>
-          {cartItems.length > 0 ? (
-            cartItems.map((item) => (
-              <div
-                key={item.id}
-                className="d-flex justify-content-between align-items-center mb-2"
-              >
-                <span>{item.name} </span>
-                <span>
-                <div className="d-flex align-items-center gap-3 mt-2">
-                <button className="btn btn-outline-danger btn-sm"
-                  onClick={() => dispatch(decrementQuantity(item.id))}
-                >-</button>
-                <span>{item.quantityInCart}</span>
-                <button
-                className="btn btn-outline-danger btn-sm"
-                onClick={() => handleIncrementQuantity(item)}
+          <div className="card p-3" style={{ marginTop: "60px" }}>
+            <h5>Your Order</h5>
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="d-flex justify-content-between align-items-center mb-2"
                 >
-                +
-                </button> 
-                </div></span>
-                <span>₹{item.price * item.quantityInCart}</span>
-              </div>
-            ))
-          ) : (
-            <p>No items in your cart</p>
-          )}
-          <hr />
-          <div className="d-flex justify-content-between">
-            <h6>Total:</h6>
-            <h6>₹{cartItems.reduce((total, item) => total + item.price * item.quantityInCart, 0)}</h6>
-          </div>
-          <div className="text-center mt-2">
-            <button className="btn btn-primary mt-2" onClick={handlePlaceOrder}>
-              Place Order
-            </button>
+                  <span>{item.name} </span>
+                  <span>
+                    <div className="d-flex align-items-center gap-3 mt-2">
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => dispatch(decrementQuantity(item.id))}
+                      >
+                        -
+                      </button>
+                      <span>{item.quantityInCart}</span>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleIncrementQuantity(item)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </span>
+                  <span>₹{item.price * item.quantityInCart}</span>
+                </div>
+              ))
+            ) : (
+              <p>No items in your cart</p>
+            )}
+            <hr />
+            <div className="d-flex justify-content-between">
+              <h6>Total:</h6>
+              <h6>
+                ₹
+                {cartItems.reduce(
+                  (total, item) => total + item.price * item.quantityInCart,
+                  0,
+                )}
+              </h6>
+            </div>
+            <div className="text-center mt-2">
+              <button
+                className="btn btn-primary mt-2"
+                onClick={handlePlaceOrder}
+              >
+                Place Order
+              </button>
+            </div>
           </div>
         </div>
-        </div>
-
       </div>
       <Modal
         title={currentAddress ? "Update Address" : "Add New Address"}
