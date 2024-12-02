@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   fetchMenuItemsDetail,
@@ -39,7 +39,7 @@ export function MenuItem() {
 
   const fetchMenuItems = async () => {
     try {
-      const response = await fetchMenuItemsDetail(restaurantId); 
+      const response = await fetchMenuItemsDetail(restaurantId);
       if (response.status === 200) {
         setMenuItems(response.data);
       } else {
