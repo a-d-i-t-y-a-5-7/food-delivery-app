@@ -23,9 +23,10 @@ export const Address = () => {
   const [currentAddress, setCurrentAddress] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [form] = Form.useForm();
-
   const userId = useSelector((state) => state.auth.userId);
   const cartItems = useSelector((state) => state.cart.items);
+  const restaurantId = useSelector((state) => state.cart.restaurantId);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -120,10 +121,9 @@ export const Address = () => {
       toast.warning("Please select a delivery address.");
       return;
     }
-
-    const orderData = {
+  const orderData = {
       customerId: userId,
-      restaurantId: 1,
+      restaurantId: restaurantId,
       addressId: selectedAddressId,
       orderItems: cartItems.map((item) => ({
         foodItemId: item.id,

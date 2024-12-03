@@ -74,7 +74,10 @@ const MyOrders = () => {
                   ))}
                 </div>
                 <div className="text-end mt-3">
-                  <button className="btn btn-primary">Add Review</button>
+                  <button className="btn btn-primary"
+                  //onClick={ () => handleReview()}
+                  >
+                  Add Review</button>
                 </div>
               </div>
             </div>

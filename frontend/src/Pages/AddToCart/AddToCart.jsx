@@ -6,6 +6,7 @@ import {
   clearCart,
   incrementQuantity,
   decrementQuantity,
+  setUserId,
 } from "../../Redux/Slices/cartSlice";
 
 export const AddToCart = () => {
@@ -15,8 +16,10 @@ export const AddToCart = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (userId) {
+      dispatch(setUserId(userId));
+    }
+  }, [userId, dispatch]);
 
   const handleClearCart = () => {
     dispatch(clearCart());
@@ -35,7 +38,7 @@ export const AddToCart = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`,
+        `Out of stock: Only ${item.availableQuantity} items are available.`
       );
     }
   };
@@ -80,7 +83,9 @@ export const AddToCart = () => {
                           <div className="ms-5">
                             <h5>{item.name}</h5>
                             <h6>{item.description}</h6>
-                            <p className="mb-1 text-muted">Price: ₹{item.price}</p>
+                            <p className="mb-1 text-muted">
+                              Price: ₹{item.price}
+                            </p>
                             <div className="d-flex align-items-center gap-3 mt-2">
                               <button
                                 className="btn btn-outline-danger btn-sm"
@@ -99,8 +104,9 @@ export const AddToCart = () => {
                               </button>
                             </div>
                             <div className="mt-2">
-                              <p className="text-muted"><strong>
-                                Total: ₹{item.price * item.quantityInCart}
+                              <p className="text-muted">
+                                <strong>
+                                  Total: ₹{item.price * item.quantityInCart}
                                 </strong>
                               </p>
                             </div>
