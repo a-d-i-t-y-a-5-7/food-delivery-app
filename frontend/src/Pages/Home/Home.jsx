@@ -30,7 +30,7 @@ export const Home = () => {
     return <Spin size="large" />;
   }
   const handleCardClick = (restaurantId) => {
-    navigate(`/menuItem`);  
+    navigate(`/menuItem/${restaurantId}`);
   };
 
   return (
@@ -69,7 +69,12 @@ export const Home = () => {
                   alt={restaurant.name}
                   src={restaurant.image_url}
                   onClick={() => handleCardClick(restaurant.id)}
-                  style={{ width: "100%", height: "200px", objectFit: "cover" ,cursor: "pointer"}}
+                  style={{
+                    width: "100%",
+                    height: "200px",
+                    objectFit: "cover",
+                    cursor: "pointer",
+                  }}
                 />
               }
               className="text-center"

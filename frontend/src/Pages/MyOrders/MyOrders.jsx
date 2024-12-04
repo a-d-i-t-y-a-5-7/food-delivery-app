@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { userOrders } from "../../Helper/OrderHelper";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const myOrders = () => {
+export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const userId = useSelector((state) => state.auth.userId);
 
@@ -13,7 +13,7 @@ const myOrders = () => {
       try {
         if (userId) {
           const response = await userOrders(userId);
-          setOrders(response.data.orders); 
+          setOrders(response.data.orders);
           toast.success("Orders fetched successfully");
         }
       } catch (error) {
@@ -60,5 +60,3 @@ const myOrders = () => {
     </div>
   );
 };
-
-export default myOrders;
