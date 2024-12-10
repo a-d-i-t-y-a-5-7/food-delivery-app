@@ -128,7 +128,9 @@ export const Address = () => {
       orderItems: cartItems.map((item) => ({
         foodItemId: item.id,
         quantity: item.quantityInCart,
+        
       })),
+    
     };
 
     try {
@@ -271,14 +273,13 @@ export const Address = () => {
                 )}
               </h6>
             </div>
-            <div className="text-center mt-2">
-              <button
-                className="btn btn-primary mt-2"
-                onClick={handlePlaceOrder}
-              >
-                Place Order
-              </button>
-            </div>
+            {cartItems.length > 0 && (
+              <div className="text-center mt-2">
+                <button className="btn btn-primary mt-2" onClick={handlePlaceOrder}>
+                  Place Order
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

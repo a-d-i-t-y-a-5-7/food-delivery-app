@@ -25,13 +25,28 @@ const cartSlice = createSlice({
       state.items = getCartFromLocalStorage(action.payload);
     },
     setRestaurantId: (state, action) => {
-      state.restaurantId = action.payload;
+      const newRestaurantId = action.payload;
+      if (state.items.length > 0 && state.items[0].restaurantId !== newRestaurantId) {
+        state.items = [];
+        saveCartToLocalStorage(state.userId, []);
+      }
+
+      state.restaurantId = newRestaurantId;
+      state.items = state.items.map((item) => ({
+        ...item,
+        restaurantId: newRestaurantId,
+      }));
+      saveCartToLocalStorage(state.userId, state.items); 
     },
     addToCart: (state, action) => {
-      const { id, name, price, imageUrl, availableQuantity, description } =
-        action.payload;
-      const existingItem = state.items.find((item) => item.id === id);
+      const { id, name, price, imageUrl, availableQuantity, description, restaurantId } = action.payload;
+      
+      if (state.restaurantId && state.restaurantId !== restaurantId) {
+        state.items = [];
+        saveCartToLocalStorage(state.userId, []);
+      }
 
+      const existingItem = state.items.find((item) => item.id === id);
       if (existingItem) {
         existingItem.quantityInCart += 1;
       } else {
@@ -43,6 +58,7 @@ const cartSlice = createSlice({
           availableQuantity,
           description,
           quantityInCart: 1,
+          restaurantId: state.restaurantId,
         });
       }
 

@@ -22,6 +22,7 @@ export const placeOrder = async (orderData) => {
     });
     return response.data;
   } catch (error) {
+    console.error("Error placing order:", error);
     throw new Error("Failed to place the order. Please check the order data.");
   }
 };

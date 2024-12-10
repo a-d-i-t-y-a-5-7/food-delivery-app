@@ -126,6 +126,7 @@ export function MenuItem() {
         imageUrl: item.imageUrl,
         description: item.description,
         availableQuantity: item.quantity,
+        restaurantId: item.restaurantId,
       })
     );
     toast.success("Item added to the cart.", {
