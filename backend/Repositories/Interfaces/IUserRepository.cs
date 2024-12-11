@@ -17,7 +17,8 @@ namespace backend.Repositories.Interfaces
         Task<bool> DeleteAddressById(int Id);
         Task UpdateAddress(int Id, UpdateAddressDto addressDto);
         Task<IEnumerable<Order>> GetOrderHistory(int userId);
-        
+        Task<List<Restaurant>> SearchRestaurants(string searchTerm);
+
 
     }
 }
