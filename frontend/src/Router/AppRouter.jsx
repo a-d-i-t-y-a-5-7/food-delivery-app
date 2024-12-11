@@ -10,12 +10,12 @@ import {
   Home,
   Login,
   MenuItem,
-  MyOrders,
   Register,
   RestaurantList,
   RestaurantOrders,
   ViewProfile,
 } from "../Pages";
+import MyOrders from "../Pages/MyOrders/MyOrders";
 
 export const AppRouter = () => {
   return (
@@ -28,7 +28,7 @@ export const AppRouter = () => {
         <Route path="/address" element={<Address />} />
         <Route path="/menuItem/:restaurantId" element={<MenuItem />}></Route>
         <Route path="/addtocart" element={<AddToCart />}></Route>
-        <Route path="/myOrders" element={<MyOrders />}></Route>
+        <Route path="/myOrders" element={<MyOrders/>}></Route>
       </Route>
       <Route
         path="/restaurantOrders/:restaurantId"

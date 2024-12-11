@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Card, Breadcrumb, Spin, Alert, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useDispatch } from "react-redux";
 import { fetchRestaurants } from "../../Helper/UserHelper";
+import { setRestaurantId } from "../../Redux/Slices/cartSlice";
 
 export const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,9 +33,10 @@ export const Home = () => {
     return <Spin size="large" />;
   }
   const handleCardClick = (restaurantId) => {
+    dispatch(setRestaurantId(restaurantId));
     navigate(`/menuItem/${restaurantId}`);
   };
-
+  
   return (
     <div className="container">
       <Breadcrumb className="my-3">

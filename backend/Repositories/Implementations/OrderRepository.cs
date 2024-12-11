@@ -50,7 +50,8 @@ namespace backend.Repositories.Implementations
                 if (item.Quantity > foodItem.Quantity)
                 {
 
-                    throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
+                    Exception exception = new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
+                    throw exception;
                 }
 
                 totalAmount += foodItem.Price * item.Quantity;
@@ -68,6 +69,7 @@ namespace backend.Repositories.Implementations
             newOrder.TotalAmount = totalAmount;
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
+            placeOrderDto.OrderId = newOrder.Id;
 
             return true;
         }
@@ -128,6 +130,9 @@ namespace backend.Repositories.Implementations
                 {
                     Id = item.Id,
                     FoodItemId = item.FoodItemId ?? 0,
+                    FoodItemName = item.FoodItem?.Name,  
+                    FoodItemImageUrl = item.FoodItem?.ImageUrl,
+                    Description = item.FoodItem?.Description,
                     Quantity = item.Quantity,
                     Price = item.Price,
                 }).ToList() ?? new List<OrderItemDto>()
@@ -163,6 +168,9 @@ namespace backend.Repositories.Implementations
                         {
                             Id = item.Id,
                             FoodItemId = item.FoodItemId ?? 0,
+                            FoodItemName = item.FoodItem?.Name, 
+                            FoodItemImageUrl = item.FoodItem?.ImageUrl,
+                            Description = item.FoodItem?.Description,
                             Quantity = item.Quantity,
                             Price = item.Price,
                         }).ToList()
