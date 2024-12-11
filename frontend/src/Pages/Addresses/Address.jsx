@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import Swal from 'sweetalert2'; 
+import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -26,7 +26,7 @@ export const Address = () => {
   const userId = useSelector((state) => state.auth.userId);
   const cartItems = useSelector((state) => state.cart.items);
   const restaurantId = useSelector((state) => state.cart.restaurantId);
-  
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,10 +69,10 @@ export const Address = () => {
   const handleDeliverHere = (addressId) => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
-      (address) => address.id === addressId,
+      (address) => address.id === addressId
     );
     toast.success(
-      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
     );
   };
 
@@ -89,8 +89,8 @@ export const Address = () => {
           addresses.map((address) =>
             address.id === currentAddress.id
               ? { ...address, ...values }
-              : address,
-          ),
+              : address
+          )
         );
         toast.success("Address updated successfully.");
       } else {
@@ -112,7 +112,7 @@ export const Address = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`,
+        `Out of stock: Only ${item.availableQuantity} items are available.`
       );
     }
   };
@@ -121,27 +121,25 @@ export const Address = () => {
       toast.warning("Please select a delivery address.");
       return;
     }
-  const orderData = {
+    const orderData = {
       customerId: userId,
       restaurantId: restaurantId,
       addressId: selectedAddressId,
       orderItems: cartItems.map((item) => ({
         foodItemId: item.id,
         quantity: item.quantityInCart,
-        
       })),
-    
     };
 
     try {
       const response = await placeOrder(orderData);
       Swal.fire({
-        title: 'Order Placed!',
+        title: "Order Placed!",
         text: `Your order has been successfully placed. Order ID: ${response.orderId}`,
-        icon: 'success',
-        confirmButtonText: 'OK',
+        icon: "success",
+        confirmButtonText: "OK",
         customClass: {
-          popup: 'colored-toast',
+          popup: "colored-toast",
         },
       });
     } catch (error) {
@@ -269,13 +267,16 @@ export const Address = () => {
                 ₹
                 {cartItems.reduce(
                   (total, item) => total + item.price * item.quantityInCart,
-                  0,
+                  0
                 )}
               </h6>
             </div>
             {cartItems.length > 0 && (
               <div className="text-center mt-2">
-                <button className="btn btn-primary mt-2" onClick={handlePlaceOrder}>
+                <button
+                  className="btn btn-primary mt-2"
+                  onClick={handlePlaceOrder}
+                >
                   Place Order
                 </button>
               </div>

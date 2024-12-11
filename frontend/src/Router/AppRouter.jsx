@@ -13,6 +13,7 @@ import {
   Register,
   RestaurantList,
   RestaurantOrders,
+  SearchResult,
   ViewProfile,
 } from "../Pages";
 import MyOrders from "../Pages/MyOrders/MyOrders";
@@ -28,7 +29,8 @@ export const AppRouter = () => {
         <Route path="/address" element={<Address />} />
         <Route path="/menuItem/:restaurantId" element={<MenuItem />}></Route>
         <Route path="/addtocart" element={<AddToCart />}></Route>
-        <Route path="/myOrders" element={<MyOrders/>}></Route>
+        <Route path="/myOrders" element={<MyOrders />}></Route>
+        <Route path="/search/:query" element={<SearchResult />} />
       </Route>
       <Route
         path="/restaurantOrders/:restaurantId"

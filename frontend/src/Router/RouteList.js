@@ -1,0 +1,96 @@
+import {
+  AddMenuItem,
+  AddRestaurant,
+  AddToCart,
+  Address,
+  DeliveryPartnerAssignedOrders,
+  Home,
+  Login,
+  MenuItem,
+  MyOrders,
+  Register,
+  RestaurantList,
+  RestaurantOrders,
+  ViewProfile,
+} from "../Pages";
+
+export const routeList = [
+  {
+    path: "/login",
+    element: <Login />,
+    layout: null,
+    roles: [],
+  },
+  {
+    path: "/register",
+    element: <Register />,
+    layout: null,
+    roles: [],
+  },
+  {
+    path: "/",
+    element: <Home />,
+    layout: "BaseLayout",
+    roles: [],
+  },
+  {
+    path: "/menuItem/:restaurantId",
+    element: <MenuItem />,
+    layout: "AdminLayout",
+    roles: ["admin"],
+  },
+  {
+    path: "/users/:userId",
+    element: <ViewProfile />,
+    layout: "BaseLayout",
+    roles: ["user", "admin"],
+  },
+  {
+    path: "/address",
+    element: <Address />,
+    layout: "BaseLayout",
+    roles: ["user"],
+  },
+  {
+    path: "/addtocart",
+    element: <AddToCart />,
+    layout: "BaseLayout",
+    roles: ["user"],
+  },
+  {
+    path: "/myOrders",
+    element: <MyOrders />,
+    layout: "BaseLayout",
+    roles: ["user"],
+  },
+  {
+    path: "/restaurantList",
+    element: <RestaurantList />,
+    layout: "BaseLayout",
+    roles: ["user"],
+  },
+  {
+    path: "/addrestaurant",
+    element: <AddRestaurant />,
+    layout: "BaseLayout",
+    roles: ["restaurant-owner"],
+  },
+  {
+    path: "/myAssignedOrders",
+    element: <DeliveryPartnerAssignedOrders />,
+    layout: "BaseLayout",
+    roles: ["restaurant-owner"],
+  },
+  {
+    path: "/addmenuitem",
+    element: <AddMenuItem />,
+    layout: "BaseLayout",
+    roles: ["restaurant-owner"],
+  },
+  {
+    path: "/restaurantOrders/:restaurantId",
+    element: <RestaurantOrders />,
+    layout: "BaseLayout",
+    roles: ["user"],
+  },
+];
