@@ -2,6 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -22,9 +23,10 @@ export const Address = () => {
   const [currentAddress, setCurrentAddress] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [form] = Form.useForm();
-
   const userId = useSelector((state) => state.auth.userId);
   const cartItems = useSelector((state) => state.cart.items);
+  const restaurantId = useSelector((state) => state.cart.restaurantId);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -119,10 +121,9 @@ export const Address = () => {
       toast.warning("Please select a delivery address.");
       return;
     }
-
     const orderData = {
       customerId: userId,
-      restaurantId: 1,
+      restaurantId: restaurantId,
       addressId: selectedAddressId,
       orderItems: cartItems.map((item) => ({
         foodItemId: item.id,
@@ -132,9 +133,15 @@ export const Address = () => {
 
     try {
       const response = await placeOrder(orderData);
-      console.log(orderData);
-      toast.success(`Order placed successfully! Order ID: ${response.orderId}`);
-      console.log("Placed order", response);
+      Swal.fire({
+        title: "Order Placed!",
+        text: `Your order has been successfully placed. Order ID: ${response.orderId}`,
+        icon: "success",
+        confirmButtonText: "OK",
+        customClass: {
+          popup: "colored-toast",
+        },
+      });
     } catch (error) {
       toast.error(error.message);
     }
@@ -264,14 +271,16 @@ export const Address = () => {
                 )}
               </h6>
             </div>
-            <div className="text-center mt-2">
-              <button
-                className="btn btn-primary mt-2"
-                onClick={handlePlaceOrder}
-              >
-                Place Order
-              </button>
-            </div>
+            {cartItems.length > 0 && (
+              <div className="text-center mt-2">
+                <button
+                  className="btn btn-primary mt-2"
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   fetchMenuItemsDetail,
-  getCuisinesAndCategoryList,
   updateMenuItem,
 } from "../../Helper/MenuItem";
 import { addToCart } from "../../Redux/Slices/cartSlice";
@@ -74,33 +73,7 @@ export function MenuItem() {
     setCuisines([]);
     setCategories([]);
   };
-  const handleEditClick = async (item) => {
-    setSelectedItem(item);
-    setFormData({
-      name: item.name,
-      description: item.description,
-      price: item.price || "",
-      cuisineTypeId: item.cuisineTypeId || "",
-      categoryId: item.categoryId || "",
-      isAvailable: item.isAvailable || "",
-      image: null,
-    });
-    setShowModal(true);
-    try {
-      const response = await getCuisinesAndCategoryList();
-      if (response.status === 200) {
-        setCuisines(response.data.cuisines);
-        setCategories(response.data.categories);
-      } else {
-        alert("failed to get Cuisines and Category Details");
-      }
-    } catch (error) {
-      if (error.response.status === 400 || 500) {
-        alert(`${error.response?.data?.errorMessage || "Unknown error"}`);
-      }
-    }
-  };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const MenuItemDetails = new FormData();
@@ -151,7 +124,9 @@ export function MenuItem() {
         name: item.name,
         price: item.price,
         imageUrl: item.imageUrl,
+        description: item.description,
         availableQuantity: item.quantity,
+        restaurantId: item.restaurantId,
       })
     );
     toast.success("Item added to the cart.", {
@@ -197,12 +172,6 @@ export function MenuItem() {
                       Price: {item.price || "N/A"}/-
                     </span>
                   </div>
-                  <button
-                    className="btn btn-primary w-100 mb-2"
-                    onClick={() => handleEditClick(item)}
-                  >
-                    Edit
-                  </button>
                   <button
                     className="btn btn-primary w-100"
                     onClick={() => handleMenuClick(item)}

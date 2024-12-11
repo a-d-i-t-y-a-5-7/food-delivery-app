@@ -72,7 +72,6 @@ export function RestaurantList() {
             >
               <h5 className="font-weight-bold">{restaurant.name}</h5>
               <p>{`Cuisine: ${restaurant.cuisine}, Delivery Time: ${restaurant.deliveryTime} min, Rating: ${restaurant.rating} ⭐`}</p>{" "}
-              {/* Comma-separated details */}
             </Card>
           </Col>
         ))}

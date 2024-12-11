@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using backend.Repositories.Implementations;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
@@ -12,6 +13,10 @@ namespace backend.Services.Implementations
         public FoodItemServices(IFoodItemRepository foodItemRepo)
         {
             _foodItemRepo = foodItemRepo;
+        }
+        public FoodItem GetFoodItemById(int id)
+        {
+            return _foodItemRepo.GetFoodItemById(id);
         }
 
         public bool DeleteFoodItem(int id)

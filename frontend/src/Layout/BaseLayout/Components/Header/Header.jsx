@@ -31,7 +31,6 @@ export const HeaderComponent = () => {
   };
   const handleSearch = (value) => {
     console.log(`Searching for ${value} in ${selectedCuisine} cuisine`);
-    // Add search logic here, e.g., API call with selectedCuisine and search query
   };
 
   const handleMenuClick = (e) => {

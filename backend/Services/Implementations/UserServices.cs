@@ -14,11 +14,13 @@ namespace backend.Services.Implementations
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+       
 
         public UserServices(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _configuration = configuration;
+            
         }
 
         public async Task<User?> RegisterUser(RegisterDto newUser)
@@ -143,5 +145,11 @@ namespace backend.Services.Implementations
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public async Task<List<Restaurant>> SearchRestaurants(string searchTerm)
+        {
+            return await _userRepository.SearchRestaurants(searchTerm);
+        }
+
+
     }
 }

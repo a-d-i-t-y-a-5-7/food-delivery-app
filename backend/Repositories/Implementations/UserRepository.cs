@@ -143,6 +143,16 @@ namespace backend.Repositories.Implementations
                 .Where(order => order.CustomerId == userId)
                 .ToListAsync();
         }
+        public async Task<List<Restaurant>> SearchRestaurants(string searchTerm)
+        {
+            return await _context.Restaurants
+                .Where(r => r.Name.Contains(searchTerm) || 
+                r.FoodItems.Any(f => f.Name.Contains(searchTerm)) ||
+                r.RestaurantCuisines.Any(rc => rc.Cuisine.CuisineName.Contains(searchTerm)) )
+                .ToListAsync(); 
+        }
+
+
 
     }
 }
