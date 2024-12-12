@@ -1,19 +1,16 @@
 import AxiosInstance from "./AxiosInstance";
 
 export const getMenuItemList = async (id) => {
-    try {
-        const response = await AxiosInstance.get(
-            `FoodItem/${id}`, {
-            headers: {
-                "Include-Authorization": true,
-            }
-        }
-        )
-        return response;
-    }
-    catch (error) {
-        throw error
-    }
+  try {
+    const response = await AxiosInstance.get(`FoodItem/${id}`, {
+      headers: {
+        "Include-Authorization": true,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const addMenuItem = async (menuItemDetails, id) => {
@@ -27,7 +24,7 @@ export const addMenuItem = async (menuItemDetails, id) => {
           "Content-Type": "multipart/form-data",
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response;
   } catch (error) {
@@ -43,7 +40,7 @@ export const getCuisinesAndCategoryList = async () => {
         headers: {
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response;
   } catch (error) {
@@ -61,7 +58,7 @@ export const updateMenuItem = async (id, updateMenuItemDetails) => {
           "Content-Type": "multipart/form-data",
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response;
   } catch (error) {
@@ -77,7 +74,7 @@ export const fetchMenuItemsDetail = async (id) => {
         headers: {
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {

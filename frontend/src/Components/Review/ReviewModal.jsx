@@ -5,17 +5,12 @@ import { useSelector } from "react-redux";
 const { TextArea } = Input;
 const { Option } = Select;
 
-const ReviewModal = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [reviewType, setReviewType] = useState("");
   const { userId, role } = useSelector((state) => state.auth);
   console.log(userId, role);
-
-  const handleOpenModal = () => {
-    setIsModalVisible(true);
-  };
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
@@ -41,10 +36,6 @@ const ReviewModal = () => {
 
   return (
     <div>
-      <Button type="primary" onClick={handleOpenModal} className="m-auto">
-        Add Review
-      </Button>
-
       <Modal
         title="Add Review"
         open={isModalVisible}

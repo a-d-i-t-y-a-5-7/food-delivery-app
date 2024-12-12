@@ -3,10 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  fetchMenuItemsDetail,
-  updateMenuItem,
-} from "../../Helper/MenuItem";
+import { fetchMenuItemsDetail, updateMenuItem } from "../../Helper/MenuItem";
 import { addToCart } from "../../Redux/Slices/cartSlice";
 import "./MenuItem.css";
 
@@ -73,7 +70,7 @@ export function MenuItem() {
     setCuisines([]);
     setCategories([]);
   };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const MenuItemDetails = new FormData();
@@ -127,7 +124,7 @@ export function MenuItem() {
         description: item.description,
         availableQuantity: item.quantity,
         restaurantId: item.restaurantId,
-      })
+      }),
     );
     toast.success("Item added to the cart.", {
       position: "top-right",

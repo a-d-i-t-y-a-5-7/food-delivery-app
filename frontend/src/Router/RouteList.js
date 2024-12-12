@@ -11,6 +11,7 @@ import {
   Register,
   RestaurantList,
   RestaurantOrders,
+  SearchResult,
   ViewProfile,
 } from "../Pages";
 
@@ -36,7 +37,7 @@ export const routeList = [
   {
     path: "/menuItem/:restaurantId",
     element: <MenuItem />,
-    layout: "AdminLayout",
+    layout: "BaseLayout",
     roles: ["admin"],
   },
   {
@@ -50,6 +51,12 @@ export const routeList = [
     element: <Address />,
     layout: "BaseLayout",
     roles: ["user"],
+  },
+  {
+    path: "/search/:query",
+    element: <SearchResult />,
+    layout: "BaseLayout",
+    roles: [],
   },
   {
     path: "/addtocart",

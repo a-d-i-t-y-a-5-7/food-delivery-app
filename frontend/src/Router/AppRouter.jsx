@@ -1,48 +1,32 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { BaseLayout } from "../Layout/BaseLayout";
-import {
-  AddMenuItem,
-  AddRestaurant,
-  AddToCart,
-  Address,
-  DeliveryPartnerAssignedOrders,
-  Home,
-  Login,
-  MenuItem,
-  Register,
-  RestaurantList,
-  RestaurantOrders,
-  SearchResult,
-  ViewProfile,
-} from "../Pages";
-import MyOrders from "../Pages/MyOrders/MyOrders";
+import { VerticalLayout } from "../Layout/VerticalLayout";
+import { routeList } from "./RouteList";
 
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route element={<BaseLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/users/:userId" element={<ViewProfile />} />
-        <Route path="/address" element={<Address />} />
-        <Route path="/menuItem/:restaurantId" element={<MenuItem />}></Route>
-        <Route path="/addtocart" element={<AddToCart />}></Route>
-        <Route path="/myOrders" element={<MyOrders />}></Route>
-        <Route path="/search/:query" element={<SearchResult />} />
-      </Route>
-      <Route
-        path="/restaurantOrders/:restaurantId"
-        element={<RestaurantOrders />}
-      />
-      <Route path="/restaurantList" element={<RestaurantList />} />
-      <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
-      <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
-      <Route
-        path="/myAssignedOrders"
-        element={<DeliveryPartnerAssignedOrders />}
-      ></Route>
+      {routeList.map((route, index) => {
+        const { path, element, layout } = route;
+
+        if (layout === "BaseLayout") {
+          return (
+            <Route element={<BaseLayout />}>
+              <Route key={index} path={path} element={element} />
+            </Route>
+          );
+        }
+
+        if (layout === "AdminLayout") {
+          return (
+            <Route element={<VerticalLayout />}>
+              <Route key={index} path={path} element={element} />
+            </Route>
+          );
+        }
+        return <Route key={index} path={path} element={element} />;
+      })}
     </Routes>
   );
 };
