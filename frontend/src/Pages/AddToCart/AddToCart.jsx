@@ -38,7 +38,7 @@ export const AddToCart = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`
+        `Out of stock: Only ${item.availableQuantity} items are available.`,
       );
     }
   };

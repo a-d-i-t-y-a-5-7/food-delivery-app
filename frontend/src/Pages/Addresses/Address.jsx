@@ -16,6 +16,7 @@ import {
   decrementQuantity,
 } from "../../Redux/Slices/cartSlice";
 import { placeOrder } from "../../Helper/OrderHelper";
+import { AddressCard } from "../../Components/Profile/AddressCard";
 
 export const Address = () => {
   const [addresses, setAddresses] = useState([]);
@@ -69,10 +70,10 @@ export const Address = () => {
   const handleDeliverHere = (addressId) => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
-      (address) => address.id === addressId
+      (address) => address.id === addressId,
     );
     toast.success(
-      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
     );
   };
 
@@ -89,8 +90,8 @@ export const Address = () => {
           addresses.map((address) =>
             address.id === currentAddress.id
               ? { ...address, ...values }
-              : address
-          )
+              : address,
+          ),
         );
         toast.success("Address updated successfully.");
       } else {
@@ -112,7 +113,7 @@ export const Address = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`
+        `Out of stock: Only ${item.availableQuantity} items are available.`,
       );
     }
   };
@@ -158,65 +159,13 @@ export const Address = () => {
           <div className="row">
             {addresses.map((address) => (
               <div className="col-12 col-md-6 mb-4" key={address.id}>
-                <div
-                  className="card h-100 shadow-sm"
-                  style={{
-                    width: "100%",
-                    maxWidth: "450px",
-                    margin: "auto",
-                    background: "white",
-                    color: "black",
-                  }}
-                >
-                  <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
-                    <span>
-                      {address.city}, {address.state}
-                    </span>
-                    <input
-                      type="radio"
-                      name="deliveryAddress"
-                      checked={selectedAddressId === address.id}
-                      onChange={() => handleDeliverHere(address.id)}
-                      className="form-check-input"
-                    />
-                  </div>
-                  <div className="card-body">
-                    <p>
-                      <strong>Street:</strong> {address.addressLine1},{" "}
-                      {address.addressLine2}
-                    </p>
-                    <p>
-                      <strong>Zip Code:</strong> {address.zipCode}
-                    </p>
-                    <p>
-                      <strong>Country:</strong> {address.country}
-                    </p>
-                    <div className="d-flex justify-content-end">
-                      <button
-                        className="btn btn-outline-success mx-2"
-                        onClick={() => handleUpdate(address)}
-                        style={{
-                          padding: "0.5rem 1rem",
-                          borderRadius: "5px",
-                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-                        }}
-                      >
-                        <EditOutlined />
-                      </button>
-                      <button
-                        className="btn btn-outline-danger mx-2"
-                        onClick={() => handleDelete(address.id)}
-                        style={{
-                          padding: "0.5rem 1rem",
-                          borderRadius: "5px",
-                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-                        }}
-                      >
-                        <DeleteOutlined />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <AddressCard
+                  address={address}
+                  selectedAddressId={selectedAddressId}
+                  onUpdate={handleUpdate}
+                  onDelete={handleDelete}
+                  onSelect={handleDeliverHere}
+                />
               </div>
             ))}
           </div>
@@ -267,7 +216,7 @@ export const Address = () => {
                 ₹
                 {cartItems.reduce(
                   (total, item) => total + item.price * item.quantityInCart,
-                  0
+                  0,
                 )}
               </h6>
             </div>

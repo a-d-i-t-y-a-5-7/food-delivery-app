@@ -2,18 +2,56 @@ import { Avatar, Button, Tabs } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { AddressCard } from "../../Components/Profile/AddressCard";
+import { EditProfileModal } from "../../Components/Profile/EditProfileModal";
+import { fetchAddresses } from "../../Helper/AddressHelper";
 import { getUserById, updateUser } from "../../Helper/ProfileHelper";
 import "./ViewProfile.css";
-import { EditProfileModal } from "../../Components/Profile/EditProfileModal";
+import { OrderCard } from "../../Components/Profile/OrderCard";
+import { userOrders } from "../../Helper/OrderHelper";
 
 export const ViewProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [orders, setOrders] = useState([]);
   const { userId } = useSelector((state) => state.auth);
   const [user, setUser] = useState({
     name: "",
     email: "",
     phoneNumber: "",
   });
+
+  const handleReview = () => {
+    setIsModalVisible(true);
+  };
+
+  const loadAddresses = async () => {
+    try {
+      const addressData = await fetchAddresses(userId, "USER");
+      console.log(addressData);
+      setAddresses(addressData);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      if (userId) {
+        const response = await userOrders(userId);
+        const fetchedOrders = response.data.orders;
+        const sortedOrders = fetchedOrders.sort(
+          (a, b) => b.orderId - a.orderId,
+        );
+        console.log(sortedOrders);
+        setOrders(sortedOrders);
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,6 +66,8 @@ export const ViewProfile = () => {
     };
 
     fetchUser();
+    loadAddresses();
+    fetchOrders();
   }, [userId]);
 
   const handleEditClick = () => {
@@ -49,9 +89,36 @@ export const ViewProfile = () => {
       case "reviews":
         return <div>Reviews content goes here...</div>;
       case "addresses":
-        return <div>My Addresses content goes here...</div>;
+        return (
+          <div className="d-flex align-items-start">
+            {addresses.length === 0 ? (
+              <p>No addresses found.</p>
+            ) : (
+              addresses.map((address) => (
+                <AddressCard key={address.id} address={address} />
+              ))
+            )}
+          </div>
+        );
       case "orders":
-        return <div>My Orders content goes here...</div>;
+        return (
+          <div className="row m-3">
+            {orders.length === 0 ? (
+              <p>No Orders found.</p>
+            ) : (
+              orders.map((order) => (
+                <div className="col-md-6 mb-4">
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    isModalVisible={isModalVisible}
+                    setIsModalVisible={setIsModalVisible}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        );
       default:
         return null;
     }

@@ -36,7 +36,7 @@ export const Home = () => {
     dispatch(setRestaurantId(restaurantId));
     navigate(`/menuItem/${restaurantId}`);
   };
-  
+
   return (
     <div className="container">
       <Breadcrumb className="my-3">
