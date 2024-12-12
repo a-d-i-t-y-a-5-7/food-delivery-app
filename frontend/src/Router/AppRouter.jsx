@@ -16,6 +16,7 @@ import {
   ViewProfile,
 } from "../Pages";
 import MyOrders from "../Pages/MyOrders/MyOrders";
+import LandingPage from "../Pages/LandingPage/LandingPage";
 
 export const AppRouter = () => {
   return (
@@ -23,6 +24,7 @@ export const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route element={<BaseLayout />}>
+        <Route path="/page" element={<LandingPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/users/:userId" element={<ViewProfile />} />
         <Route path="/address" element={<Address />} />
