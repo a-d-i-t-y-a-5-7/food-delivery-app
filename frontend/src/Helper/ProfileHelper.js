@@ -22,7 +22,7 @@ export const updateUser = async (userId, updatedData) => {
         headers: {
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response.data;
   } catch (error) {

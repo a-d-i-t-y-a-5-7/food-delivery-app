@@ -5,11 +5,11 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { AddressCard } from "../../Components/Profile/AddressCard";
 import { EditProfileModal } from "../../Components/Profile/EditProfileModal";
+import { OrderCard } from "../../Components/Profile/OrderCard";
 import { fetchAddresses } from "../../Helper/AddressHelper";
+import { userOrders } from "../../Helper/OrderHelper";
 import { getUserById, updateUser } from "../../Helper/ProfileHelper";
 import "./ViewProfile.css";
-import { OrderCard } from "../../Components/Profile/OrderCard";
-import { userOrders } from "../../Helper/OrderHelper";
 
 export const ViewProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -23,14 +23,9 @@ export const ViewProfile = () => {
     phoneNumber: "",
   });
 
-  const handleReview = () => {
-    setIsModalVisible(true);
-  };
-
   const loadAddresses = async () => {
     try {
       const addressData = await fetchAddresses(userId, "USER");
-      console.log(addressData);
       setAddresses(addressData);
     } catch (error) {
       toast.error(error.message);
@@ -43,14 +38,11 @@ export const ViewProfile = () => {
         const response = await userOrders(userId);
         const fetchedOrders = response.data.orders;
         const sortedOrders = fetchedOrders.sort(
-          (a, b) => b.orderId - a.orderId,
+          (a, b) => b.orderId - a.orderId
         );
-        console.log(sortedOrders);
         setOrders(sortedOrders);
       }
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -59,9 +51,7 @@ export const ViewProfile = () => {
         try {
           const data = await getUserById(userId);
           setUser(data);
-        } catch (error) {
-          console.error("Error fetching user:", error);
-        }
+        } catch (error) {}
       }
     };
 
@@ -79,9 +69,7 @@ export const ViewProfile = () => {
       await updateUser(userId, updatedData);
       setUser((prevUser) => ({ ...prevUser, ...updatedData }));
       setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
+    } catch (error) {}
   };
 
   const renderContent = (key) => {
@@ -107,7 +95,7 @@ export const ViewProfile = () => {
               <p>No Orders found.</p>
             ) : (
               orders.map((order) => (
-                <div className="col-md-6 mb-4">
+                <div className="col-10 mb-4">
                   <OrderCard
                     key={order.id}
                     order={order}

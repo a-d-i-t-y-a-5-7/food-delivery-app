@@ -12,16 +12,16 @@ export const AppRouter = () => {
 
         if (layout === "BaseLayout") {
           return (
-            <Route element={<BaseLayout />}>
-              <Route key={index} path={path} element={element} />
+            <Route key={index} element={<BaseLayout />}>
+              <Route path={path} element={element} />
             </Route>
           );
         }
 
         if (layout === "AdminLayout") {
           return (
-            <Route element={<VerticalLayout />}>
-              <Route key={index} path={path} element={element} />
+            <Route key={index} element={<VerticalLayout />}>
+              <Route path={path} element={element} />
             </Route>
           );
         }

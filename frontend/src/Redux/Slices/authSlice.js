@@ -9,9 +9,7 @@ const decodeToken = () => {
       const role =
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       return { userId: decoded.sub, role: role };
-    } catch (error) {
-      console.error("Invalid token in sessionStorage:", error);
-    }
+    } catch (error) {}
   }
   return { userId: null, role: null };
 };

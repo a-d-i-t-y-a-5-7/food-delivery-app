@@ -1,8 +1,8 @@
+import { Alert, Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { decodedJwt } from "../../Helper/JwtHelper";
 import { getRestaurantList } from "../../Helper/RestaurantHelper";
-import { useNavigate } from "react-router-dom";
-import { Card, Alert, Row, Col } from "antd";
 
 export function RestaurantList() {
   const [restaurantList, setRestaurantList] = useState([]);
@@ -14,7 +14,6 @@ export function RestaurantList() {
     if (logiinObj != null) {
       try {
         const response = await getRestaurantList(parseInt(logiinObj.sub));
-        console.log(response);
         setRestaurantList(response.data.restaurants);
       } catch (error) {
         setErrorMessage(error.message);

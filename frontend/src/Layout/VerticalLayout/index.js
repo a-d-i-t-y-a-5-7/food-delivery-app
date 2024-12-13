@@ -1,8 +1,8 @@
 import { Layout } from "antd";
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { HeaderComponent } from "../BaseLayout/Components/Header/Header";
 import { FooterComponent } from "../BaseLayout/Components/Footer/Footer";
+import { HeaderComponent } from "../BaseLayout/Components/Header/Header";
 import { Sidebar } from "./Components/Sidebar/Sidebar";
 
 export const VerticalLayout = () => {

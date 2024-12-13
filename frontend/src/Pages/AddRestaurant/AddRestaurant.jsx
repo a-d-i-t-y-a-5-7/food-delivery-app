@@ -69,7 +69,6 @@ export function AddRestaurant() {
       try {
         const response = await addRestaurant(newRestaurantDetails);
         if (response.status === 201) {
-          console.log("Restaurant Added Successfully", response);
           alert("Restaurant added successfully!");
           setFormData(resetFormData);
         } else {
@@ -78,7 +77,7 @@ export function AddRestaurant() {
       } catch (error) {
         if (error.response.status === 400 || 500) {
           alert(
-            `Failed to add Restaurant : ${error.response?.data?.errorMessage || "Unknown error"}`,
+            `Failed to add Restaurant : ${error.response?.data?.errorMessage || "Unknown error"}`
           );
         } else {
           alert("An unexpected error occurred. Please try again later.");

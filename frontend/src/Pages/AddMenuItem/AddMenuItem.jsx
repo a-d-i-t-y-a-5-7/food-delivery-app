@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { addMenuItem, getCuisinesAndCategoryList } from "../../Helper/MenuItem";
 
 export function AddMenuItem() {
@@ -29,7 +28,7 @@ export function AddMenuItem() {
       } catch (error) {
         if (error.response?.status === 400 || 500) {
           alert(
-            `${error.response?.data?.errorMessage || "failed to fetch cuisine category List"}`,
+            `${error.response?.data?.errorMessage || "failed to fetch cuisine category List"}`
           );
         }
       } finally {
@@ -69,22 +68,19 @@ export function AddMenuItem() {
     }
     try {
       const response = await addMenuItem(MenuItemDetails, 2);
-      console.log(response);
       if (response.status === 201) {
         setFormData(resetForm);
         alert("Menu item added successfully!");
-        console.log(response);
       } else {
         alert("Failed To Add Menu Item Please try again later.");
       }
     } catch (error) {
       if (error.response.status === 400 || 500) {
         alert(
-          `Failed to add menu Item: ${error.response?.data?.errorMessage || "Unknown error"}`,
+          `Failed to add menu Item: ${error.response?.data?.errorMessage || "Unknown error"}`
         );
       } else {
         alert("An unexpected error occurred. Please try again later.");
-        console.error(error);
       }
     }
   };

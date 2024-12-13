@@ -1,22 +1,22 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import { AddressCard } from "../../Components/Profile/AddressCard";
 import {
   addAddress,
   deleteAddress,
   fetchAddresses,
   updateAddress,
 } from "../../Helper/AddressHelper";
-import {
-  incrementQuantity,
-  decrementQuantity,
-} from "../../Redux/Slices/cartSlice";
 import { placeOrder } from "../../Helper/OrderHelper";
-import { AddressCard } from "../../Components/Profile/AddressCard";
+import {
+  clearCart,
+  decrementQuantity,
+  incrementQuantity,
+} from "../../Redux/Slices/cartSlice";
 
 export const Address = () => {
   const [addresses, setAddresses] = useState([]);
@@ -27,14 +27,13 @@ export const Address = () => {
   const userId = useSelector((state) => state.auth.userId);
   const cartItems = useSelector((state) => state.cart.items);
   const restaurantId = useSelector((state) => state.cart.restaurantId);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const loadAddresses = async () => {
       try {
         const addressData = await fetchAddresses(userId, "USER");
-        console.log(addressData);
         setAddresses(addressData);
       } catch (error) {
         toast.error(error.message);
@@ -70,10 +69,10 @@ export const Address = () => {
   const handleDeliverHere = (addressId) => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
-      (address) => address.id === addressId,
+      (address) => address.id === addressId
     );
     toast.success(
-      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
     );
   };
 
@@ -90,8 +89,8 @@ export const Address = () => {
           addresses.map((address) =>
             address.id === currentAddress.id
               ? { ...address, ...values }
-              : address,
-          ),
+              : address
+          )
         );
         toast.success("Address updated successfully.");
       } else {
@@ -113,7 +112,7 @@ export const Address = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`,
+        `Out of stock: Only ${item.availableQuantity} items are available.`
       );
     }
   };
@@ -143,6 +142,8 @@ export const Address = () => {
           popup: "colored-toast",
         },
       });
+      navigate("/");
+      dispatch(clearCart());
     } catch (error) {
       toast.error(error.message);
     }
@@ -216,7 +217,7 @@ export const Address = () => {
                 ₹
                 {cartItems.reduce(
                   (total, item) => total + item.price * item.quantityInCart,
-                  0,
+                  0
                 )}
               </h6>
             </div>

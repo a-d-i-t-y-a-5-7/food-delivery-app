@@ -1,6 +1,5 @@
 import { Button, Input, Modal, Rate, Select } from "antd";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -9,8 +8,6 @@ const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [reviewType, setReviewType] = useState("");
-  const { userId, role } = useSelector((state) => state.auth);
-  console.log(userId, role);
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
@@ -22,9 +19,6 @@ const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
       alert("Please fill all fields!");
       return;
     }
-
-    const reviewData = { rating, comment, reviewType };
-    console.log("Review Submitted: ", reviewData);
     handleCloseModal();
   };
 
@@ -42,13 +36,11 @@ const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        {/* Rating */}
         <div>
           <label>Rating:</label>
           <Rate onChange={setRating} value={rating} />
         </div>
 
-        {/* Comment */}
         <div style={{ marginTop: 16 }}>
           <label>Comment:</label>
           <TextArea
@@ -59,7 +51,6 @@ const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
           />
         </div>
 
-        {/* Review Type */}
         <div style={{ marginTop: 16 }}>
           <label>Review Type:</label>
           <Select
@@ -73,7 +64,6 @@ const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
           </Select>
         </div>
 
-        {/* Submit Button */}
         <Button
           type="primary"
           style={{ marginTop: 20, width: "100%" }}

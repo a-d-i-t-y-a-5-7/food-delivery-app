@@ -1,6 +1,6 @@
+import { Card, Col, Row, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Row, Col, Card, Spin } from "antd";
 import { getSearchResults } from "../../Helper/RestaurantHelper";
 
 export const SearchResult = () => {
@@ -21,14 +21,12 @@ export const SearchResult = () => {
       const results = await getSearchResults(searchQuery);
       setRestaurants(results);
     } catch (error) {
-      console.error("Error fetching search results:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleCardClick = (id) => {
-    console.log("Restaurant clicked", id);
     navigate(`/menuItem/${id}`);
   };
 
@@ -48,7 +46,7 @@ export const SearchResult = () => {
                   cover={
                     <img
                       alt={restaurant.name}
-                      src={restaurant.image_url}
+                      src={restaurant.imageUrl}
                       onClick={() => handleCardClick(restaurant.id)}
                       style={{
                         width: "100%",

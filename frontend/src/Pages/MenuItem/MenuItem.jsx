@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -85,12 +84,10 @@ export function MenuItem() {
     try {
       const response = await updateMenuItem(selectedItem.id, MenuItemDetails);
       if (response.status === 200) {
-        console.log("Menu Item Updated Successfully", response);
         alert("Menu Item Updated Successfully");
         setShowModal(false);
         setFormData(resetFormData);
         fetchMenuItems();
-        console.log(response);
       } else {
         alert("Failed to Update Menu Item");
         setFormData(resetFormData);
@@ -100,7 +97,6 @@ export function MenuItem() {
       alert(`Failed to update menu item: ${err.message || err}`);
       setFormData(resetFormData);
       setShowModal(false);
-      console.error(err);
     }
   };
   const handleMenuClick = (item) => {
@@ -124,7 +120,7 @@ export function MenuItem() {
         description: item.description,
         availableQuantity: item.quantity,
         restaurantId: item.restaurantId,
-      }),
+      })
     );
     toast.success("Item added to the cart.", {
       position: "top-right",
