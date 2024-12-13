@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   clearCart,
-  incrementQuantity,
   decrementQuantity,
+  incrementQuantity,
   setUserId,
 } from "../../Redux/Slices/cartSlice";
 
@@ -38,7 +38,7 @@ export const AddToCart = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`,
+        `Out of stock: Only ${item.availableQuantity} items are available.`
       );
     }
   };

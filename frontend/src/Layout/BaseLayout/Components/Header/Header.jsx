@@ -31,7 +31,6 @@ export const HeaderComponent = () => {
     setSelectedCuisine(value);
   };
   const handleSearch = (value) => {
-    console.log(`Searching for ${value} in ${selectedCuisine} cuisine`);
     setSearchQuery("");
     navigate(`/search/${value}`);
   };

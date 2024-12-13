@@ -13,22 +13,16 @@ export const RestaurantOrders = () => {
   let getOrders = async () => {
     try {
       const response = await restaurantOrders(restaurantId);
-      console.log(response);
       setOrders(response.data.orders);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   let orderStatus = async (orderId) => {
     try {
       let status = orders.find((o) => o.orderId === orderId).status;
-      const response = await updateOrderStatus(orderId, status);
-      console.log(response);
+      await updateOrderStatus(orderId, status);
       getOrders();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

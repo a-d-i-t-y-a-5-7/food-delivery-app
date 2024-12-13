@@ -35,7 +35,7 @@ export const OrderCard = ({ order, isModalVisible, setIsModalVisible }) => {
             key={item.id}
             className="d-flex justify-content-between align-items-center mt-3"
           >
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center justify-content-between">
               <img
                 src={item.foodItemImageUrl}
                 alt={item.foodItemName}
@@ -53,22 +53,23 @@ export const OrderCard = ({ order, isModalVisible, setIsModalVisible }) => {
                   </strong>
                 </p>
               </div>
+              <div className="text-end m-3">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleReview()}
+                >
+                  Add Review
+                </button>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      <div>
-        <div className="text-end mt-3">
-          <button className="btn btn-primary" onClick={() => handleReview()}>
-            Add Review
-          </button>
-        </div>
-        <ReviewModal
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-        />
-      </div>
+      <ReviewModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
     </div>
   );
 };

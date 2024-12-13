@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { userOrders } from "../../Helper/OrderHelper";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { OrderCard } from "../../Components/Profile/OrderCard";
+import { userOrders } from "../../Helper/OrderHelper";
 
 export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -16,13 +15,11 @@ export const MyOrders = () => {
           const response = await userOrders(userId);
           const fetchedOrders = response.data.orders;
           const sortedOrders = fetchedOrders.sort(
-            (a, b) => b.orderId - a.orderId,
+            (a, b) => b.orderId - a.orderId
           );
           setOrders(sortedOrders);
         }
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
+      } catch (error) {}
     };
     fetchOrders();
   }, [userId]);

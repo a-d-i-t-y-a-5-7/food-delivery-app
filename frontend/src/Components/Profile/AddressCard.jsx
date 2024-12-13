@@ -1,5 +1,5 @@
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import React from "react";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 export const AddressCard = ({
   address,

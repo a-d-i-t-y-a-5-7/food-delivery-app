@@ -8,11 +8,10 @@ export const fetchRestaurants = async () => {
         headers: {
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response.data.restaurants;
   } catch (error) {
-    console.log(error);
     throw new Error("Failed to fetch Restaurants.");
   }
 };
@@ -26,7 +25,7 @@ export const handleRegister = async (registerDetails) => {
         headers: {
           "Include-Authorization": false,
         },
-      },
+      }
     );
     return response.data;
   } catch (error) {
