@@ -6,13 +6,19 @@ import { toast } from "react-toastify";
 import { AddressCard } from "../../Components/Profile/AddressCard";
 import { EditProfileModal } from "../../Components/Profile/EditProfileModal";
 import { OrderCard } from "../../Components/Profile/OrderCard";
+import { ReviewCard } from "../../Components/Review/ReviewCard";
 import { fetchAddresses } from "../../Helper/AddressHelper";
 import { userOrders } from "../../Helper/OrderHelper";
-import { getUserById, updateUser } from "../../Helper/ProfileHelper";
+import {
+  getReviewById,
+  getUserById,
+  updateUser,
+} from "../../Helper/ProfileHelper";
 import "./ViewProfile.css";
 
 export const ViewProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [reviews, setReviews] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -22,6 +28,15 @@ export const ViewProfile = () => {
     email: "",
     phoneNumber: "",
   });
+
+  const GetReviews = async () => {
+    try {
+      const reviewData = await getReviewById(userId);
+      setReviews(reviewData);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const loadAddresses = async () => {
     try {
@@ -58,6 +73,7 @@ export const ViewProfile = () => {
     fetchUser();
     loadAddresses();
     fetchOrders();
+    GetReviews();
   }, [userId]);
 
   const handleEditClick = () => {
@@ -75,7 +91,22 @@ export const ViewProfile = () => {
   const renderContent = (key) => {
     switch (key) {
       case "reviews":
-        return <div>Reviews content goes here...</div>;
+        return (
+          <div className="d-flex align-items-start">
+            {reviews.length === 0 ? (
+              <p>No Reviews found.</p>
+            ) : (
+              reviews.map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  rating={review.rating}
+                  comment={review.comment}
+                  orderId={review.orderId}
+                />
+              ))
+            )}
+          </div>
+        );
       case "addresses":
         return (
           <div className="d-flex align-items-start">

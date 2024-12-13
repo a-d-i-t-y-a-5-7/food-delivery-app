@@ -32,6 +32,18 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(AddReview), new { id = createdReview.Id }, createdReview);
         }
 
+        [HttpGet("user/{customerId}")]
+        public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByCustomerId(long customerId)
+        {
+            var reviews = await _reviewService.GetReviewsByCustomerId(customerId);
+            if (reviews == null || reviews.Count == 0)
+            {
+                return NotFound("No reviews found for this customer.");
+            }
+
+            return Ok(reviews);
+        }
+
         [HttpGet("restaurant/{restaurantId}/reviews")]
         public async Task<IActionResult> GetReviewsByRestaurantId(int restaurantId)
         {
