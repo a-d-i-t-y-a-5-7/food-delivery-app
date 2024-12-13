@@ -19,6 +19,16 @@ namespace backend.Repositories.Implementations
             await _context.SaveChangesAsync();
             return review;
         }
+        public async Task<List<Review>> GetReviewsByCustomerId(long customerId)
+        {
+            var reviews = await (from review in _context.Reviews
+                                 join order in _context.Orders on review.OrderId equals order.Id
+                                 where order.CustomerId == customerId
+                                 select review)
+                        .ToListAsync();
+
+            return reviews;
+        }
 
         public async Task<List<Review>> GetReviewsByRestaurantId(int restaurantId)
         {
