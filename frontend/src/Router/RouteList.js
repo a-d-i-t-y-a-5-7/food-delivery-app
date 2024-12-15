@@ -20,25 +20,21 @@ export const routeList = [
     path: "/login",
     element: <Login />,
     layout: null,
-    roles: [],
   },
   {
     path: "/register",
     element: <Register />,
     layout: null,
-    roles: [],
   },
   {
     path: "/",
     element: <Home />,
     layout: "BaseLayout",
-    roles: [],
   },
   {
     path: "/menuItem/:restaurantId",
     element: <MenuItem />,
     layout: "BaseLayout",
-    roles: ["admin"],
   },
   {
     path: "/users/:userId",
@@ -56,7 +52,6 @@ export const routeList = [
     path: "/search/:query",
     element: <SearchResult />,
     layout: "BaseLayout",
-    roles: [],
   },
   {
     path: "/addtocart",
@@ -74,7 +69,7 @@ export const routeList = [
     path: "/restaurantList",
     element: <RestaurantList />,
     layout: "BaseLayout",
-    roles: ["user"],
+    roles: ["admin"],
   },
   {
     path: "/addrestaurant",

@@ -3,12 +3,24 @@ import { Route, Routes } from "react-router-dom";
 import { BaseLayout } from "../Layout/BaseLayout";
 import { VerticalLayout } from "../Layout/VerticalLayout";
 import { routeList } from "./RouteList";
+import { ErrorPage } from "../Pages";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const AppRouter = () => {
   return (
     <Routes>
       {routeList.map((route, index) => {
-        const { path, element, layout } = route;
+        const { path, element, layout, roles } = route;
+
+        if (roles) {
+          return (
+            <Route
+              key={index}
+              path={path}
+              element={<ProtectedRoute element={element} roles={roles} />}
+            />
+          );
+        }
 
         if (layout === "BaseLayout") {
           return (
