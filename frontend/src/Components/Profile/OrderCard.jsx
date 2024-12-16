@@ -31,45 +31,48 @@ export const OrderCard = ({ order, isModalVisible, setIsModalVisible }) => {
 
       <div>
         {order.orderItems.map((item) => (
-          <div
-            key={item.id}
-            className="d-flex justify-content-between align-items-center mt-3"
-          >
-            <div className="d-flex align-items-center justify-content-between">
-              <img
-                src={item.foodItemImageUrl}
-                alt={item.foodItemName}
-                style={{
-                  width: "80px",
-                  height: "60px",
-                  borderRadius: "8px",
-                  marginRight: "10px",
-                }}
-              />
-              <div>
-                <p className="mb-1">
-                  <strong>
-                    {item.foodItemName} x {item.quantity} Price: ₹{item.price}{" "}
-                  </strong>
-                </p>
-              </div>
-              <div className="text-end m-3">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleReview()}
-                >
-                  Add Review
-                </button>
+          <>
+            <div
+              key={item.id}
+              className="d-flex justify-content-between align-items-center mt-3"
+            >
+              <div className="d-flex align-items-center justify-content-between">
+                <img
+                  src={item.foodItemImageUrl}
+                  alt={item.foodItemName}
+                  style={{
+                    width: "80px",
+                    height: "60px",
+                    borderRadius: "8px",
+                    marginRight: "10px",
+                  }}
+                />
+                <div>
+                  <p className="mb-1">
+                    <strong>
+                      {item.foodItemName} x {item.quantity} Price: ₹{item.price}{" "}
+                    </strong>
+                  </p>
+                </div>
+                <div className="text-end m-3">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleReview()}
+                  >
+                    Add Review
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+            <ReviewModal
+              key={order.orderId}
+              isModalVisible={isModalVisible}
+              setIsModalVisible={setIsModalVisible}
+              orderId={order.orderId}
+            />
+          </>
         ))}
       </div>
-
-      <ReviewModal
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-      />
     </div>
   );
 };

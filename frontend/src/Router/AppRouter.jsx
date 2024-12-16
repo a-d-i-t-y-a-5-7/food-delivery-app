@@ -2,9 +2,9 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { BaseLayout } from "../Layout/BaseLayout";
 import { VerticalLayout } from "../Layout/VerticalLayout";
-import { routeList } from "./RouteList";
 import { ErrorPage } from "../Pages";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { routeList } from "./RouteList";
 
 export const AppRouter = () => {
   return (
@@ -17,28 +17,34 @@ export const AppRouter = () => {
             <Route
               key={index}
               path={path}
-              element={<ProtectedRoute element={element} roles={roles} />}
+              element={
+                <ProtectedRoute
+                  element={element}
+                  roles={roles}
+                  layout={layout}
+                />
+              }
             />
           );
         }
 
         if (layout === "BaseLayout") {
           return (
-            <Route key={index} element={<BaseLayout />}>
-              <Route path={path} element={element} />
-            </Route>
+            <Route path={path} element={<BaseLayout>{element}</BaseLayout>} />
           );
         }
 
         if (layout === "AdminLayout") {
           return (
-            <Route key={index} element={<VerticalLayout />}>
-              <Route path={path} element={element} />
-            </Route>
+            <Route
+              path={path}
+              element={<VerticalLayout>{element}</VerticalLayout>}
+            />
           );
         }
         return <Route key={index} path={path} element={element} />;
       })}
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 };
