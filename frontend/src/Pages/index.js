@@ -3,6 +3,7 @@ export * from "./AddRestaurant/AddRestaurant";
 export * from "./AddToCart/AddToCart";
 export * from "./Addresses/Address";
 export * from "./DeliveryPartnerAsssignedOrders/DeliveryPartnerAssignedOrders";
+export * from "./ErrorPage/ErrorPage";
 export * from "./Home/Home";
 export * from "./Login/Login";
 export * from "./MenuItem/MenuItem";

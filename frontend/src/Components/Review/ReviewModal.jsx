@@ -1,10 +1,12 @@
 import { Button, Input, Modal, Rate, Select } from "antd";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { AddReview } from "../../Helper/ProfileHelper";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
+const ReviewModal = ({ isModalVisible, setIsModalVisible, orderId }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [reviewType, setReviewType] = useState("");
@@ -14,11 +16,20 @@ const ReviewModal = ({ isModalVisible, setIsModalVisible }) => {
     clearFields();
   };
 
-  const handleAddReview = () => {
+  const handleAddReview = async () => {
     if (!rating || !comment || !reviewType) {
       alert("Please fill all fields!");
       return;
     }
+    try {
+      await AddReview({
+        orderId,
+        rating,
+        comment,
+        reviewType,
+      });
+      toast.success("Review Added");
+    } catch (error) {}
     handleCloseModal();
   };
 
