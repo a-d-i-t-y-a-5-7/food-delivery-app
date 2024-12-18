@@ -10,6 +10,7 @@
     "antd": "^5.21.4",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "crypto-js": "^4.2.0",
     "frontend": "file:",
     "jwt-decode": "^4.0.0",
     "prettier": "^3.3.3",

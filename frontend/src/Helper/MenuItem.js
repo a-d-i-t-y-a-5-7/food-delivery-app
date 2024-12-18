@@ -1,8 +1,9 @@
 import AxiosInstance from "./AxiosInstance";
+import CryptoJS from "crypto-js";
+const secretKey = process.env.REACT_APP_SECRET_KEY
 
 export const addMenuItem = async (menuItemDetails, id) => {
     try {
-        debugger;;
         const response = await AxiosInstance.post(
             `/FoodItem/AddmenuItem/${id}`,
             menuItemDetails,
@@ -70,3 +71,13 @@ catch (error){
 }
 }
 
+
+export const decodeparams = (encodedId) => {
+    const decodedEncryptedId = decodeURIComponent(encodedId);
+    const bytes = CryptoJS.AES.decrypt(decodedEncryptedId, secretKey);
+    const decryptedparams = bytes.toString(CryptoJS.enc.Utf8);
+    if (!decryptedparams) {
+      throw new Error('Invalid restaurant ID');
+    }
+    return decryptedparams;
+  };

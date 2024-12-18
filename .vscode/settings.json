@@ -1,6 +1,9 @@
 {
     "cSpell.words": [
         "addmenuitem",
-        "addrestaurant"
+        "addrestaurant",
+        "decodeparams",
+        "decryptedparams",
+        "setdecrypted"
     ]
 }

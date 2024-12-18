@@ -3,11 +3,6 @@ using backend.Models;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Net.Http;
-using System.Net;
-using backend.Helper;
 
 namespace backend.Controllers
 {
@@ -42,7 +37,7 @@ namespace backend.Controllers
         }
         [HttpGet("get-restaurants/{ownerId}")]
         public IActionResult GetRestaurant(int ownerId)
-        {
+        {;
             List<Restaurant> restaurants = _restaurantServices.GetRestaurants(ownerId);
 
             if (restaurants.IsNullOrEmpty())

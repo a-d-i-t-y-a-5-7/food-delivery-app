@@ -35,7 +35,8 @@ namespace backend.Repositories.Implementations
 
         public async Task<bool> AddMenuItemAsync(FoodItem foodItem, IFormFile image)
         {
-            bool IsRestaurantExits = await _Dbcontext.Users.AnyAsync(u => u.Id == foodItem.RestaurantId);
+            bool IsRestaurantExits = await _Dbcontext.Restaurants.AnyAsync(u => u.Id == foodItem.RestaurantId);
+
             if (!IsRestaurantExits)
             {
                 throw new ArgumentException("Restaurant Not Exits");
@@ -68,6 +69,11 @@ namespace backend.Repositories.Implementations
 
         public async Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItem foodItem, IFormFile image)
         {
+            bool IsMenuItemExits = await _Dbcontext.FoodItems.AnyAsync(u => u.Name.ToLower() == foodItem.Name.ToLower() && u.RestaurantId == foodItem.RestaurantId && u.Id != menuItemId);
+            if (IsMenuItemExits)
+            {
+                throw new ArgumentException($"{foodItem.Name} is already exits for this restaurant");
+            }
             FoodItem? existingMenuItem = await _Dbcontext.FoodItems.FindAsync(menuItemId);
             if (existingMenuItem == null)
             {
@@ -167,6 +173,7 @@ namespace backend.Repositories.Implementations
             try
             {
                 FoodItem? existingfoodItem = await _Dbcontext.FoodItems.FindAsync(menuItemId);
+
                 if (existingfoodItem != null)
                 {
                     existingfoodItem.Price = foodItemPriceDto.Price;

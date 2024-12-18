@@ -40,6 +40,7 @@ namespace backend.Services.Implementations
         {
             FoodItem UpdateFoodItem = new FoodItem
             {
+                RestaurantId = foodItemDto.RestaurantId,
                 Name = foodItemDto.Name,
                 Description = foodItemDto.Description,
                 CuisineTypeId = foodItemDto.CuisineTypeId,

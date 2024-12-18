@@ -23,7 +23,7 @@ export const Login = () => {
       sessionStorage.setItem("accessToken", response?.token);
       dispatch(setAuth());
       toast.success("Login Successful");
-      navigate("/");
+      navigate("/restaurantDashBoard");
     } catch (error) {
       setErrorMessage(error.message);
     }

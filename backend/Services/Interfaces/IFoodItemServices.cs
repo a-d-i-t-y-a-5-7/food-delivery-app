@@ -7,7 +7,7 @@ namespace backend.Services.Interfaces
     {
         public bool DeleteFoodItem(int id);
         Task<bool> AddMenuItem(int restaurantId, FoodItemDto foodItemdItem, IFormFile formFile);
-        Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItemDto foodItem,IFormFile formFile);
+        Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItemDto foodItem,IFormFile? formFile);
         Task<IEnumerable<FoodItem>> GetListOfMenuItemByRestaurantIdAsync(int resturentId);
         Task<CuisineAndCategoryListDto> GetCategoryAndCuisineList();
         Task<bool> UpdateMenuItemPrice(int menuItemId, FoodItemPriceDto foodItemPriceDto);

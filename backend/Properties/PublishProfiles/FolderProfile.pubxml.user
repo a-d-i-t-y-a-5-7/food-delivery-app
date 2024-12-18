@@ -7,5 +7,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <History>True|2024-10-18T10:21:19.0751190Z||;False|2024-10-18T15:49:35.2858226+05:30||;</History>
     <LastFailureDetails />
     <_PublishTargetUrl>C:\Users\payalsh\Desktop\FoodDelivery APIs</_PublishTargetUrl>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
   </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DatabaseUrl">
+      <Value>Data Source=GVC1279%3bInitial Catalog=FoodDeliveryDB%3bIntegrated Security=true%3bTrustServerCertificate=true%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="backend.Models.FoodDeliveryDbContext">
+      <Value>Data Source=GVC1279%3bInitial Catalog=FoodDeliveryDB%3bIntegrated Security=true%3bTrustServerCertificate=true%3b</Value>
+    </EFMigrations>
+  </ItemGroup>
 </Project>

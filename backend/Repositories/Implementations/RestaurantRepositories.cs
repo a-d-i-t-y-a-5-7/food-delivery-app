@@ -94,12 +94,12 @@ namespace backend.Repositories.Implementations
             bool IsPhonenoExits = await _Dbcontext.Restaurants.AnyAsync(u => u.PhoneNumber == restaurantDto.PhoneNumber);
             if (IsPhonenoExits)
             {
-                throw new ArgumentException($"{restaurantDto.PhoneNumber}' is already exits");
+                throw new ArgumentException($"Phone number: {restaurantDto.PhoneNumber} is already exits");
             }
             bool IsRestaurantNameExits = await _Dbcontext.Restaurants.AnyAsync(u => u.Name == restaurantDto.Name && u.OwnerId == restaurantDto.OwnerId);
             if (IsRestaurantNameExits)
             {
-                throw new ArgumentException($"{restaurantDto.Name}' is already exits");
+                throw new ArgumentException($"Restaurant {restaurantDto.Name}' is already exits");
             }
             try
             {
