@@ -74,7 +74,7 @@ export const ViewProfile = () => {
     loadAddresses();
     fetchOrders();
     GetReviews();
-  }, [userId]);
+  }, [userId, reviews]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -92,7 +92,7 @@ export const ViewProfile = () => {
     switch (key) {
       case "reviews":
         return (
-          <div className="d-flex align-items-start">
+          <div className="review-container">
             {reviews.length === 0 ? (
               <p>No Reviews found.</p>
             ) : (
@@ -109,7 +109,7 @@ export const ViewProfile = () => {
         );
       case "addresses":
         return (
-          <div className="d-flex align-items-start">
+          <div className="d-flex">
             {addresses.length === 0 ? (
               <p>No addresses found.</p>
             ) : (
@@ -121,12 +121,12 @@ export const ViewProfile = () => {
         );
       case "orders":
         return (
-          <div className="row m-3">
+          <div className="order-container m-3">
             {orders.length === 0 ? (
               <p>No Orders found.</p>
             ) : (
               orders.map((order) => (
-                <div className="col-10 mb-4">
+                <div className="mb-4">
                   <OrderCard
                     key={order.id}
                     order={order}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReviewCard } from "./ReviewCard";
+import "./Review.css";
 
 export const Reviews = ({ fetchReviews, entityId, emptyMessage }) => {
   const [reviews, setReviews] = useState([]);
@@ -23,7 +24,7 @@ export const Reviews = ({ fetchReviews, entityId, emptyMessage }) => {
 
   if (loading) return <p>Loading reviews...</p>;
   return (
-    <div className="d-flex mt-4">
+    <div className="review-container">
       {reviews.length > 0 ? (
         <div>
           {reviews.map((review) => (
