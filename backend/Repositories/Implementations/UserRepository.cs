@@ -151,8 +151,6 @@ namespace backend.Repositories.Implementations
                 r.RestaurantCuisines.Any(rc => rc.Cuisine.CuisineName.Contains(searchTerm)) )
                 .ToListAsync(); 
         }
-
-
-
     }
 }
+

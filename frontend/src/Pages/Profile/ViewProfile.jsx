@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { getUserById, updateUser } from "../../Helper/ProfileHelper";
 import "./ViewProfile.css";
 import { EditProfileModal } from "../../Components/Profile/EditProfileModal";
+import MyOrders from "../MyOrders/MyOrders";
+import { Address } from "../Addresses/Address";
 
 export const ViewProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -49,9 +51,9 @@ export const ViewProfile = () => {
       case "reviews":
         return <div>Reviews content goes here...</div>;
       case "addresses":
-        return <div>My Addresses content goes here...</div>;
+        return <Address showForm={true}/>;
       case "orders":
-        return <div>My Orders content goes here...</div>;
+        return <MyOrders/>;
       default:
         return null;
     }

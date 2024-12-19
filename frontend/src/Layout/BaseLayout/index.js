@@ -1,11 +1,14 @@
 import { Layout } from "antd";
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import "./BaseLayout.css";
 import { FooterComponent } from "./Components/Footer/Footer";
 import { HeaderComponent } from "./Components/Header/Header";
 
 export const BaseLayout = () => {
+  const location = useLocation();
+  const showFooter = location.pathname === "/" || location.pathname === "/page";
+
   return (
     <Layout className="layout">
       <HeaderComponent />
@@ -14,7 +17,7 @@ export const BaseLayout = () => {
           <Outlet className="main-content" />
         </Layout>
       </Layout>
-      {/* <FooterComponent /> */}
+      {showFooter && <FooterComponent />} 
     </Layout>
   );
 };

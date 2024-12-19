@@ -1,39 +1,72 @@
 import React, { useState } from "react";
 import { FaTruck, FaLocationArrow, FaCreditCard, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import ImageRow from "../../Components/LandingPage/ImageRow";
 
 const LandingPage = () => {
   const items = [
-    { img: "/assets/Coffee.jpg", name: "Coffee" },
-    { img: "/assets/Burger.jpg", name: "Burger" },
-    { img: "/assets/Bread.jpg", name: "Sandwich" },
-    { img: "/assets/Pasta.jpg", name: "Pasta" },
-    { img: "/assets/Pizza.jpg", name: "Pizza" },
-    { img: "/assets/Muffin.jpg", name: "Muffin" },
-    { img: "/assets/Paneer.jpg", name: "Paneer" },
-    { img: "/assets/Chicken.jpg", name: "Chicken" },
-    { img: "/assets/Sushi.jpg", name: "Sushi" },
-    { img: "/assets/salad.jpg", name: "Salad" },
-    { img: "/assets/Momo.jpg", name: "Momo" },
-    { img: "/assets/Biryani.jpg", name: "Biryani" },
-    { img: "/assets/Paratha Rolls.jpg", name: "Paratha Rolls" },
-    { img: "/assets/Icecream.jpg", name: "Icecream" },
+    { img: "/assets/Categories/Coffee.jpg", name: "Coffee" },
+    { img: "/assets/Categories/Burger.jpg", name: "Burger" },
+    { img: "/assets/Categories/Bread.jpg", name: "Sandwich" },
+    { img: "/assets/Categories/Pasta.jpg", name: "Pasta" },
+    { img: "/assets/Categories/Pizza.jpg", name: "Pizza" },
+    { img: "/assets/Categories/Muffin.jpg", name: "Muffin" },
+    { img: "/assets/Categories/Paneer.jpg", name: "Paneer" },
+    { img: "/assets/Categories/Chicken.jpg", name: "Chicken" },
+    { img: "/assets/Categories/Sushi.jpg", name: "Sushi" },
+    { img: "/assets/Categories/salad.jpg", name: "Salad" },
+    { img: "/assets/Categories/Momo.jpg", name: "Momo" },
+    { img: "/assets/Categories/Biryani.jpg", name: "Biryani" },
+    { img: "/assets/Categories/Paratha Rolls.jpg", name: "Paratha Rolls" },
+    { img: "/assets/Categories/Icecream.jpg", name: "Icecream" },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
 
   const handleNext = () => {
-    if (currentIndex + 7 < items.length) {
-      setCurrentIndex(currentIndex + 7);
+    if (currentIndex + 6 < items.length) {
+      setCurrentIndex(currentIndex + 6);
     }
   };
 
   const handlePrev = () => {
-    if (currentIndex - 7 >= 0) {
-      setCurrentIndex(currentIndex - 7);
+    if (currentIndex - 6 >= 0) {
+      setCurrentIndex(currentIndex - 6);
     }
   };
 
-  const currentItems = items.slice(currentIndex, currentIndex + 7);
+  const currentItems = items.slice(currentIndex, currentIndex + 6);
+  const handleCategoryClick = () => {
+    navigate('/page'); 
+  };
+
+  const categoryImages = currentItems.map(item => ({
+    img: item.img,
+    alt: item.name,
+    onClick: handleCategoryClick,
+  }));
+
+  const dealsImages = [
+    { img: "/assets/Offers/Offer1.jpg", alt: "offer", onClick: handleCategoryClick },
+    { img: "/assets/Offers/Offer2.jpg", alt: "foodoffer", onClick: handleCategoryClick },
+    { img: "/assets/Offers/Offer3.jpg", alt: "freeoffer", onClick: handleCategoryClick },
+    { img: "/assets/Offers/Offer4.jpg", alt: "freeoffer", onClick: handleCategoryClick },
+  ];
+
+  const cafesImages = [
+    { img: "/assets/Cafes/Cafe1.jpg", alt: "cafe1", onClick: handleCategoryClick },
+    { img: "/assets/Cafes/Cafe2.jpg", alt: "cafe3", onClick: handleCategoryClick },
+    { img: "/assets/Cafes/Cafe3.jpg", alt: "cafe2", onClick: handleCategoryClick },
+    { img: "/assets/Cafes/Cafe4.jpg", alt: "cafe2", onClick: handleCategoryClick },
+  ];
+
+  const rooftopImages = [
+    { img: "/assets/RoofTops/RoofTop1.jpg", alt: "rooftop1", onClick: handleCategoryClick },
+    { img: "/assets/RoofTops/RoofTop2.jpg", alt: "rooftop2", onClick: handleCategoryClick },
+    { img: "/assets/RoofTops/RoofTop3.jpg", alt: "rooftop3", onClick: handleCategoryClick },
+    { img: "/assets/RoofTops/RoofTop4.jpg", alt: "rooftop3", onClick: handleCategoryClick },
+  ];
 
   return (
     <div className="d-flex justify-content-center align-items-center w-100 flex-column">
@@ -84,65 +117,42 @@ const LandingPage = () => {
           </p>
         </div>
       </div>
+
       <div className="w-100 text-center mt-3">
-        <h2 className="fw-bold">Categories</h2>
+        <h2 className="text-left mb-4">Categories</h2>
         <div className="w-100 d-flex justify-content-center align-items-center mt-3">
-        <FaArrowLeft
-          className="me-2"
-          size={30}
-          style={{ cursor: "pointer" }}
-          onClick={handlePrev}
-        />
-        <div className="d-flex" style={{ width: "80%" }}>
-          {currentItems.map((item, index) => (
-            <div key={index} className="text-center mx-4">
-              <img
-                src={item.img}
-                alt={item.name}
-                className="rounded-circle mb-2"
-                style={{ width: "120px", height: "100px", objectFit: "cover" }}
-              />
-              <p className="mb-0 fw-bold">{item.name}</p>
-            </div>
-          ))}
+          <FaArrowLeft
+            className="me-2"
+            size={30}
+            style={{ cursor: "pointer" }}
+            onClick={handlePrev}
+          />
+          <div className="d-flex" style={{ width: "65%" }}>
+            {categoryImages.map((item, index) => (
+              <div key={index} className="text-center mx-4">
+                <img
+                  src={item.img}
+                  alt={item.alt}
+                  className="rounded-circle mb-2"
+                  style={{ width: "120px", height: "100px", objectFit: "cover", cursor: "pointer" }}
+                  onClick={item.onClick}
+                />
+                <p className="mb-0 fw-bold">{item.alt}</p>
+              </div>
+            ))}
+          </div>
+          <FaArrowRight
+            className="ms-2"
+            size={30}
+            style={{ cursor: "pointer" }}
+            onClick={handleNext}
+          />
         </div>
-        <FaArrowRight
-          className="ms-2"
-          size={30}
-          style={{ cursor: "pointer" }}
-          onClick={handleNext}
-        />
-        </div>
-      </div>     
-      <div className="w-100 text-center mt-5">
-        <h2 className="fw-bold">Collections</h2>
-        <div className="d-flex justify-content-center mt-4">
-          <div className="text-center mx-3">
-            <img
-              src="/assets/Offer.jpg"
-              alt="Pizza"
-              className="rounded mb-2"
-              style={{ width: "300px", height: "250px", objectFit: "cover" }}
-            />
-          </div>
-          <div className="text-center mx-3">
-            <img
-              src="/assets/FoodOffer.jpg"
-              alt="Sushi"
-              className="rounded mb-2"
-              style={{ width: "400px", height: "250px", objectFit: "cover" }}
-            />
-          </div>
-          <div className="text-center mx-3">
-            <img
-              src="/assets/FreeOffer.jpg"
-              alt="Sushi"
-              className="rounded mb-2"
-              style={{ width: "300px", height: "250px", objectFit: "cover" }}
-            />
-          </div>
-          </div>
       </div>
+
+      <ImageRow title="Today's Deals" images={dealsImages} />
+      <ImageRow title="Popular Cafe's" images={cafesImages} />
+      <ImageRow title="Popular Rooftop Restaurant's" images={rooftopImages} />
     </div>
   );
 };
