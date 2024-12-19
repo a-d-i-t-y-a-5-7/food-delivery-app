@@ -1,9 +1,10 @@
 import { Rate } from "antd";
 import React from "react";
+import "./Review.css";
 
 export const ReviewCard = ({ rating, comment, orderId }) => {
   return (
-    <div className="review-card border rounded p-3 m-2 shadow-sm ">
+    <div className="review-card shadow-sm">
       <p>Order Id: {orderId}</p>
       <p className="mb-3 fw-bold">{comment}</p>
       <div className="d-flex align-items-center mb-2">
