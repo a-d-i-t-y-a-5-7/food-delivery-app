@@ -52,3 +52,37 @@
 .tabs-section {
   flex: 1;
 }
+
+.review-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.order-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .review-container {
+    margin: 10px;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .order-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .review-container {
+    margin: 10px;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .order-container {
+    margin: 10px;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

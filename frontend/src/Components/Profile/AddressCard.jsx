@@ -9,16 +9,7 @@ export const AddressCard = ({
   onSelect,
 }) => {
   return (
-    <div
-      className="card w-50 shadow-sm"
-      // style={{
-      //   width: "100%",
-      //   maxWidth: "450px",
-      //   margin: "auto",
-      //   background: "white",
-      //   color: "black",
-      // }}
-    >
+    <div className="card w-75 shadow-sm">
       <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
         <span>
           {address.city}, {address.state}
