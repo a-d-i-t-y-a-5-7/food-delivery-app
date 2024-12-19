@@ -43,7 +43,7 @@ namespace backend.Controllers
         }
         [HttpGet("get-restaurants/{ownerId}")]
         public IActionResult GetRestaurant(int ownerId)
-        {
+        {;
             List<Restaurant> restaurants = _restaurantServices.GetRestaurants(ownerId);
 
             if (restaurants.IsNullOrEmpty())

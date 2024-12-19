@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Card, Breadcrumb, Spin, Alert, Row, Col } from "antd";
-import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Alert, Card, Col, Row, Spin } from "antd";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchRestaurants } from "../../Helper/UserHelper";
 import { setRestaurantId } from "../../Redux/Slices/cartSlice";
 
@@ -17,9 +16,9 @@ export const Home = () => {
     const getRestaurants = async () => {
       try {
         const restaurantData = await fetchRestaurants();
+        console.log(restaurantData);
         setRestaurants(restaurantData);
       } catch (error) {
-        console.log("error", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -36,13 +35,13 @@ export const Home = () => {
     dispatch(setRestaurantId(restaurantId));
     navigate(`/menuItem/${restaurantId}`);
   };
-  
+
   return (
-    <div className="container">
-      <Breadcrumb className="my-3">
+    <div className="container p-2">
+      {/* <Breadcrumb className="my-3">
         <Breadcrumb.Item>Home</Breadcrumb.Item>
         <Breadcrumb.Item>Restaurants</Breadcrumb.Item>
-      </Breadcrumb>
+      </Breadcrumb> */}
 
       <div
         style={{

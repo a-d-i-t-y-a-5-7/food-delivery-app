@@ -18,6 +18,7 @@ const { Option } = Select;
 export const HeaderComponent = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [selectedCuisine, setSelectedCuisine] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const { userId } = useSelector((state) => state.auth);
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -30,7 +31,8 @@ export const HeaderComponent = () => {
     setSelectedCuisine(value);
   };
   const handleSearch = (value) => {
-    console.log(`Searching for ${value} in ${selectedCuisine} cuisine`);
+    setSearchQuery("");
+    navigate(`/search/${value}`);
   };
 
   const handleMenuClick = (e) => {
@@ -103,6 +105,8 @@ export const HeaderComponent = () => {
             <Option value="Chinese">Chinese</Option>
           </Select>
           <Search
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for food or restaurants"
             enterButton
             className="w-100"

@@ -24,7 +24,6 @@ export const Address = () => {
     const loadAddresses = async () => {
       try {
         const addressData = await fetchAddresses(userId, "USER");
-        console.log(addressData);
         setAddresses(addressData);
       } catch (error) {
         toast.error(error.message);
@@ -71,8 +70,10 @@ export const Address = () => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
       (address) => address.id === addressId
+      (address) => address.id === addressId
     );
     toast.success(
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
       `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
     );
   };
@@ -83,6 +84,7 @@ export const Address = () => {
     } else {
       toast.error(
         `Out of stock: Only ${item.availableQuantity} items are available.`
+        `Out of stock: Only ${item.availableQuantity} items are available.`
       );
     }
   };
@@ -91,6 +93,7 @@ export const Address = () => {
       toast.warning("Please select a delivery address.");
       return;
     }
+    const orderData = {
     const orderData = {
       customerId: userId,
       restaurantId: restaurantId,
@@ -105,13 +108,19 @@ export const Address = () => {
       const response = await placeOrder(orderData);
       Swal.fire({
         title: "Order Placed!",
+        title: "Order Placed!",
         text: `Your order has been successfully placed. Order ID: ${response.orderId}`,
+        icon: "success",
+        confirmButtonText: "OK",
         icon: "success",
         confirmButtonText: "OK",
         customClass: {
           popup: "colored-toast",
+          popup: "colored-toast",
         },
       });
+      navigate("/");
+      dispatch(clearCart());
     } catch (error) {
       toast.error(error.message);
     }
@@ -231,6 +240,7 @@ export const Address = () => {
                 ₹
                 {cartItems.reduce(
                   (total, item) => total + item.price * item.quantityInCart,
+                  0
                   0
                 )}
               </h6>

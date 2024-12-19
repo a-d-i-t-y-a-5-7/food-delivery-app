@@ -1,5 +1,5 @@
+import { Button, Form, Input, Modal } from "antd";
 import React, { useState } from "react";
-import { Modal, Form, Input, Button } from "antd";
 
 export const AddCuisine = () => {
   const [form] = Form.useForm();
@@ -12,13 +12,10 @@ export const AddCuisine = () => {
   const handleOk = () => {
     form
       .validateFields()
-      .then((values) => {
-        console.log(values);
+      .then(() => {
         form.resetFields();
       })
-      .catch((info) => {
-        console.error("Validation Failed:", info);
-      });
+      .catch(() => {});
   };
 
   return (

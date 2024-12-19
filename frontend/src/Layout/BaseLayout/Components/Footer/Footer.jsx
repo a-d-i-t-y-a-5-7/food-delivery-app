@@ -1,8 +1,7 @@
+import { Button } from "antd";
 import { Footer } from "antd/es/layout/layout";
 import React from "react";
-import { Button } from "antd";
-import { Container, Row, Col } from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
+import "./Footer.css";
 
 export const FooterComponent = () => {
 

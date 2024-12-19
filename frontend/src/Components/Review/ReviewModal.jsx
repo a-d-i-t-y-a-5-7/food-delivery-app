@@ -1,35 +1,35 @@
 import { Button, Input, Modal, Rate, Select } from "antd";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { AddReview } from "../../Helper/ProfileHelper";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const ReviewModal = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+const ReviewModal = ({ isModalVisible, setIsModalVisible, orderId }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [reviewType, setReviewType] = useState("");
-  const { userId, role } = useSelector((state) => state.auth);
-  console.log(userId, role);
-
-  const handleOpenModal = () => {
-    setIsModalVisible(true);
-  };
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
     clearFields();
   };
 
-  const handleAddReview = () => {
+  const handleAddReview = async () => {
     if (!rating || !comment || !reviewType) {
       alert("Please fill all fields!");
       return;
     }
-
-    const reviewData = { rating, comment, reviewType };
-    console.log("Review Submitted: ", reviewData);
+    try {
+      await AddReview({
+        orderId,
+        rating,
+        comment,
+        reviewType,
+      });
+      toast.success("Review Added");
+    } catch (error) {}
     handleCloseModal();
   };
 
@@ -41,23 +41,17 @@ const ReviewModal = () => {
 
   return (
     <div>
-      <Button type="primary" onClick={handleOpenModal} className="m-auto">
-        Add Review
-      </Button>
-
       <Modal
         title="Add Review"
         open={isModalVisible}
         onCancel={handleCloseModal}
         footer={null}
       >
-        {/* Rating */}
         <div>
           <label>Rating:</label>
           <Rate onChange={setRating} value={rating} />
         </div>
 
-        {/* Comment */}
         <div style={{ marginTop: 16 }}>
           <label>Comment:</label>
           <TextArea
@@ -68,7 +62,6 @@ const ReviewModal = () => {
           />
         </div>
 
-        {/* Review Type */}
         <div style={{ marginTop: 16 }}>
           <label>Review Type:</label>
           <Select
@@ -82,7 +75,6 @@ const ReviewModal = () => {
           </Select>
         </div>
 
-        {/* Submit Button */}
         <Button
           type="primary"
           style={{ marginTop: 20, width: "100%" }}

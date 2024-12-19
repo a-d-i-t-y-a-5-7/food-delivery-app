@@ -35,7 +35,8 @@ namespace backend.Services.Implementations
                 CuisineTypeId = foodItemDto.CuisineTypeId,
                 Price = foodItemDto.Price,
                 CategoryId = foodItemDto.CategoryId,
-                IsAvailable = foodItemDto.IsAvailable
+                IsAvailable = foodItemDto.IsAvailable,
+                Quantity = foodItemDto.quantity
             };
             bool result = await _foodItemRepo.AddMenuItemAsync(newFoodItem,image);
             return result;
@@ -45,12 +46,15 @@ namespace backend.Services.Implementations
         {
             FoodItem UpdateFoodItem = new FoodItem
             {
+                RestaurantId = foodItemDto.RestaurantId,
                 Name = foodItemDto.Name,
                 Description = foodItemDto.Description,
                 CuisineTypeId = foodItemDto.CuisineTypeId,
                 Price = foodItemDto.Price,
                 CategoryId = foodItemDto.CategoryId,
-                IsAvailable = foodItemDto.IsAvailable
+                IsAvailable = foodItemDto.IsAvailable,
+                Quantity = foodItemDto.quantity
+                
             };
             bool UpdatedFoodItem = await _foodItemRepo.UpdateMenuItembyIdAsync(menuItemId , UpdateFoodItem,file);
             return UpdatedFoodItem;

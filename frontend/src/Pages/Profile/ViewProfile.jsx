@@ -2,14 +2,26 @@ import { Avatar, Button, Tabs } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getUserById, updateUser } from "../../Helper/ProfileHelper";
-import "./ViewProfile.css";
+import { toast } from "react-toastify";
+import { AddressCard } from "../../Components/Profile/AddressCard";
 import { EditProfileModal } from "../../Components/Profile/EditProfileModal";
-import MyOrders from "../MyOrders/MyOrders";
-import { Address } from "../Addresses/Address";
+import { OrderCard } from "../../Components/Profile/OrderCard";
+import { ReviewCard } from "../../Components/Review/ReviewCard";
+import { fetchAddresses } from "../../Helper/AddressHelper";
+import { userOrders } from "../../Helper/OrderHelper";
+import {
+  getReviewById,
+  getUserById,
+  updateUser,
+} from "../../Helper/ProfileHelper";
+import "./ViewProfile.css";
 
 export const ViewProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [addresses, setAddresses] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [orders, setOrders] = useState([]);
   const { userId } = useSelector((state) => state.auth);
   const [user, setUser] = useState({
     name: "",
@@ -17,20 +29,52 @@ export const ViewProfile = () => {
     phoneNumber: "",
   });
 
+  const GetReviews = async () => {
+    try {
+      const reviewData = await getReviewById(userId);
+      setReviews(reviewData);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const loadAddresses = async () => {
+    try {
+      const addressData = await fetchAddresses(userId, "USER");
+      setAddresses(addressData);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      if (userId) {
+        const response = await userOrders(userId);
+        const fetchedOrders = response.data.orders;
+        const sortedOrders = fetchedOrders.sort(
+          (a, b) => b.orderId - a.orderId
+        );
+        setOrders(sortedOrders);
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       if (userId) {
         try {
           const data = await getUserById(userId);
           setUser(data);
-        } catch (error) {
-          console.error("Error fetching user:", error);
-        }
+        } catch (error) {}
       }
     };
 
     fetchUser();
-  }, [userId]);
+    loadAddresses();
+    fetchOrders();
+    GetReviews();
+  }, [userId, reviews]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -41,19 +85,59 @@ export const ViewProfile = () => {
       await updateUser(userId, updatedData);
       setUser((prevUser) => ({ ...prevUser, ...updatedData }));
       setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
+    } catch (error) {}
   };
 
   const renderContent = (key) => {
     switch (key) {
       case "reviews":
-        return <div>Reviews content goes here...</div>;
+        return (
+          <div className="review-container">
+            {reviews.length === 0 ? (
+              <p>No Reviews found.</p>
+            ) : (
+              reviews.map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  rating={review.rating}
+                  comment={review.comment}
+                  orderId={review.orderId}
+                />
+              ))
+            )}
+          </div>
+        );
       case "addresses":
-        return <Address showForm={true}/>;
+        return (
+          <div className="d-flex">
+            {addresses.length === 0 ? (
+              <p>No addresses found.</p>
+            ) : (
+              addresses.map((address) => (
+                <AddressCard key={address.id} address={address} />
+              ))
+            )}
+          </div>
+        );
       case "orders":
-        return <MyOrders/>;
+        return (
+          <div className="order-container m-3">
+            {orders.length === 0 ? (
+              <p>No Orders found.</p>
+            ) : (
+              orders.map((order) => (
+                <div className="mb-4">
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    isModalVisible={isModalVisible}
+                    setIsModalVisible={setIsModalVisible}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        );
       default:
         return null;
     }

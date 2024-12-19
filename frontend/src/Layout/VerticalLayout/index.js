@@ -1,11 +1,10 @@
 import { Layout } from "antd";
 import React from "react";
-import { Outlet } from "react-router-dom";
-import { HeaderComponent } from "../BaseLayout/Components/Header/Header";
 import { FooterComponent } from "../BaseLayout/Components/Footer/Footer";
+import { HeaderComponent } from "../BaseLayout/Components/Header/Header";
 import { Sidebar } from "./Components/Sidebar/Sidebar";
 
-export const VerticalLayout = () => {
+export const VerticalLayout = ({ children }) => {
   const { Sider } = Layout;
   return (
     <Layout className="layout">
@@ -15,7 +14,7 @@ export const VerticalLayout = () => {
           <Sidebar />
         </Sider>
         <Layout className="main-content-layout">
-          <Outlet />
+          <div className="main-content">{children}</div>
         </Layout>
       </Layout>
       <FooterComponent />

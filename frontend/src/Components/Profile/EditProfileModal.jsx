@@ -1,5 +1,5 @@
+import { Input, Modal } from "antd";
 import React from "react";
-import { Modal, Input } from "antd";
 
 export const EditProfileModal = ({ visible, onSave, onCancel, userData }) => {
   const [name, setName] = React.useState("");

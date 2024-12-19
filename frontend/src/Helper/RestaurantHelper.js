@@ -8,7 +8,7 @@ export const getRestaurantList = async (ownerId) => {
         headers: {
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response;
   } catch (error) {
@@ -24,7 +24,7 @@ export const restaurantOrders = async (restaurantId) => {
         headers: {
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response;
   } catch (error) {
@@ -35,7 +35,7 @@ export const restaurantOrders = async (restaurantId) => {
 export const fetchReviewsByRestaurant = async (restaurantId) => {
   try {
     const response = await AxiosInstance.get(
-      `/Review/restaurant/${restaurantId}/reviews`,
+      `/Review/restaurant/${restaurantId}/reviews`
     );
     return response.data;
   } catch (error) {
@@ -46,7 +46,7 @@ export const fetchReviewsByRestaurant = async (restaurantId) => {
 export const fetchReviewsBydeliveryPartner = async (partnerId) => {
   try {
     const response = await AxiosInstance.get(
-      `Review/delivery-partner/${partnerId}/reviews`,
+      `Review/delivery-partner/${partnerId}/reviews`
     );
     return response.data;
   } catch (error) {
@@ -64,12 +64,10 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
     try {
       const response = await AxiosInstance.put(
         `/Order/update-status`,
-        orderStatusDto,
+        orderStatusDto
       );
       return response;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   if (orderStatus === "OutForDelivery") {
@@ -81,12 +79,10 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
     try {
       const response = await AxiosInstance.put(
         `/Order/update-status`,
-        orderStatusDto,
+        orderStatusDto
       );
       return response;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 };
 export const addRestaurant = async (restaurantDetails) => {
@@ -99,10 +95,44 @@ export const addRestaurant = async (restaurantDetails) => {
           "Content-Type": "multipart/form-data",
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response;
   } catch (error) {
-    throw new error("Failed to Add Restaurant Details");
+    throw error;
+  }
+};
+
+
+export const fetchRestaurantByUserId = async (userId) => {
+  try {
+    const response = await AxiosInstance.get(
+      `/Restaurant/get-restaurants/${userId}`,
+      {
+        headers: {
+          "Include-Authorization": true,
+        }
+      }
+    )
+    return response.data.restaurants
+  }
+  catch (error) {
+    throw error
+  }
+
+}
+export const getSearchResults = async (query) => {
+  try {
+    const response = await AxiosInstance.get(
+      `User/search-restaurants?searchTerm=${query}`,
+      {
+        headers: {
+          "Include-Authorization": false,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return [];
   }
 };

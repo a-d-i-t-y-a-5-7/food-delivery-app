@@ -6,7 +6,7 @@ namespace backend.Helper
 {
     public class HelperClass
     {
-        private const string UploadUrl = "https://imageupload-s259.onrender.com/api/upload-image";
+        private const string UploadUrl = "https://imageupload-rev1.onrender.com/api/upload-image";
         public async Task<string?> UploadImageAsync(IFormFile file)
         {
             if (file == null || file.Length == 0)

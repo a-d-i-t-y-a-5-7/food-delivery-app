@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   clearCart,
-  incrementQuantity,
   decrementQuantity,
+  incrementQuantity,
   setUserId,
 } from "../../Redux/Slices/cartSlice";
 

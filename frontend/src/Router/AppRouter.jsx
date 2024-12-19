@@ -1,48 +1,50 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { BaseLayout } from "../Layout/BaseLayout";
-import {
-  AddMenuItem,
-  AddRestaurant,
-  AddToCart,
-  Address,
-  DeliveryPartnerAssignedOrders,
-  Home,
-  Login,
-  MenuItem,
-  Register,
-  RestaurantList,
-  RestaurantOrders,
-  ViewProfile,
-} from "../Pages";
-import MyOrders from "../Pages/MyOrders/MyOrders";
-import LandingPage from "../Pages/LandingPage/LandingPage";
+import { VerticalLayout } from "../Layout/VerticalLayout";
+import { ErrorPage } from "../Pages";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { routeList } from "./RouteList";
 
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route element={<BaseLayout />}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/page" element={<Home />} />
-        <Route path="/users/:userId" element={<ViewProfile />} />
-        <Route path="/address" element={<Address />} />
-        <Route path="/menuItem/:restaurantId" element={<MenuItem />}></Route>
-        <Route path="/addtocart" element={<AddToCart />}></Route>
-        <Route path="/myOrders" element={<MyOrders/>}></Route>
-      </Route>
-      <Route
-        path="/restaurantOrders/:restaurantId"
-        element={<RestaurantOrders />}
-      />
-      <Route path="/restaurantList" element={<RestaurantList />} />
-      <Route path="/addrestaurant" element={<AddRestaurant />}></Route>
-      <Route path="/addmenuitem" element={<AddMenuItem />}></Route>
-      <Route
-        path="/myAssignedOrders"
-        element={<DeliveryPartnerAssignedOrders />}
-      ></Route>
+      {routeList.map((route, index) => {
+        const { path, element, layout, roles } = route;
+
+        if (roles) {
+          return (
+            <Route
+              key={index}
+              path={path}
+              element={
+                <ProtectedRoute
+                  element={element}
+                  roles={roles}
+                  layout={layout}
+                />
+              }
+            />
+          );
+        }
+
+        if (layout === "BaseLayout") {
+          return (
+            <Route path={path} element={<BaseLayout>{element}</BaseLayout>} />
+          );
+        }
+
+        if (layout === "AdminLayout") {
+          return (
+            <Route
+              path={path}
+              element={<VerticalLayout>{element}</VerticalLayout>}
+            />
+          );
+        }
+        return <Route key={index} path={path} element={element} />;
+      })}
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 };
