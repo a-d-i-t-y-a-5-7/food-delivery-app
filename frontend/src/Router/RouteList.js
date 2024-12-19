@@ -15,6 +15,7 @@ import {
   ViewProfile,
 } from "../Pages";
 import { RestaurantDashBoard } from "../Pages/DashBoard/RestaurantDashBoard/RestaurantDashBoard";
+import LandingPage from "../Pages/LandingPage/LandingPage";
 import { RestaurantMenuItem } from "../Pages/RestaurantMenuItem/RestaurantMenuItem";
 export const routeList = [
   {
@@ -29,6 +30,11 @@ export const routeList = [
   },
   {
     path: "/",
+    element: <LandingPage/>,
+    layout: "BaseLayout",
+  },
+  {
+    path: "/home",
     element: <Home />,
     layout: "BaseLayout",
   },

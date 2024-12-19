@@ -30,7 +30,7 @@ export const AddToCart = () => {
   };
 
   const handleBrowseRestaurants = () => {
-    navigate("/page");
+    navigate("/home");
   };
 
   const handleIncrementQuantity = (item) => {

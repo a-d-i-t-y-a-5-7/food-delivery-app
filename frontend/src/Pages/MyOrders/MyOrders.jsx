@@ -19,17 +19,19 @@ export const MyOrders = () => {
           );
           setOrders(sortedOrders);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
     };
     fetchOrders();
   }, [userId]);
 
   return (
-    <div className="container" style={{ padding: "20px" }}>
+    <div className="container py-4">
       <h2 className="text-left mb-4">Your Orders</h2>
       <div className="row">
         {orders.map((order) => (
-          <div key={order.orderId} className="col-md-6 mb-4">
+          <div key={order.orderId} className="col-12 col-md-8 offset-md-2 mb-4">
             <OrderCard
               order={order}
               isModalVisible={isModalVisible}
