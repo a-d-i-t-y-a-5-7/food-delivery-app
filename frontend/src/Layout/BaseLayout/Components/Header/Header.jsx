@@ -10,7 +10,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { clearAuth } from "../../../../Redux/Slices/authSlice";
 import "./Header.css";
-import { Login } from "../../../../Pages";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -19,6 +18,7 @@ const { Option } = Select;
 export const HeaderComponent = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [selectedCuisine, setSelectedCuisine] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const { userId } = useSelector((state) => state.auth);
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -31,8 +31,8 @@ export const HeaderComponent = () => {
     setSelectedCuisine(value);
   };
   const handleSearch = (value) => {
-    console.log(`Searching for ${value} in ${selectedCuisine} cuisine`);
-    // Add search logic here, e.g., API call with selectedCuisine and search query
+    setSearchQuery("");
+    navigate(`/search/${value}`);
   };
 
   const handleMenuClick = (e) => {
@@ -53,23 +53,11 @@ export const HeaderComponent = () => {
       key: "viewProfile",
       label: (
         <Link
-          to="/view-profile"
+          to={`/users/${userId}`}
           onClick={handleMenuClick}
           style={{ textDecoration: "none" }}
         >
-          View Profile
-        </Link>
-      ),
-    },
-    {
-      key: "selectAddress",
-      label: (
-        <Link
-          to="/address"
-          onClick={handleMenuClick}
-          style={{ textDecoration: "none" }}
-        >
-          Select Address
+          Profile
         </Link>
       ),
     },
@@ -116,6 +104,8 @@ export const HeaderComponent = () => {
             <Option value="Chinese">Chinese</Option>
           </Select>
           <Search
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for food or restaurants"
             enterButton
             className="w-100"
@@ -152,13 +142,13 @@ export const HeaderComponent = () => {
               />
             )}
 
-          <Link to="/addtocart" style={{ marginLeft: 10 }}>
+            <Link to="/addtocart" style={{ marginLeft: 10 }}>
               <Badge count={cartItems.length} showZero>
-                  <ShoppingCartOutlined
-                      style={{ fontSize: "28px", color: "#333" }}
-                    />
+                <ShoppingCartOutlined
+                  style={{ fontSize: "28px", color: "#333" }}
+                />
               </Badge>
-          </Link>
+            </Link>
           </>
         ) : (
           <Link to="/login" className="btn border">

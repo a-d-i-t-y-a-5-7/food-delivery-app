@@ -67,9 +67,7 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
         orderStatusDto
       );
       return response;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   if (orderStatus === "OutForDelivery") {
@@ -84,9 +82,7 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
         orderStatusDto
       );
       return response;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 };
 export const addRestaurant = async (restaurantDetails) => {
@@ -125,3 +121,18 @@ export const fetchRestaurantByUserId = async (userId) => {
   }
 
 }
+export const getSearchResults = async (query) => {
+  try {
+    const response = await AxiosInstance.get(
+      `User/search-restaurants?searchTerm=${query}`,
+      {
+        headers: {
+          "Include-Authorization": false,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return [];
+  }
+};

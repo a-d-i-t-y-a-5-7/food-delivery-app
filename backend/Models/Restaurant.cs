@@ -29,9 +29,7 @@ public partial class Restaurant
     public int? DeliveryTime { get; set; }
 
     public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
-
     public virtual ICollection<FoodItem> FoodItems { get; set; } = new List<FoodItem>();
-
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual User? Owner { get; set; }

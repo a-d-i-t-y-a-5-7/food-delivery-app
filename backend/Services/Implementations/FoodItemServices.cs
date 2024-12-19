@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using backend.Repositories.Implementations;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
@@ -12,6 +13,10 @@ namespace backend.Services.Implementations
         public FoodItemServices(IFoodItemRepository foodItemRepo)
         {
             _foodItemRepo = foodItemRepo;
+        }
+        public FoodItem GetFoodItemById(int id)
+        {
+            return _foodItemRepo.GetFoodItemById(id);
         }
 
         public bool DeleteFoodItem(int id)
@@ -30,7 +35,8 @@ namespace backend.Services.Implementations
                 CuisineTypeId = foodItemDto.CuisineTypeId,
                 Price = foodItemDto.Price,
                 CategoryId = foodItemDto.CategoryId,
-                IsAvailable = foodItemDto.IsAvailable
+                IsAvailable = foodItemDto.IsAvailable,
+                Quantity = foodItemDto.quantity
             };
             bool result = await _foodItemRepo.AddMenuItemAsync(newFoodItem,image);
             return result;
@@ -46,7 +52,9 @@ namespace backend.Services.Implementations
                 CuisineTypeId = foodItemDto.CuisineTypeId,
                 Price = foodItemDto.Price,
                 CategoryId = foodItemDto.CategoryId,
-                IsAvailable = foodItemDto.IsAvailable
+                IsAvailable = foodItemDto.IsAvailable,
+                Quantity = foodItemDto.quantity
+                
             };
             bool UpdatedFoodItem = await _foodItemRepo.UpdateMenuItembyIdAsync(menuItemId , UpdateFoodItem,file);
             return UpdatedFoodItem;

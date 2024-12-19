@@ -1,17 +1,22 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal} from "antd";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Button, Form, Input, Modal } from "antd";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import { AddressCard } from "../../Components/Profile/AddressCard";
 import {
   addAddress,
   deleteAddress,
   fetchAddresses,
   updateAddress,
 } from "../../Helper/AddressHelper";
-import { incrementQuantity, decrementQuantity } from "../../Redux/Slices/cartSlice";
 import { placeOrder } from "../../Helper/OrderHelper";
+import {
+  clearCart,
+  decrementQuantity,
+  incrementQuantity,
+} from "../../Redux/Slices/cartSlice";
 
 export const Address = () => {
   const [addresses, setAddresses] = useState([]);
@@ -19,16 +24,16 @@ export const Address = () => {
   const [currentAddress, setCurrentAddress] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [form] = Form.useForm();
-
   const userId = useSelector((state) => state.auth.userId);
   const cartItems = useSelector((state) => state.cart.items);
+  const restaurantId = useSelector((state) => state.cart.restaurantId);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const loadAddresses = async () => {
       try {
         const addressData = await fetchAddresses(userId, "USER");
-        console.log(addressData);
         setAddresses(addressData);
       } catch (error) {
         toast.error(error.message);
@@ -106,7 +111,9 @@ export const Address = () => {
     if (item.quantityInCart < item.availableQuantity) {
       dispatch(incrementQuantity(item.id));
     } else {
-      toast.error(`Out of stock: Only ${item.availableQuantity} items are available.`);
+      toast.error(
+        `Out of stock: Only ${item.availableQuantity} items are available.`
+      );
     }
   };
   const handlePlaceOrder = async () => {
@@ -114,21 +121,29 @@ export const Address = () => {
       toast.warning("Please select a delivery address.");
       return;
     }
-
     const orderData = {
       customerId: userId,
-      restaurantId: 1, 
+      restaurantId: restaurantId,
       addressId: selectedAddressId,
-      orderItems: cartItems.map((item) => ({ 
-        foodItemId: item.id, 
+      orderItems: cartItems.map((item) => ({
+        foodItemId: item.id,
         quantity: item.quantityInCart,
       })),
     };
 
     try {
       const response = await placeOrder(orderData);
-      toast.success(`Order placed successfully! Order ID: ${response.orderId}`);
-      console.log("Placed order",response);
+      Swal.fire({
+        title: "Order Placed!",
+        text: `Your order has been successfully placed. Order ID: ${response.orderId}`,
+        icon: "success",
+        confirmButtonText: "OK",
+        customClass: {
+          popup: "colored-toast",
+        },
+      });
+      navigate("/");
+      dispatch(clearCart());
     } catch (error) {
       toast.error(error.message);
     }
@@ -142,68 +157,16 @@ export const Address = () => {
       <div className="row">
         <div className="col-md-8">
           <h2 className="text-left mb-4">Select a Delivery Address</h2>
-           <div className="row">
+          <div className="row">
             {addresses.map((address) => (
               <div className="col-12 col-md-6 mb-4" key={address.id}>
-                <div
-                  className="card h-100 shadow-sm"
-                  style={{
-                    width: "100%",
-                    maxWidth: "450px",
-                    margin: "auto",
-                    background: "white",
-                    color: "black",
-                  }}
-                >
-                  <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
-                    <span>
-                      {address.city}, {address.state}
-                    </span>
-                    <input
-                      type="radio"
-                      name="deliveryAddress"
-                      checked={selectedAddressId === address.id}
-                      onChange={() => handleDeliverHere(address.id)}
-                      className="form-check-input"
-                    />
-                  </div>
-                  <div className="card-body">
-                    <p>
-                      <strong>Street:</strong> {address.addressLine1},{" "}
-                      {address.addressLine2}
-                    </p>
-                    <p>
-                      <strong>Zip Code:</strong> {address.zipCode}
-                    </p>
-                    <p>
-                      <strong>Country:</strong> {address.country}
-                    </p>
-                    <div className="d-flex justify-content-end">
-                      <button
-                        className="btn btn-outline-success mx-2"
-                        onClick={() => handleUpdate(address)}
-                        style={{
-                          padding: "0.5rem 1rem",
-                          borderRadius: "5px",
-                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-                        }}
-                      >
-                        <EditOutlined />
-                      </button>
-                      <button
-                        className="btn btn-outline-danger mx-2"
-                        onClick={() => handleDelete(address.id)}
-                        style={{
-                          padding: "0.5rem 1rem",
-                          borderRadius: "5px",
-                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-                        }}
-                      >
-                        <DeleteOutlined />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <AddressCard
+                  address={address}
+                  selectedAddressId={selectedAddressId}
+                  onUpdate={handleUpdate}
+                  onDelete={handleDelete}
+                  onSelect={handleDeliverHere}
+                />
               </div>
             ))}
           </div>
@@ -215,47 +178,61 @@ export const Address = () => {
           </div>
         </div>
         <div className="col-md-4">
-        <div className="card p-3" style={{ marginTop: "60px" }}>
-          <h5>Your Order</h5>
-          {cartItems.length > 0 ? (
-            cartItems.map((item) => (
-              <div
-                key={item.id}
-                className="d-flex justify-content-between align-items-center mb-2"
-              >
-                <span>{item.name} </span>
-                <span>
-                <div className="d-flex align-items-center gap-3 mt-2">
-                <button className="btn btn-outline-danger btn-sm"
-                  onClick={() => dispatch(decrementQuantity(item.id))}
-                >-</button>
-                <span>{item.quantityInCart}</span>
-                <button
-                className="btn btn-outline-danger btn-sm"
-                onClick={() => handleIncrementQuantity(item)}
+          <div className="card p-3" style={{ marginTop: "60px" }}>
+            <h5>Your Order</h5>
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="d-flex justify-content-between align-items-center mb-2"
                 >
-                +
-                </button> 
-                </div></span>
-                <span>₹{item.price * item.quantityInCart}</span>
+                  <span>{item.name} </span>
+                  <span>
+                    <div className="d-flex align-items-center gap-3 mt-2">
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => dispatch(decrementQuantity(item.id))}
+                      >
+                        -
+                      </button>
+                      <span>{item.quantityInCart}</span>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleIncrementQuantity(item)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </span>
+                  <span>₹{item.price * item.quantityInCart}</span>
+                </div>
+              ))
+            ) : (
+              <p>No items in your cart</p>
+            )}
+            <hr />
+            <div className="d-flex justify-content-between">
+              <h6>Total:</h6>
+              <h6>
+                ₹
+                {cartItems.reduce(
+                  (total, item) => total + item.price * item.quantityInCart,
+                  0
+                )}
+              </h6>
+            </div>
+            {cartItems.length > 0 && (
+              <div className="text-center mt-2">
+                <button
+                  className="btn btn-primary mt-2"
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
+                </button>
               </div>
-            ))
-          ) : (
-            <p>No items in your cart</p>
-          )}
-          <hr />
-          <div className="d-flex justify-content-between">
-            <h6>Total:</h6>
-            <h6>₹{cartItems.reduce((total, item) => total + item.price * item.quantityInCart, 0)}</h6>
-          </div>
-          <div className="text-center mt-2">
-            <button className="btn btn-primary mt-2" onClick={handlePlaceOrder}>
-              Place Order
-            </button>
+            )}
           </div>
         </div>
-        </div>
-
       </div>
       <Modal
         title={currentAddress ? "Update Address" : "Add New Address"}

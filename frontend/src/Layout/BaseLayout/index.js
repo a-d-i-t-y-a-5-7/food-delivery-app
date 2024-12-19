@@ -1,20 +1,17 @@
 import { Layout } from "antd";
 import React from "react";
-import { Outlet } from "react-router-dom";
 import "./BaseLayout.css";
-import { FooterComponent } from "./Components/Footer/Footer";
 import { HeaderComponent } from "./Components/Header/Header";
 
-export const BaseLayout = () => {
+export const BaseLayout = ({ children }) => {
   return (
     <Layout className="layout">
       <HeaderComponent />
       <Layout>
         <Layout>
-          <Outlet className="main-content" />
+          <div className="main-content">{children}</div>
         </Layout>
       </Layout>
-      {/* <FooterComponent /> */}
     </Layout>
   );
 };

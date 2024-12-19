@@ -75,5 +75,6 @@ namespace backend.Services.Implementations
             bool result = _restaurantRepo.UpdateActiveStatus(token, restaurantId);
             return result;
         }
+      
     }
 }

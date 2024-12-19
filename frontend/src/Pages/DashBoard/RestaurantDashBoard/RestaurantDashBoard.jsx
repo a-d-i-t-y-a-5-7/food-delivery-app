@@ -4,15 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CryptoJS from "crypto-js";
-import { fetchRestaurantByUserId } from '../../../Helper/RestaurantHelper';
+import {fetchRestaurantByUserId} from "../../../Helper/RestaurantHelper"
 
-function RestaurantDashBoard() {
+export const RestaurantDashBoard = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
  const secretKey = process.env.REACT_APP_SECRET_KEY
   const { userId } = useSelector((state) => state.auth);
+  console.log(userId);
   useEffect(() => {
     if (!userId) {
       navigate('/login');
@@ -100,5 +101,3 @@ function RestaurantDashBoard() {
     </div>
   );
 }
-
-export default RestaurantDashBoard;

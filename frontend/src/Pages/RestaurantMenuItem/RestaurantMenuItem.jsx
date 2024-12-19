@@ -6,11 +6,12 @@ import { useParams } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './RestaurantMenuItem.css';
 
-function RestaurantMenuItem() {
+export const RestaurantMenuItem =() => {
   const resetFormData = {
     name: '',
     description: '',
     price: '',
+    quantity :'',
     cuisineTypeId: '',
     categoryId: '',
     isAvailable: 'true',
@@ -35,15 +36,22 @@ function RestaurantMenuItem() {
       if (!decryptedRestaurantId) {
         throw new Error('Invalid restaurant ID');
       }
+      debugger;
       const response = await fetchMenuItemsDetail(decryptedRestaurantId);
       if (response?.status === 200) {
-        setMenuItems(response.data || []);
+        setMenuItems(response.data);
       } else {
         setMenuItems([]);
       }
     } catch (error) {
+      console.log(error)
+      if (error?.response?.status === 404){
+      toast.error(`Error: ${error.response.data.errorMessage } for this Restaurant `|| "Unknown error occurred");
+      }
+      else{
       setError(error.message || 'Failed to fetch menu items.');
       toast.error(`Error: ${error.message || 'Unknown error occurred'}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -98,6 +106,7 @@ function RestaurantMenuItem() {
       name: item.name,
       description: item.description,
       price: item.price || '',
+      quantity : item.quantity || '',
       cuisineTypeId: item.cuisineTypeId || '',
       categoryId: item.categoryId || '',
       isAvailable: item.isAvailable || 'true',
@@ -259,6 +268,20 @@ function RestaurantMenuItem() {
                       />
                     </div>
                     <div className="mb-3">
+                      <label htmlFor="quantity" className="form-label">
+                        Quantity
+                      </label>
+                      <input
+                        type="number"
+                        id="quantity"
+                        className="form-control"
+                        name="quantity"
+                        value={formData.quantity}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
                       <label htmlFor="cuisineTypeId" className="form-label">
                         Cuisine Type
                       </label>
@@ -350,4 +373,3 @@ function RestaurantMenuItem() {
   );
 }
 
-export default RestaurantMenuItem;

@@ -18,6 +18,28 @@ namespace backend.Repositories.Implementations
         {
             _Dbcontext = context;
         }
+        public FoodItem GetFoodItemById(int id)
+        {
+            var item = _Dbcontext.FoodItems
+                .FirstOrDefault(o => o.Id == id);
+
+            if (item == null)
+                return null;
+
+            return new FoodItem
+            {
+                Id = item.Id,
+                Name = item.Name,
+                RestaurantId = item.RestaurantId,
+                Description = item.Description,
+                ImageUrl = item.ImageUrl,
+                Price = item.Price,
+                CategoryId = item.CategoryId,
+                CuisineTypeId = item.CuisineTypeId,
+                IsAvailable = item.IsAvailable,
+                Quantity = item.Quantity,  
+            };
+        }
 
         public bool DeleteFoodItem(int id)
         {
@@ -85,6 +107,7 @@ namespace backend.Repositories.Implementations
                 existingMenuItem.Description = foodItem.Description;
                 existingMenuItem.CuisineType = foodItem.CuisineType;
                 existingMenuItem.Price = foodItem.Price;
+                existingMenuItem.Quantity = foodItem.Quantity;
                 if (image != null && image.Length > 0)
                 {
                     HelperClass helper = new HelperClass();

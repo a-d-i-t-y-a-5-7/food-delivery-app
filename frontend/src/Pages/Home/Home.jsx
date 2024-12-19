@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Card, Breadcrumb, Spin, Alert, Row, Col } from "antd";
+import { Alert, Card, Col, Row, Spin } from "antd";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { fetchRestaurants } from "../../Helper/UserHelper";
+import { setRestaurantId } from "../../Redux/Slices/cartSlice";
 
 export const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +19,6 @@ export const Home = () => {
         console.log(restaurantData);
         setRestaurants(restaurantData);
       } catch (error) {
-        console.log("error", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -31,15 +32,16 @@ export const Home = () => {
     return <Spin size="large" />;
   }
   const handleCardClick = (restaurantId) => {
-    navigate(`/menuItem/${restaurantId}`);  
+    dispatch(setRestaurantId(restaurantId));
+    navigate(`/menuItem/${restaurantId}`);
   };
 
   return (
-    <div className="container">
-      <Breadcrumb className="my-3">
+    <div className="container p-2">
+      {/* <Breadcrumb className="my-3">
         <Breadcrumb.Item>Home</Breadcrumb.Item>
         <Breadcrumb.Item>Restaurants</Breadcrumb.Item>
-      </Breadcrumb>
+      </Breadcrumb> */}
 
       <div
         style={{
@@ -70,7 +72,12 @@ export const Home = () => {
                   alt={restaurant.name}
                   src={restaurant.image_url}
                   onClick={() => handleCardClick(restaurant.id)}
-                  style={{ width: "100%", height: "200px", objectFit: "cover" ,cursor: "pointer"}}
+                  style={{
+                    width: "100%",
+                    height: "200px",
+                    objectFit: "cover",
+                    cursor: "pointer",
+                  }}
                 />
               }
               className="text-center"

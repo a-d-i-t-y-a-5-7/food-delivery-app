@@ -5,6 +5,7 @@ namespace backend.Repositories.Interfaces
 {
     public interface IFoodItemRepository
     {
+        FoodItem GetFoodItemById(int id); 
         public bool DeleteFoodItem(int id);
         Task<bool> AddMenuItemAsync(FoodItem foodItemdItem,IFormFile formFile);
         Task<bool> UpdateMenuItembyIdAsync(int menuItemId, FoodItem foodItem,IFormFile formFile);

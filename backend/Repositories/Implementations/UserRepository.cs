@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories.Implementations
 {
-    public class UserRepository:IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly FoodDeliveryDbContext _context;
         private readonly IConfiguration _configuration;
@@ -87,10 +87,10 @@ namespace backend.Repositories.Implementations
         }
 
         //Delete Address whose Entity_Id is not foreign key of Order table
-        public async Task<bool> DeleteAddressById( int Id)
+        public async Task<bool> DeleteAddressById(int Id)
         {
             var address = await _context.Addresses
-         .FirstOrDefaultAsync(a => a.Id==Id);
+         .FirstOrDefaultAsync(a => a.Id == Id);
 
             if (address != null)
             {
@@ -102,18 +102,18 @@ namespace backend.Repositories.Implementations
         }
         public async Task UpdateAddress(int Id, UpdateAddressDto addressDto)
         {
-         
-            var existingAddress = await _context.Addresses
-                .FirstOrDefaultAsync(a => a.Id==Id); 
 
-        
+            var existingAddress = await _context.Addresses
+                .FirstOrDefaultAsync(a => a.Id == Id);
+
+
             if (existingAddress == null)
             {
                 throw new KeyNotFoundException("Address not found for the user.");
             }
 
-            
-            existingAddress.AddressLine1 = addressDto.AddressLine1 ?? existingAddress.AddressLine1; 
+
+            existingAddress.AddressLine1 = addressDto.AddressLine1 ?? existingAddress.AddressLine1;
             existingAddress.AddressLine2 = addressDto.AddressLine2 ?? existingAddress.AddressLine2;
             existingAddress.City = addressDto.City ?? existingAddress.City;
             existingAddress.State = addressDto.State ?? existingAddress.State;
@@ -130,7 +130,7 @@ namespace backend.Repositories.Implementations
             Address address = await _context.Addresses.FindAsync(addressId);
             if (address != null)
             {
-                address.IsPrimary =true;
+                address.IsPrimary = true;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -143,6 +143,16 @@ namespace backend.Repositories.Implementations
                 .Where(order => order.CustomerId == userId)
                 .ToListAsync();
         }
+        public async Task<List<Restaurant>> SearchRestaurants(string searchTerm)
+        {
+            return await _context.Restaurants
+                .Where(r => r.Name.Contains(searchTerm) || 
+                r.FoodItems.Any(f => f.Name.Contains(searchTerm)) ||
+                r.RestaurantCuisines.Any(rc => rc.Cuisine.CuisineName.Contains(searchTerm)) )
+                .ToListAsync(); 
+        }
+
+
 
     }
 }

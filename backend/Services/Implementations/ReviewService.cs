@@ -27,6 +27,10 @@ namespace backend.Services.Implementations
             };
             return await _reviewRepository.AddReview(review);
         }
+        public async Task<List<Review>> GetReviewsByCustomerId(long customerId)
+        {
+            return await _reviewRepository.GetReviewsByCustomerId(customerId);
+        }
 
         public async Task<List<Review>> GetReviewsByRestaurantId(int restaurantId)
         {

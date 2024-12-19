@@ -15,7 +15,7 @@ namespace backend.Repositories.Implementations
 
         public bool AddDeliveryPartner(User deliveryPartner)
         {
-            User? user = _context.Users.FirstOrDefault(u => u.Email ==  deliveryPartner.Email);
+            User? user = _context.Users.FirstOrDefault(u => u.Email == deliveryPartner.Email);
 
             if (user == null)
             {

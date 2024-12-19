@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { OrderCard } from "../../Components/Profile/OrderCard";
 import { userOrders } from "../../Helper/OrderHelper";
-import "bootstrap/dist/css/bootstrap.min.css";
 
-const myOrders = () => {
+export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const userId = useSelector((state) => state.auth.userId);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         if (userId) {
           const response = await userOrders(userId);
-          setOrders(response.data.orders); 
-          toast.success("Orders fetched successfully");
+          const fetchedOrders = response.data.orders;
+          const sortedOrders = fetchedOrders.sort(
+            (a, b) => b.orderId - a.orderId
+          );
+          setOrders(sortedOrders);
         }
-      } catch (error) {
-        toast.error("Failed to fetch orders");
-        console.error("Error fetching orders:", error);
-      }
+      } catch (error) {}
     };
     fetchOrders();
   }, [userId]);
@@ -27,38 +27,17 @@ const myOrders = () => {
   return (
     <div className="container" style={{ padding: "20px" }}>
       <h2 className="text-left mb-4">Your Orders</h2>
-      {orders.length > 0 ? (
-        <div>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Restaurant Name</th>
-                <th>Total Amount</th>
-                <th>Order Status</th>
-                <th>Payment Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.orderId}>
-                  <td>{order.orderId}</td>
-                  <td>{order.customerName}</td>
-                  <td>{order.restaurantname}</td>
-                  <td>₹{order.totalAmount}</td>
-                  <td>{order.status}</td>
-                  <td>{order.paymentStatus}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p>No orders found.</p>
-      )}
+      <div className="row">
+        {orders.map((order) => (
+          <div key={order.orderId} className="col-md-6 mb-4">
+            <OrderCard
+              order={order}
+              isModalVisible={isModalVisible}
+              setIsModalVisible={setIsModalVisible}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
-
-export default myOrders;

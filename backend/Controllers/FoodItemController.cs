@@ -1,6 +1,7 @@
 ﻿using backend.DTOs;
 using backend.Helper;
 using backend.Models;
+using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,18 @@ namespace backend.Controllers
         {
             _foodItemServices = foodItemServices;
         }
+        [HttpGet("{id}")]
+        public IActionResult GetFoodItemById(int id)
+        {
+            var item = _foodItemServices.GetFoodItemById(id);
 
+            if (item != null)
+            {
+                return Ok(item);
+            }
+
+            return NotFound(new { message = "Food Item not found" });
+        }
         [HttpDelete("delete-menu-item/{id}")]
         public IActionResult DeleteFoodItem(int id)
         {

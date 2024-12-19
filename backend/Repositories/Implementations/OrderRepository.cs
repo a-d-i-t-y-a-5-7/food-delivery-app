@@ -35,24 +35,25 @@ namespace backend.Repositories.Implementations
                 RestaurantId = placeOrderDto.RestaurantId,
                 Address = placeOrderDto.AddressId,
                 CreatedAt = DateTime.Now,
-                Status = "Pending", 
-                PaymentStatus = "Pending", 
-                TotalAmount = 0 
+                Status = "Pending",
+                PaymentStatus = "Pending",
+                TotalAmount = 0
             };
 
             decimal totalAmount = 0;
 
-            
+
             foreach (var item in placeOrderDto.OrderItems)
             {
-              
+
                 var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId) ?? throw new Exception($"Food item with ID {item.FoodItemId} not found.");
                 if (item.Quantity > foodItem.Quantity)
                 {
-                    
-                    throw new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
+
+                    Exception exception = new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
+                    throw exception;
                 }
-              
+
                 totalAmount += foodItem.Price * item.Quantity;
                 newOrder.OrderItems.Add(new OrderItem
                 {
@@ -61,13 +62,14 @@ namespace backend.Repositories.Implementations
                     Price = foodItem.Price
                 });
 
-               
+
                 foodItem.Quantity -= item.Quantity;
             }
 
             newOrder.TotalAmount = totalAmount;
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
+            placeOrderDto.OrderId = newOrder.Id;
 
             return true;
         }
@@ -93,7 +95,7 @@ namespace backend.Repositories.Implementations
 
             _context.DeliveryRequests.Add(deliveryRequest);
 
-           
+
             await _context.SaveChangesAsync();
 
             return true;
@@ -128,6 +130,9 @@ namespace backend.Repositories.Implementations
                 {
                     Id = item.Id,
                     FoodItemId = item.FoodItemId ?? 0,
+                    FoodItemName = item.FoodItem?.Name,  
+                    FoodItemImageUrl = item.FoodItem?.ImageUrl,
+                    Description = item.FoodItem?.Description,
                     Quantity = item.Quantity,
                     Price = item.Price,
                 }).ToList() ?? new List<OrderItemDto>()
@@ -138,8 +143,8 @@ namespace backend.Repositories.Implementations
         public List<OrdersDto> GetOrderByUserId(int userId)
         {
             var orders = _context.Orders
-                .Include(o => o.OrderItems) 
-                .ThenInclude(oi => oi.FoodItem) 
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.FoodItem)
                 .Where(o => o.CustomerId == userId)
                 .ToList();
 
@@ -163,6 +168,9 @@ namespace backend.Repositories.Implementations
                         {
                             Id = item.Id,
                             FoodItemId = item.FoodItemId ?? 0,
+                            FoodItemName = item.FoodItem?.Name, 
+                            FoodItemImageUrl = item.FoodItem?.ImageUrl,
+                            Description = item.FoodItem?.Description,
                             Quantity = item.Quantity,
                             Price = item.Price,
                         }).ToList()
@@ -206,7 +214,7 @@ namespace backend.Repositories.Implementations
         public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto)
         {
             Order? order = _context.Orders.Find(statusDto.OrderId);
-            if(order==null || !order.Status.Equals("Pending"))
+            if (order == null || !order.Status.Equals("Pending"))
             {
                 return false;
             }

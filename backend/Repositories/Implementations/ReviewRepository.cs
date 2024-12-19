@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories.Implementations
 {
-    public class ReviewRepository:IReviewRepository
+    public class ReviewRepository : IReviewRepository
     {
         private readonly FoodDeliveryDbContext _context;
 
@@ -18,6 +18,16 @@ namespace backend.Repositories.Implementations
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
             return review;
+        }
+        public async Task<List<Review>> GetReviewsByCustomerId(long customerId)
+        {
+            var reviews = await (from review in _context.Reviews
+                                 join order in _context.Orders on review.OrderId equals order.Id
+                                 where order.CustomerId == customerId
+                                 select review)
+                        .ToListAsync();
+
+            return reviews;
         }
 
         public async Task<List<Review>> GetReviewsByRestaurantId(int restaurantId)
@@ -53,9 +63,9 @@ namespace backend.Repositories.Implementations
 
         public async Task<double?> GetavgRatingByRestaurantId(int restaurantId)
         {
-           var reviews = await _context.Reviews
-        .Where(r => r.Order.RestaurantId == restaurantId && r.ReviewType == "Restaurant")
-        .ToListAsync();
+            var reviews = await _context.Reviews
+         .Where(r => r.Order.RestaurantId == restaurantId && r.ReviewType == "Restaurant")
+         .ToListAsync();
 
             return reviews.Average(r => r.Rating);
         }

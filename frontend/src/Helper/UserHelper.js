@@ -12,7 +12,6 @@ export const fetchRestaurants = async () => {
     );
     return response.data.restaurants;
   } catch (error) {
-    console.log(error);
     throw new Error("Failed to fetch Restaurants.");
   }
 };

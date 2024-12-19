@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { Footer } from "antd/es/layout/layout";
 import React from "react";
-import { Button } from "antd";
 import "./Footer.css";
 
 export const FooterComponent = () => {

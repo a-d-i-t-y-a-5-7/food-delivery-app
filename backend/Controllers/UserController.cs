@@ -175,6 +175,24 @@ namespace backend.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("search-restaurants")]
+        public async Task<IActionResult> SearchRestaurants([FromQuery] string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest(new { message = "Search term is required" });
+            }
+
+            var restaurants = await _userService.SearchRestaurants(searchTerm);
+
+            if (restaurants == null || restaurants.Count == 0)
+            {
+                return NotFound(new { message = "No restaurants found" });
+            }
+
+            return Ok(restaurants);
+        }
+
 
 
     }

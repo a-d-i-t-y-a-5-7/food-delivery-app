@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { addRestaurant } from "../../Helper/RestaurantHelper";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
 export function AddRestaurant() {
   const resetFormData = {
     Name: "",
@@ -14,9 +17,12 @@ export function AddRestaurant() {
     ClosingTime: "",
     Image: null,
   };
+  const { userId } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState(resetFormData);
   const [errors, setErrors] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const validate = () => {
     const newErrors = {};
     if (!/^\d{10}$/.test(formData.PhoneNumber)) {
@@ -54,9 +60,11 @@ export function AddRestaurant() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors("");
+    setLoading(true);
     const validationError = validate();
     if (Object.keys(validationError).length > 0) {
       setErrors(validationError);
+      setLoading(false);
       return;
     }
 
@@ -66,24 +74,33 @@ export function AddRestaurant() {
         newRestaurantDetails.append(key, formData[key]);
       }
     });
-
-    newRestaurantDetails.append("OwnerId", 1);
+    if (userId && !isNaN(userId)) {
+      const ownerId = parseInt(userId, 10); 
+      newRestaurantDetails.append("OwnerId", ownerId);
+    } else {
+      toast.error("Invalid userId");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await addRestaurant(newRestaurantDetails);
       if (response.status === 201) {
-        alert("Restaurant added successfully!");
+        toast.success("Restaurant added successfully!");
         setFormData(resetFormData);
         setErrors("");
+        navigate("/RestaurantDashBoard");
       } else {
-        alert("Failed To Register new Restaurant. Please try again later.");
+        toast.error("Failed To Register new Restaurant. Please try again later.");
       }
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 500)) {
-        alert(`Failed to add Restaurant: ${error.response?.data?.errorMessage || "Unknown error"}`);
+        toast.error(`Failed to add Restaurant: ${error.response?.data?.errorMessage || "Unknown error"}`);
       } else {
-        alert("An unexpected error occurred. Please try again later.");
+        toast.error("An unexpected error occurred. Please try again later.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,9 +111,7 @@ export function AddRestaurant() {
           <h2 className="text-center mb-4">Add New Restaurant</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="Name" className="font-weight-bold">
-                Name
-              </label>
+              <label htmlFor="Name" className="font-weight-bold">Name</label>
               <input
                 type="text"
                 id="Name"
@@ -107,15 +122,11 @@ export function AddRestaurant() {
                 className="form-control"
                 required
               />
-              {errors.Name && (
-                <small className="form-text text-danger">{errors.Name}</small>
-              )}
+              {errors.Name && <small className="form-text text-danger">{errors.Name}</small>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="PhoneNumber" className="font-weight-bold">
-                Phone Number
-              </label>
+              <label htmlFor="PhoneNumber" className="font-weight-bold">Phone Number</label>
               <input
                 type="text"
                 id="PhoneNumber"
@@ -126,17 +137,11 @@ export function AddRestaurant() {
                 className="form-control"
                 required
               />
-              {errors.PhoneNumber && (
-                <small className="form-text text-danger">
-                  {errors.PhoneNumber}
-                </small>
-              )}
+              {errors.PhoneNumber && <small className="form-text text-danger">{errors.PhoneNumber}</small>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="StreetAddress" className="font-weight-bold">
-                Street Address
-              </label>
+              <label htmlFor="StreetAddress" className="font-weight-bold">Street Address</label>
               <input
                 type="text"
                 id="StreetAddress"
@@ -147,17 +152,11 @@ export function AddRestaurant() {
                 className="form-control"
                 required
               />
-              {errors.StreetAddress && (
-                <small className="form-text text-danger">
-                  {errors.StreetAddress}
-                </small>
-              )}
+              {errors.StreetAddress && <small className="form-text text-danger">{errors.StreetAddress}</small>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="AdditionalAddress" className="font-weight-bold">
-                Apartment/Unit Number
-              </label>
+              <label htmlFor="AdditionalAddress" className="font-weight-bold">Apartment/Unit Number</label>
               <input
                 type="text"
                 id="AdditionalAddress"
@@ -167,17 +166,10 @@ export function AddRestaurant() {
                 onFocus={handleFocus}
                 className="form-control"
               />
-              {errors.AdditionalAddress && (
-                <small className="form-text text-danger">
-                  {errors.AdditionalAddress}
-                </small>
-              )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="State" className="font-weight-bold">
-                State
-              </label>
+              <label htmlFor="State" className="font-weight-bold">State</label>
               <input
                 type="text"
                 id="State"
@@ -188,15 +180,11 @@ export function AddRestaurant() {
                 className="form-control"
                 required
               />
-              {errors.State && (
-                <small className="form-text text-danger">{errors.State}</small>
-              )}
+              {errors.State && <small className="form-text text-danger">{errors.State}</small>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="City" className="font-weight-bold">
-                City
-              </label>
+              <label htmlFor="City" className="font-weight-bold">City</label>
               <input
                 type="text"
                 id="City"
@@ -207,15 +195,11 @@ export function AddRestaurant() {
                 className="form-control"
                 required
               />
-              {errors.City && (
-                <small className="form-text text-danger">{errors.City}</small>
-              )}
+              {errors.City && <small className="form-text text-danger">{errors.City}</small>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="Pincode" className="font-weight-bold">
-                Pincode
-              </label>
+              <label htmlFor="Pincode" className="font-weight-bold">Pincode</label>
               <input
                 type="text"
                 id="Pincode"
@@ -226,17 +210,11 @@ export function AddRestaurant() {
                 className="form-control"
                 required
               />
-              {errors.Pincode && (
-                <small className="form-text text-danger">
-                  {errors.Pincode}
-                </small>
-              )}
+              {errors.Pincode && <small className="form-text text-danger">{errors.Pincode}</small>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="OpeningTime" className="font-weight-bold">
-                Opening Time
-              </label>
+              <label htmlFor="OpeningTime" className="font-weight-bold">Opening Time</label>
               <input
                 type="time"
                 id="OpeningTime"
@@ -250,9 +228,7 @@ export function AddRestaurant() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="ClosingTime" className="font-weight-bold">
-                Closing Time
-              </label>
+              <label htmlFor="ClosingTime" className="font-weight-bold">Closing Time</label>
               <input
                 type="time"
                 id="ClosingTime"
@@ -266,9 +242,7 @@ export function AddRestaurant() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="Image" className="font-weight-bold">
-                Image
-              </label>
+              <label htmlFor="Image" className="font-weight-bold">Image</label>
               <input
                 type="file"
                 id="Image"
@@ -277,14 +251,15 @@ export function AddRestaurant() {
                 onFocus={handleFocus}
                 className="form-control"
               />
-              {errors.Image && (
-                <small className="form-text text-danger">{errors.Image}</small>
-              )}
             </div>
 
             <div className="text-center">
-              <button type="submit" className="btn btn-primary mt-4">
-                Add Restaurant
+              <button
+                type="submit"
+                className="btn btn-primary mt-4"
+                disabled={loading}
+              >
+                {loading ? "Submitting..." : "Add Restaurant"}
               </button>
             </div>
           </form>
