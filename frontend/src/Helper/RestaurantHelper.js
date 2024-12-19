@@ -99,10 +99,28 @@ export const addRestaurant = async (restaurantDetails) => {
     );
     return response;
   } catch (error) {
-    throw new error("Failed to Add Restaurant Details");
+    throw error;
   }
 };
 
+
+export const fetchRestaurantByUserId = async (userId) => {
+  try {
+    const response = await AxiosInstance.get(
+      `/Restaurant/get-restaurants/${userId}`,
+      {
+        headers: {
+          "Include-Authorization": true,
+        }
+      }
+    )
+    return response.data.restaurants
+  }
+  catch (error) {
+    throw error
+  }
+
+}
 export const getSearchResults = async (query) => {
   try {
     const response = await AxiosInstance.get(

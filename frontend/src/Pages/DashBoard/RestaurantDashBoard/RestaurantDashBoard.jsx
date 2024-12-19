@@ -1,24 +1,35 @@
-import { Alert, Card, Col, Row, Spin } from "antd";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { Card, Breadcrumb, Spin, Alert, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
-import { fetchRestaurants } from "../../Helper/UserHelper";
-import { setRestaurantId } from "../../Redux/Slices/cartSlice";
+import { useSelector } from "react-redux";
+import "bootstrap/dist/css/bootstrap.min.css";
+import CryptoJS from "crypto-js";
+import {fetchRestaurantByUserId} from "../../../Helper/RestaurantHelper"
 
-export const Home = () => {
+export const RestaurantDashBoard = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
+ const secretKey = process.env.REACT_APP_SECRET_KEY
+  const { userId } = useSelector((state) => state.auth);
+  console.log(userId);
   useEffect(() => {
+    if (!userId) {
+      navigate('/login');
+      return;
+    }
     const getRestaurants = async () => {
       try {
-        const restaurantData = await fetchRestaurants();
+        const restaurantData = await fetchRestaurantByUserId(userId);
         console.log(restaurantData);
-        setRestaurants(restaurantData);
+        if (Array.isArray(restaurantData) && restaurantData.length > 0) {
+          setRestaurants(restaurantData);
+        } else {
+          setError("No restaurants found.");
+        }
       } catch (error) {
+        console.log("error", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -26,22 +37,24 @@ export const Home = () => {
     };
 
     getRestaurants();
-  }, []);
+  }, [userId, navigate]);
+
+  const handleCardClick = (restaurantId) => {
+    const encryptedRestaurantId = CryptoJS.AES.encrypt(restaurantId.toString(),secretKey).toString();
+    const encodedId = encodeURIComponent(encryptedRestaurantId);
+    navigate(`/RestaurantMenuItem/${encodedId}`);  
+  };
 
   if (loading) {
     return <Spin size="large" />;
   }
-  const handleCardClick = (restaurantId) => {
-    dispatch(setRestaurantId(restaurantId));
-    navigate(`/menuItem/${restaurantId}`);
-  };
 
   return (
-    <div className="container p-2">
-      {/* <Breadcrumb className="my-3">
+    <div className="container">
+      <Breadcrumb className="my-3">
         <Breadcrumb.Item>Home</Breadcrumb.Item>
         <Breadcrumb.Item>Restaurants</Breadcrumb.Item>
-      </Breadcrumb> */}
+      </Breadcrumb>
 
       <div
         style={{
@@ -72,12 +85,7 @@ export const Home = () => {
                   alt={restaurant.name}
                   src={restaurant.image_url}
                   onClick={() => handleCardClick(restaurant.id)}
-                  style={{
-                    width: "100%",
-                    height: "200px",
-                    objectFit: "cover",
-                    cursor: "pointer",
-                  }}
+                  style={{ width: "100%", height: "200px", objectFit: "cover", cursor: "pointer" }}
                 />
               }
               className="text-center"
@@ -92,4 +100,4 @@ export const Home = () => {
       </Row>
     </div>
   );
-};
+}

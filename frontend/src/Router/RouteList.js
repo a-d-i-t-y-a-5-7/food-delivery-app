@@ -14,7 +14,8 @@ import {
   SearchResult,
   ViewProfile,
 } from "../Pages";
-
+import { RestaurantDashBoard } from "../Pages/DashBoard/RestaurantDashBoard/RestaurantDashBoard";
+import { RestaurantMenuItem } from "../Pages/RestaurantMenuItem/RestaurantMenuItem";
 export const routeList = [
   {
     path: "/login",
@@ -81,7 +82,7 @@ export const routeList = [
     path: "/myAssignedOrders",
     element: <DeliveryPartnerAssignedOrders />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner"],
+     roles: ["restaurant-owner"],
   },
   {
     path: "/addmenuitem",
@@ -95,4 +96,17 @@ export const routeList = [
     layout: "BaseLayout",
     roles: ["user"],
   },
+  {
+    path:"/restaurantDashBoard",
+    element:<RestaurantDashBoard />,
+    layout:"BaseLayout",
+    roles:["restaurant-owner"]
+  },
+  {
+    path:"/restaurantMenuItem/:restaurantId",
+    element:<RestaurantMenuItem />,
+    layout:"BaseLayout",
+    roles:["restaurant-owner"]
+  }
+  
 ];

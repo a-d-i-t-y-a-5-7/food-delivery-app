@@ -92,6 +92,10 @@ namespace backend.Controllers
                     return NotFound(new { errorMessage = "Menu Item Not Found" });
                 }
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { errorMessage = ex.Message });
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, new { errorMessage = "Internal Server Error."+ ex.Message });
