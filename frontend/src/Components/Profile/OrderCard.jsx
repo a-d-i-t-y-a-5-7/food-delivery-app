@@ -8,7 +8,16 @@ export const OrderCard = ({ order, isModalVisible, setIsModalVisible }) => {
 
   return (
     <div className="card shadow-sm p-3 mb-4 bg-white rounded">
-      <h5 className="p-3">{order.restaurantname}</h5>
+      <div
+        className="restaurant-header mb-3 p-2"
+        style={{
+          background: "linear-gradient(90deg, #ff7e5f, #feb47b)",
+          borderRadius: "8px",
+          color: "#fff",
+        }}
+      >
+        <h5 className="mb-3">{order.restaurantname}</h5>
+      </div>
 
       <div className="d-flex justify-content-between mb-2">
         <div>
@@ -75,7 +84,6 @@ export const OrderCard = ({ order, isModalVisible, setIsModalVisible }) => {
         </button>
       </div>
 
-   
       <ReviewModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}

@@ -28,7 +28,7 @@ export const MyOrders = () => {
 
   return (
     <div className="container py-4">
-      <h2 className="text-left mb-4">Your Orders</h2>
+      <h2 className="text-center mb-4">Your Orders</h2>
       <div className="row">
         {orders.map((order) => (
           <div key={order.orderId} className="col-12 col-md-8 offset-md-2 mb-4">
@@ -43,3 +43,4 @@ export const MyOrders = () => {
     </div>
   );
 };
+

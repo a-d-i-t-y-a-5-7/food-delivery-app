@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { FaTruck, FaLocationArrow, FaCreditCard, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaTruck, FaLocationArrow, FaCreditCard, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import ImageRow from "../../Components/LandingPage/ImageRow";
+import ImageRow from '../../Components/LandingPage/ImageRow';
 
 const LandingPage = () => {
   const items = [
-    { img: "/assets/Categories/Coffee.jpg", name: "Coffee" },
-    { img: "/assets/Categories/Burger.jpg", name: "Burger" },
-    { img: "/assets/Categories/Bread.jpg", name: "Sandwich" },
-    { img: "/assets/Categories/Pasta.jpg", name: "Pasta" },
-    { img: "/assets/Categories/Pizza.jpg", name: "Pizza" },
-    { img: "/assets/Categories/Muffin.jpg", name: "Muffin" },
-    { img: "/assets/Categories/Paneer.jpg", name: "Paneer" },
-    { img: "/assets/Categories/Chicken.jpg", name: "Chicken" },
-    { img: "/assets/Categories/Sushi.jpg", name: "Sushi" },
-    { img: "/assets/Categories/salad.jpg", name: "Salad" },
-    { img: "/assets/Categories/Momo.jpg", name: "Momo" },
-    { img: "/assets/Categories/Biryani.jpg", name: "Biryani" },
-    { img: "/assets/Categories/Paratha Rolls.jpg", name: "Paratha Rolls" },
-    { img: "/assets/Categories/Icecream.jpg", name: "Icecream" },
+    { img: '/assets/Categories/Coffee.jpg', name: 'Coffee' },
+    { img: '/assets/Categories/Burger.jpg', name: 'Burger' },
+    { img: '/assets/Categories/Bread.jpg', name: 'Sandwich' },
+    { img: '/assets/Categories/Pasta.jpg', name: 'Pasta' },
+    { img: '/assets/Categories/Pizza.jpg', name: 'Pizza' },
+    { img: '/assets/Categories/Muffin.jpg', name: 'Muffin' },
+    { img: '/assets/Categories/Paneer.jpg', name: 'Paneer' },
+    { img: '/assets/Categories/Chicken.jpg', name: 'Chicken' },
+    { img: '/assets/Categories/Sushi.jpg', name: 'Sushi' },
+    { img: '/assets/Categories/salad.jpg', name: 'Salad' },
+    { img: '/assets/Categories/Momo.jpg', name: 'Momo' },
+    { img: '/assets/Categories/Biryani.jpg', name: 'Biryani' },
+    { img: '/assets/Categories/Paratha Rolls.jpg', name: 'Paratha Rolls' },
+    { img: '/assets/Categories/Icecream.jpg', name: 'Icecream' },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -38,7 +38,7 @@ const LandingPage = () => {
 
   const currentItems = items.slice(currentIndex, currentIndex + 6);
   const handleCategoryClick = () => {
-    navigate('/home'); 
+    navigate('/home');
   };
 
   const categoryImages = currentItems.map(item => ({
@@ -48,24 +48,30 @@ const LandingPage = () => {
   }));
 
   const dealsImages = [
-    { img: "/assets/Offers/Offer1.jpg", alt: "offer", onClick: handleCategoryClick },
-    { img: "/assets/Offers/Offer2.jpg", alt: "foodoffer", onClick: handleCategoryClick },
-    { img: "/assets/Offers/Offer3.jpg", alt: "freeoffer", onClick: handleCategoryClick },
-    { img: "/assets/Offers/Offer4.jpg", alt: "freeoffer", onClick: handleCategoryClick },
+    { img: '/assets/Offers/Offer1.jpg', alt: 'offer', onClick: handleCategoryClick },
+    { img: '/assets/Offers/Offer2.jpg', alt: 'foodoffer', onClick: handleCategoryClick },
+    { img: '/assets/Offers/Offer3.jpg', alt: 'freeoffer', onClick: handleCategoryClick },
+    { img: '/assets/Offers/Offer4.jpg', alt: 'freeoffer', onClick: handleCategoryClick },
   ];
 
   const cafesImages = [
-    { img: "/assets/Cafes/Cafe1.jpg", alt: "cafe1", onClick: handleCategoryClick },
-    { img: "/assets/Cafes/Cafe2.jpg", alt: "cafe3", onClick: handleCategoryClick },
-    { img: "/assets/Cafes/Cafe3.jpg", alt: "cafe2", onClick: handleCategoryClick },
-    { img: "/assets/Cafes/Cafe4.jpg", alt: "cafe2", onClick: handleCategoryClick },
+    { img: '/assets/Cafes/Cafe1.jpg', alt: 'cafe1', onClick: handleCategoryClick },
+    { img: '/assets/Cafes/Cafe2.jpg', alt: 'cafe3', onClick: handleCategoryClick },
+    { img: '/assets/Cafes/Cafe3.jpg', alt: 'cafe2', onClick: handleCategoryClick },
+    { img: '/assets/Cafes/Cafe4.jpg', alt: 'cafe2', onClick: handleCategoryClick },
   ];
 
   const rooftopImages = [
-    { img: "/assets/RoofTops/RoofTop1.jpg", alt: "rooftop1", onClick: handleCategoryClick },
-    { img: "/assets/RoofTops/RoofTop2.jpg", alt: "rooftop2", onClick: handleCategoryClick },
-    { img: "/assets/RoofTops/RoofTop3.jpg", alt: "rooftop3", onClick: handleCategoryClick },
-    { img: "/assets/RoofTops/RoofTop4.jpg", alt: "rooftop3", onClick: handleCategoryClick },
+    { img: '/assets/RoofTops/RoofTop1.jpg', alt: 'rooftop1', onClick: handleCategoryClick },
+    { img: '/assets/RoofTops/RoofTop2.jpg', alt: 'rooftop2', onClick: handleCategoryClick },
+    { img: '/assets/RoofTops/RoofTop3.jpg', alt: 'rooftop3', onClick: handleCategoryClick },
+    { img: '/assets/RoofTops/RoofTop4.jpg', alt: 'rooftop3', onClick: handleCategoryClick },
+  ];
+
+  const features = [
+    { icon: <FaTruck className="me-2" size={20} />, text: 'Fast Delivery' },
+    { icon: <FaLocationArrow className="me-2" size={20} />, text: 'Live Tracking' },
+    { icon: <FaCreditCard className="me-2" size={20} />, text: 'Hassle-free Payment' },
   ];
 
   return (
@@ -74,48 +80,12 @@ const LandingPage = () => {
         className="text-center p-4 text-white rounded shadow w-100"
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
+            'linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))',
         }}
       >
         <h1 className="fw-bold display-3">Swigato</h1>
         <p className="lead">Order your most favourite food dishes today! 😋</p>
-        <div className="d-flex justify-content-center mt-4">
-          <div
-            className="d-flex text-center p-3 bg-gradient text-dark rounded shadow mx-2"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
-            }}
-          >
-            <FaTruck className="me-2" size={20} />
-            <p className="mb-0 fw-bold">Fast Delivery</p>
-          </div>
-          <div
-            className="d-flex text-center p-3 bg-gradient text-dark rounded shadow mx-2"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
-            }}
-          >
-            <FaLocationArrow className="me-2" size={20} />
-            <p className="mb-0 fw-bold">Live Tracking</p>
-          </div>
-          <div
-            className="d-flex text-center p-3 bg-gradient text-dark rounded shadow mx-2"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
-            }}
-          >
-            <FaCreditCard className="me-2" size={20} />
-            <p className="mb-0 fw-bold">Hassle-free Payment</p>
-          </div>
-        </div>
-        <div className="w-100 text-center mt-4">
-          <p className="text-dark lead" style={{ fontSize: "1.25rem" }}>
-            Discover restaurants that deliver near you
-          </p>
-        </div>
+        <ImageRow iconRow={features} />
       </div>
 
       <div className="w-100 text-center mt-3">
@@ -124,17 +94,22 @@ const LandingPage = () => {
           <FaArrowLeft
             className="me-2"
             size={30}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={handlePrev}
           />
-          <div className="d-flex" style={{ width: "65%" }}>
+          <div className="d-flex" style={{ width: '65%' }}>
             {categoryImages.map((item, index) => (
               <div key={index} className="text-center mx-4">
                 <img
                   src={item.img}
                   alt={item.alt}
                   className="rounded-circle mb-2"
-                  style={{ width: "120px", height: "100px", objectFit: "cover", cursor: "pointer" }}
+                  style={{
+                    width: '120px',
+                    height: '100px',
+                    objectFit: 'cover',
+                    cursor: 'pointer',
+                  }}
                   onClick={item.onClick}
                 />
                 <p className="mb-0 fw-bold">{item.alt}</p>
@@ -144,7 +119,7 @@ const LandingPage = () => {
           <FaArrowRight
             className="ms-2"
             size={30}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={handleNext}
           />
         </div>
