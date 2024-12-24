@@ -18,7 +18,9 @@ export function MenuItem() {
   const fetchMenuItems = async () => {
     try {
       const response = await fetchMenuItemsDetail(restaurantId);
+      console.log("FoodItems",response);
       setMenuItems(response);
+     
     } catch (error) {
       setError(`Failed to fetch menu items: ${error.message || error}`);
     } finally {

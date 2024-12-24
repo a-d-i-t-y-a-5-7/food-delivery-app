@@ -85,10 +85,11 @@ export const HeaderComponent = () => {
 
   return (
     <Header className="headerContainer">
-      <div className="logo">
-        <Link to={"/"}>
-          <img src="/assets/food1.jpg" alt="logo" />
-        </Link>
+     <div className="d-flex align-items-center">
+        <div className="logo">
+          <img src="/assets/logo1.jpg" alt="logo" className="me-3" /> 
+        </div>
+        <span className="fw-bold fs-4 text-dark">Swigato</span>
       </div>
 
       <div className="col-12 col-md-6 col-lg-6 search-bar">
