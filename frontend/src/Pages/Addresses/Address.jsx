@@ -1,39 +1,30 @@
-import { Button, Form, Input, Modal } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button} from "antd";
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { AddressCard } from "../../Components/Profile/AddressCard";
-import {
-  addAddress,
-  deleteAddress,
-  fetchAddresses,
-  updateAddress,
-} from "../../Helper/AddressHelper";
+import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import {deleteAddress,fetchAddresses} from "../../Helper/AddressHelper";
+import {incrementQuantity,decrementQuantity,} from "../../Redux/Slices/cartSlice";
 import { placeOrder } from "../../Helper/OrderHelper";
-import {
-  clearCart,
-  decrementQuantity,
-  incrementQuantity,
-} from "../../Redux/Slices/cartSlice";
+import AddressFormModal from "../../Components/Address/AddressFormModal";
 
 export const Address = () => {
   const [addresses, setAddresses] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentAddress, setCurrentAddress] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [form] = Form.useForm();
   const userId = useSelector((state) => state.auth.userId);
   const cartItems = useSelector((state) => state.cart.items);
   const restaurantId = useSelector((state) => state.cart.restaurantId);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const loadAddresses = async () => {
       try {
         const addressData = await fetchAddresses(userId, "USER");
+        console.log(addressData);
         setAddresses(addressData);
       } catch (error) {
         toast.error(error.message);
@@ -42,17 +33,15 @@ export const Address = () => {
     if (userId) {
       loadAddresses();
     }
-  }, [userId]);
+  }, [userId, addresses]);
 
   const handleAdd = () => {
     setCurrentAddress(null);
-    form.resetFields();
     setIsModalVisible(true);
   };
 
   const handleUpdate = (address) => {
     setCurrentAddress(address);
-    form.setFieldsValue(address);
     setIsModalVisible(true);
   };
 
@@ -63,6 +52,18 @@ export const Address = () => {
       toast.success("Address deleted successfully.");
     } catch (error) {
       toast.error(error.message);
+    }
+  };
+  const handleAddressSave = (updatedAddress) => {
+    if (currentAddress) {
+      setAddresses(
+        addresses.map((address) =>
+          address.id === currentAddress.id ? { ...address, ...updatedAddress } : address
+        )
+      );
+     
+    } else {
+      setAddresses([...addresses, updatedAddress]);
     }
   };
 
@@ -76,37 +77,6 @@ export const Address = () => {
     );
   };
 
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
-    setCurrentAddress(null);
-  };
-
-  const handleFormSubmit = async (values) => {
-    try {
-      if (currentAddress) {
-        await updateAddress(currentAddress.id, values);
-        setAddresses(
-          addresses.map((address) =>
-            address.id === currentAddress.id
-              ? { ...address, ...values }
-              : address
-          )
-        );
-        toast.success("Address updated successfully.");
-      } else {
-        const newAddress = await addAddress({
-          entityId: userId,
-          entityType: "USER",
-          ...values,
-        });
-        setAddresses([...addresses, newAddress]);
-        toast.success("Address added successfully.");
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-    setIsModalVisible(false);
-  };
   const handleIncrementQuantity = (item) => {
     if (item.quantityInCart < item.availableQuantity) {
       dispatch(incrementQuantity(item.id));
@@ -142,12 +112,14 @@ export const Address = () => {
           popup: "colored-toast",
         },
       });
-      navigate("/");
-      dispatch(clearCart());
     } catch (error) {
       toast.error(error.message);
     }
   };
+  const handleApplyCoupon = async () => {
+    toast.success("Applied");
+  };
+ 
 
   return (
     <div
@@ -160,13 +132,49 @@ export const Address = () => {
           <div className="row">
             {addresses.map((address) => (
               <div className="col-12 col-md-6 mb-4" key={address.id}>
-                <AddressCard
-                  address={address}
-                  selectedAddressId={selectedAddressId}
-                  onUpdate={handleUpdate}
-                  onDelete={handleDelete}
-                  onSelect={handleDeliverHere}
-                />
+                <div
+                  className="card h-100 shadow-sm"
+                  style={{
+                    width: "100%",
+                    maxWidth: "450px",
+                    margin: "auto",
+                    background: "white",
+                    color: "black",
+                  }}
+                >
+                  <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
+                    <span>
+                      {address.city}, {address.state}
+                    </span>
+                    <input
+                      type="radio"
+                      name="deliveryAddress"
+                      checked={selectedAddressId === address.id}
+                      onChange={() => handleDeliverHere(address.id)}
+                      className="form-check-input"
+                    />
+                  </div>
+                  <div className="card-body">
+                    <p>
+                      <strong>Street:</strong> {address.addressLine1},{" "}
+                      {address.addressLine2}
+                    </p>
+                    <p>
+                      <strong>Zip Code:</strong> {address.zipCode}
+                    </p>
+                    <p>
+                      <strong>Country:</strong> {address.country}
+                    </p>
+                     <div className="d-flex justify-content-end">
+                      <button className="btn btn-outline-success mx-2" onClick={() => handleUpdate(address)}>
+                        <EditOutlined />
+                      </button>
+                      <button className="btn btn-outline-danger mx-2" onClick={() => handleDelete(address.id)}>
+                        <DeleteOutlined />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -178,42 +186,48 @@ export const Address = () => {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card p-3" style={{ marginTop: "60px" }}>
-            <h5>Your Order</h5>
+          <div
+            className="card p-4 shadow-lg rounded"
+            style={{
+              marginTop: "60px",
+              backgroundColor: "#f8f9fa",
+            }}
+          >
+            <h5 className="text-center text-primary mb-4">Your Order</h5>
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="d-flex justify-content-between align-items-center mb-2"
+                  className="d-flex justify-content-between align-items-center mb-3 p-3 border rounded bg-light"
                 >
-                  <span>{item.name} </span>
-                  <span>
-                    <div className="d-flex align-items-center gap-3 mt-2">
-                      <button
-                        className="btn btn-outline-danger btn-sm"
-                        onClick={() => dispatch(decrementQuantity(item.id))}
-                      >
-                        -
-                      </button>
-                      <span>{item.quantityInCart}</span>
-                      <button
-                        className="btn btn-outline-danger btn-sm"
-                        onClick={() => handleIncrementQuantity(item)}
-                      >
-                        +
-                      </button>
-                    </div>
+                  <span className="font-weight-bold">{item.name}</span>
+                  <div className="d-flex align-items-center gap-3">
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => dispatch(decrementQuantity(item.id))}
+                    >
+                      -
+                    </button>
+                    <span>{item.quantityInCart}</span>
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => handleIncrementQuantity(item)}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <span className="font-weight-bold">
+                    ₹{item.price * item.quantityInCart}
                   </span>
-                  <span>₹{item.price * item.quantityInCart}</span>
                 </div>
               ))
             ) : (
-              <p>No items in your cart</p>
+              <p className="text-center text-muted">No items in your cart</p>
             )}
             <hr />
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between align-items-center mb-3">
               <h6>Total:</h6>
-              <h6>
+              <h6 className="font-weight-bold">
                 ₹
                 {cartItems.reduce(
                   (total, item) => total + item.price * item.quantityInCart,
@@ -221,10 +235,28 @@ export const Address = () => {
                 )}
               </h6>
             </div>
+
+            <div className="mb-2">
+              <label htmlFor="couponCode" className="form-label">
+                Apply Coupon
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  id="couponCode"
+                  className="form-control"
+                  placeholder="Enter coupon code"
+                />
+                <button className="btn btn-success" onClick={handleApplyCoupon}>
+                  Apply
+                </button>
+              </div>
+            </div>
+
             {cartItems.length > 0 && (
-              <div className="text-center mt-2">
+              <div className="text-center">
                 <button
-                  className="btn btn-primary mt-2"
+                  className="btn btn-primary btn-lg"
                   onClick={handlePlaceOrder}
                 >
                   Place Order
@@ -233,60 +265,15 @@ export const Address = () => {
             )}
           </div>
         </div>
-      </div>
-      <Modal
-        title={currentAddress ? "Update Address" : "Add New Address"}
-        open={isModalVisible}
-        onCancel={handleModalCancel}
-        footer={null}
-        width={400}
-      >
-        <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
-          <Form.Item
-            label="Address Line 1"
-            name="addressLine1"
-            rules={[{ required: true, message: "Please input your address!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Address Line 2" name="addressLine2">
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="City"
-            name="city"
-            rules={[{ required: true, message: "Please input your city!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="State"
-            name="state"
-            rules={[{ required: true, message: "Please input your state!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Zip Code"
-            name="zipCode"
-            rules={[{ required: true, message: "Please input your zip code!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Country"
-            name="country"
-            rules={[{ required: true, message: "Please input your country!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              {currentAddress ? "Update" : "Add"}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+        </div>
+        <AddressFormModal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        currentAddress={currentAddress}
+        userId={userId}
+        onAddressSave={handleAddressSave}
+      />
+      
     </div>
   );
 };

@@ -87,7 +87,7 @@ export const fetchMenuItemsDetail = async (id) => {
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
     throw error;
   }
