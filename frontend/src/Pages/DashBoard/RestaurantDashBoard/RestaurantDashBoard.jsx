@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { Card, Breadcrumb, Spin, Alert, Row, Col } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Alert, Breadcrumb, Card, Col, Row, Spin } from "antd";
 import CryptoJS from "crypto-js";
-import {fetchRestaurantByUserId} from "../../../Helper/RestaurantHelper"
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchRestaurantByUserId } from "../../../Helper/RestaurantHelper";
 
 export const RestaurantDashBoard = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
- const secretKey = process.env.REACT_APP_SECRET_KEY
+  const secretKey = process.env.REACT_APP_SECRET_KEY;
   const { userId } = useSelector((state) => state.auth);
   console.log(userId);
   useEffect(() => {
     if (!userId) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
     const getRestaurants = async () => {
@@ -40,9 +39,12 @@ export const RestaurantDashBoard = () => {
   }, [userId, navigate]);
 
   const handleCardClick = (restaurantId) => {
-    const encryptedRestaurantId = CryptoJS.AES.encrypt(restaurantId.toString(),secretKey).toString();
+    const encryptedRestaurantId = CryptoJS.AES.encrypt(
+      restaurantId.toString(),
+      secretKey
+    ).toString();
     const encodedId = encodeURIComponent(encryptedRestaurantId);
-    navigate(`/RestaurantMenuItem/${encodedId}`);  
+    navigate(`/RestaurantMenuItem/${encodedId}`);
   };
 
   if (loading) {
@@ -85,7 +87,12 @@ export const RestaurantDashBoard = () => {
                   alt={restaurant.name}
                   src={restaurant.image_url}
                   onClick={() => handleCardClick(restaurant.id)}
-                  style={{ width: "100%", height: "200px", objectFit: "cover", cursor: "pointer" }}
+                  style={{
+                    width: "100%",
+                    height: "200px",
+                    objectFit: "cover",
+                    cursor: "pointer",
+                  }}
                 />
               }
               className="text-center"
@@ -100,4 +107,4 @@ export const RestaurantDashBoard = () => {
       </Row>
     </div>
   );
-}
+};

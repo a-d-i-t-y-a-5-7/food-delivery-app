@@ -85,9 +85,11 @@ export const HeaderComponent = () => {
 
   return (
     <Header className="headerContainer">
-     <div className="d-flex align-items-center">
+      <div className="d-flex align-items-center">
         <div className="logo">
-          <img src="/assets/logo1.jpg" alt="logo" className="me-3" /> 
+          <Link to="/">
+            <img src="/assets/logo1.jpg" alt="logo" className="me-3" />
+          </Link>
         </div>
         <span className="fw-bold fs-4 text-dark">Swigato</span>
       </div>

@@ -1,14 +1,16 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button} from "antd";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Button } from "antd";
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { useSelector, useDispatch } from "react-redux";
-import {deleteAddress,fetchAddresses} from "../../Helper/AddressHelper";
-import {incrementQuantity,decrementQuantity,} from "../../Redux/Slices/cartSlice";
-import { placeOrder } from "../../Helper/OrderHelper";
+import Swal from "sweetalert2";
 import AddressFormModal from "../../Components/Address/AddressFormModal";
+import { deleteAddress, fetchAddresses } from "../../Helper/AddressHelper";
+import { placeOrder } from "../../Helper/OrderHelper";
+import {
+  decrementQuantity,
+  incrementQuantity,
+} from "../../Redux/Slices/cartSlice";
 
 export const Address = () => {
   const [addresses, setAddresses] = useState([]);
@@ -58,10 +60,11 @@ export const Address = () => {
     if (currentAddress) {
       setAddresses(
         addresses.map((address) =>
-          address.id === currentAddress.id ? { ...address, ...updatedAddress } : address
+          address.id === currentAddress.id
+            ? { ...address, ...updatedAddress }
+            : address
         )
       );
-     
     } else {
       setAddresses([...addresses, updatedAddress]);
     }
@@ -119,7 +122,6 @@ export const Address = () => {
   const handleApplyCoupon = async () => {
     toast.success("Applied");
   };
- 
 
   return (
     <div
@@ -165,11 +167,17 @@ export const Address = () => {
                     <p>
                       <strong>Country:</strong> {address.country}
                     </p>
-                     <div className="d-flex justify-content-end">
-                      <button className="btn btn-outline-success mx-2" onClick={() => handleUpdate(address)}>
+                    <div className="d-flex justify-content-end">
+                      <button
+                        className="btn btn-outline-success mx-2"
+                        onClick={() => handleUpdate(address)}
+                      >
                         <EditOutlined />
                       </button>
-                      <button className="btn btn-outline-danger mx-2" onClick={() => handleDelete(address.id)}>
+                      <button
+                        className="btn btn-outline-danger mx-2"
+                        onClick={() => handleDelete(address.id)}
+                      >
                         <DeleteOutlined />
                       </button>
                     </div>
@@ -265,15 +273,14 @@ export const Address = () => {
             )}
           </div>
         </div>
-        </div>
-        <AddressFormModal
+      </div>
+      <AddressFormModal
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         currentAddress={currentAddress}
         userId={userId}
         onAddressSave={handleAddressSave}
       />
-      
     </div>
   );
 };
