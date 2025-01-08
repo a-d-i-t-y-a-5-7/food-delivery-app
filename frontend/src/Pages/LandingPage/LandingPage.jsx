@@ -25,18 +25,18 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    if (currentIndex + 6 < items.length) {
-      setCurrentIndex(currentIndex + 6);
+    if (currentIndex + 7 < items.length) {
+      setCurrentIndex(currentIndex + 7);
     }
   };
 
   const handlePrev = () => {
-    if (currentIndex - 6 >= 0) {
-      setCurrentIndex(currentIndex - 6);
+    if (currentIndex - 7 >= 0) {
+      setCurrentIndex(currentIndex - 7);
     }
   };
 
-  const currentItems = items.slice(currentIndex, currentIndex + 6);
+  const currentItems = items.slice(currentIndex, currentIndex + 7);
   const handleCategoryClick = () => {
     navigate('/home');
   };
@@ -140,15 +140,15 @@ const LandingPage = () => {
       </div>
 
       <ImageRow title="Today's Deals" images={dealsImages} />
-      <ImageRow title="Popular Cafe's" images={cafesImages} />
-      <ImageRow title="Popular Rooftop Restaurant's" images={rooftopImages} />
+      <ImageRow title="Popular Cafes" images={cafesImages} />
+      <ImageRow title="Popular Rooftop Restaurants" images={rooftopImages} />
       <ImageRow title="Popular Dining Places" images={others} />
-      <ImageRow title="Popular Pub's" images={pubs} />
+      <ImageRow title="Popular Pubs" images={pubs} />
 
       <div className="w-100 text-center mt-5 p-4" style={{ backgroundColor: '#f2f2f2' }}>
         <blockquote className="blockquote mb-0">
           <p className="fw-bold" style={{ fontSize: '1.25rem' }}>
-            "Good food is all the sweeter when shared with good friends and the loved once."
+            "Good food is all the sweeter when shared with good friends and the loved ones."
           </p>
           <footer className="blockquote-footer">Swigato</footer>
         </blockquote>
@@ -158,3 +158,7 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
+ 
+
+
