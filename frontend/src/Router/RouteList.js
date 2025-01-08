@@ -76,7 +76,7 @@ export const routeList = [
     path: "/restaurantList",
     element: <RestaurantList />,
     layout: "BaseLayout",
-    roles: ["admin"],
+    roles: ["admin", "restaurant-owner"],
   },
   {
     path: "/addrestaurant",
@@ -88,7 +88,7 @@ export const routeList = [
     path: "/myAssignedOrders",
     element: <DeliveryPartnerAssignedOrders />,
     layout: "BaseLayout",
-     roles: ["restaurant-owner"],
+    roles: ["restaurant-owner"],
   },
   {
     path: "/addmenuitem",
@@ -100,19 +100,18 @@ export const routeList = [
     path: "/restaurantOrders/:restaurantId",
     element: <RestaurantOrders />,
     layout: "BaseLayout",
-    roles: ["user"],
+    roles: ["restaurant-owner"],
   },
   {
-    path:"/restaurantDashBoard",
-    element:<RestaurantDashBoard />,
-    layout:"BaseLayout",
-    roles:["restaurant-owner"]
+    path: "/restaurantDashBoard",
+    element: <RestaurantDashBoard />,
+    layout: "BaseLayout",
+    roles: ["restaurant-owner"],
   },
   {
-    path:"/restaurantMenuItem/:restaurantId",
-    element:<RestaurantMenuItem />,
-    layout:"BaseLayout",
-    roles:["restaurant-owner"]
-  }
-  
+    path: "/restaurantMenuItem/:restaurantId",
+    element: <RestaurantMenuItem />,
+    layout: "BaseLayout",
+    roles: ["restaurant-owner"],
+  },
 ];

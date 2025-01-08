@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { fetchMenuItemsDetail } from '../../Helper/MenuItem';
-import './MenuItem.css'
-import { toast } from 'react-toastify';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { addToCart } from '../../Redux/Slices/cartSlice';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { fetchMenuItemsDetail } from "../../Helper/MenuItem";
+import { addToCart } from "../../Redux/Slices/cartSlice";
+import "./MenuItem.css";
 export function MenuItem() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,9 +17,8 @@ export function MenuItem() {
   const fetchMenuItems = async () => {
     try {
       const response = await fetchMenuItemsDetail(restaurantId);
-      console.log("FoodItems",response);
+      console.log("FoodItems", response);
       setMenuItems(response);
-     
     } catch (error) {
       setError(`Failed to fetch menu items: ${error.message || error}`);
     } finally {
@@ -60,9 +58,9 @@ export function MenuItem() {
       autoClose: 2000,
     });
 
-    setTimeout(() => {
-      navigate("/addtocart");
-    }, 500);
+    // setTimeout(() => {
+    //   navigate("/addtocart");
+    // }, 500);
   };
 
   if (loading) {
