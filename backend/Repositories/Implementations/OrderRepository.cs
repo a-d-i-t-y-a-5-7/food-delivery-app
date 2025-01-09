@@ -75,7 +75,7 @@ throw exception;
                 newOrder.TotalAmount = totalAmount;
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
-placeOrderDto.OrderId = newOrder.Id;
+            placeOrderDto.OrderId = newOrder.Id;
 
             return true;
                    }
