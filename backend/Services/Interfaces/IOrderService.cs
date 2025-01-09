@@ -6,6 +6,7 @@ namespace backend.Services.Interfaces
     public interface IOrderService
     {
         Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto);
+        Task<List<Order>> GetAllOrders();
         OrdersDto GetOrderByOrderId(int orderId);
         public List<OrdersDto> GetOrderByUserId(int userId);
         Task<bool> AssignDeliveryPartnerToOrderAsync(int orderId, int deliveryPartnerId);

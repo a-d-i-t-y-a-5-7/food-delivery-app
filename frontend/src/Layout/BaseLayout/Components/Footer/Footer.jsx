@@ -1,35 +1,39 @@
-import { Button } from "antd";
+import { Button, Col, Row } from "antd";
 import { Footer } from "antd/es/layout/layout";
 import React from "react";
 import "./Footer.css";
+import { useNavigate } from "react-router-dom";
 
 export const FooterComponent = () => {
-
   const navigate = useNavigate();
   const handleCategoryClick = () => {
-    navigate('/addtocart'); 
+    navigate("/addtocart");
   };
 
   return (
     <Footer
       className="footerContainer"
       style={{
-        backgroundImage: "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
+        backgroundImage:
+          "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
         padding: "5px 0",
       }}
     >
-      <Container>
+      <div>
         <Row className="text-center mt-4">
           <Col>
-            <h3 className="fw-bold text-white">Swigato : Online Ordering Website</h3>
+            <h3 className="fw-bold text-white">
+              Swigato : Online Ordering Website
+            </h3>
             <p className="text-white">
-              Your favorite meals delivered to your doorsteps with ease and speed!
+              Your favorite meals delivered to your doorsteps with ease and
+              speed!
             </p>
           </Col>
         </Row>
         <Row className="text-center">
           <Col>
-            <Button             
+            <Button
               className="order-button"
               onClick={handleCategoryClick}
               size="lg"
@@ -38,7 +42,7 @@ export const FooterComponent = () => {
             </Button>
           </Col>
         </Row>
-      </Container>
+      </div>
     </Footer>
   );
 };

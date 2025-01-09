@@ -22,57 +22,63 @@ namespace backend.Repositories.Implementations
         {
             await _context.SaveChangesAsync();
         }
-        public async Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto)
-        {
 
-            var foodItems = await _context.FoodItems
-                .Where(fi => fi.RestaurantId == placeOrderDto.RestaurantId)
+        public async Task<List<User>> GetDeliveryPartners()
+        {
+            var deliveryPartners = await _context.Users
+                .Where(u => u.RoleId == 1005)
                 .ToListAsync();
 
-            Order newOrder = new Order
-            {
-                CustomerId = placeOrderDto.CustomerId,
-                RestaurantId = placeOrderDto.RestaurantId,
-                Address = placeOrderDto.AddressId,
-                CreatedAt = DateTime.Now,
-                Status = "Pending",
-                PaymentStatus = "Pending",
-                TotalAmount = 0
-            };
+            return deliveryPartners;
+        }
 
-            decimal totalAmount = 0;
+        public async Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto)
+        {
+                var foodItems = await _context.FoodItems
+                    .Where(fi => fi.RestaurantId == placeOrderDto.RestaurantId)
+                    .ToListAsync();
 
-
-            foreach (var item in placeOrderDto.OrderItems)
-            {
-
-                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId) ?? throw new Exception($"Food item with ID {item.FoodItemId} not found.");
-                if (item.Quantity > foodItem.Quantity)
+                Order newOrder = new Order
                 {
+                    CustomerId = placeOrderDto.CustomerId,
+                    RestaurantId = placeOrderDto.RestaurantId,
+                    Address = placeOrderDto.AddressId,
+                    CreatedAt = DateTime.Now,
+                    Status = "Pending",
+                    PaymentStatus = "Pending",
+                    TotalAmount = 0,
+                };
+
+                decimal totalAmount = 0;
+                foreach (var item in placeOrderDto.OrderItems)
+                {
+                    
+                var foodItem = foodItems.FirstOrDefault(fi => fi.Id == item.FoodItemId) ?? throw new Exception($"Food item with ID {item.FoodItemId} not found.");
+                    if (item.Quantity > foodItem.Quantity)
+                        {
 
                     Exception exception = new Exception($"Food item '{foodItem.Name}' is out of stock. Only {foodItem.Quantity} items are available.");
-                    throw exception;
+throw exception;
                 }
 
-                totalAmount += foodItem.Price * item.Quantity;
-                newOrder.OrderItems.Add(new OrderItem
-                {
-                    FoodItemId = item.FoodItemId,
-                    Quantity = item.Quantity,
-                    Price = foodItem.Price
-                });
+                    totalAmount += foodItem.Price * item.Quantity;
+                    newOrder.OrderItems.Add(new OrderItem
+                    {
+                        FoodItemId = item.FoodItemId,
+                        Quantity = item.Quantity,
+                        Price = foodItem.Price
+                    });
 
+                    foodItem.Quantity -= item.Quantity;
+                }
 
-                foodItem.Quantity -= item.Quantity;
-            }
-
-            newOrder.TotalAmount = totalAmount;
+                newOrder.TotalAmount = totalAmount;
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
             placeOrderDto.OrderId = newOrder.Id;
 
             return true;
-        }
+                   }
         public async Task<bool> AssignDeliveryPartnerToOrderAsync(int orderId, int deliveryPartnerId)
         {
             var order = await _context.Orders
@@ -80,8 +86,8 @@ namespace backend.Repositories.Implementations
 
             if (order == null)
                 return false;
-
-            order.DeliveryPartnerId = deliveryPartnerId;
+           
+order.DeliveryPartnerId = deliveryPartnerId;
 
             var deliveryIncentive = (int)(order.TotalAmount * 0.10m);
 
@@ -100,9 +106,10 @@ namespace backend.Repositories.Implementations
 
             return true;
         }
-
-
-
+        public async Task<List<Order>> GetAllOrders()
+        { 
+            return await _context.Orders.ToListAsync();
+        }
         public OrdersDto GetOrderByOrderId(int orderId)
         {
             var order = _context.Orders

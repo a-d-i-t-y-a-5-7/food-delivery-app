@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Services.Interfaces
 {
@@ -7,6 +8,7 @@ namespace backend.Services.Interfaces
     {
         Task<User?> RegisterUser(RegisterDto newUser);
         Task<string?> LoginUser(LoginDto loginUser);
+        Task<List<User>> GetAllUsers();
         Task<User?> GetUserById(int id);
         Task UpdateUserProfile(int userId, UpdateUserDto userProfileDto);
         Task<Address?> AddAddress(AddAddressDto newAddress);

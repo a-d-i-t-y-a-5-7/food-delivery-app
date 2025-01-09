@@ -57,6 +57,20 @@ namespace backend.Controllers
             return Ok(new { token, message = "Login successful" });
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
+        {
+            var users = await _userService.GetAllUsers();
+
+            if (users == null || !users.Any())
+            {
+                return NotFound(new { message = "No users found" });
+            }
+
+            return Ok(users);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(int id)
         {

@@ -3,7 +3,13 @@ import { Button, Form, Input, Modal } from "antd";
 import { toast } from "react-toastify";
 import { addAddress, updateAddress } from "../../Helper/AddressHelper";
 
-const AddressFormModal = ({ isVisible, onClose, currentAddress, userId, onAddressSave }) => {
+const AddressFormModal = ({
+  isVisible,
+  onClose,
+  currentAddress,
+  userId,
+  onAddressSave,
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -29,7 +35,6 @@ const AddressFormModal = ({ isVisible, onClose, currentAddress, userId, onAddres
         toast.success("Address added successfully.");
       }
       onAddressSave(updatedAddress);
-      
     } catch (error) {
       toast.error(error.message);
     }
