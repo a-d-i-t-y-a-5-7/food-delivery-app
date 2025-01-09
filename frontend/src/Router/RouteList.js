@@ -1,3 +1,7 @@
+import { Dashboard } from "../Components/Admin/Dashboard";
+import { OrdersList } from "../Components/Admin/OrdersList";
+import { RestaurantList } from "../Components/Admin/RestaurantList";
+import { UserList } from "../Components/Admin/UserList";
 import {
   AddMenuItem,
   AddRestaurant,
@@ -9,7 +13,6 @@ import {
   MenuItem,
   MyOrders,
   Register,
-  RestaurantList,
   RestaurantOrders,
   SearchResult,
   ViewProfile,
@@ -30,7 +33,7 @@ export const routeList = [
   },
   {
     path: "/",
-    element: <LandingPage/>,
+    element: <LandingPage />,
     layout: "BaseLayout",
   },
   {
@@ -47,13 +50,13 @@ export const routeList = [
     path: "/users/:userId",
     element: <ViewProfile />,
     layout: "BaseLayout",
-    roles: ["user", "admin"],
+    roles: ["user", "admin-level1"],
   },
   {
     path: "/address",
     element: <Address />,
     layout: "BaseLayout",
-    roles: ["user"],
+    roles: ["user", "admin-level1"],
   },
   {
     path: "/search/:query",
@@ -64,54 +67,78 @@ export const routeList = [
     path: "/addtocart",
     element: <AddToCart />,
     layout: "BaseLayout",
-    roles: ["user"],
+    roles: ["user", "admin-level1"],
   },
   {
     path: "/myOrders",
     element: <MyOrders />,
     layout: "BaseLayout",
-    roles: ["user"],
+    roles: ["user", "admin-level1"],
   },
   {
     path: "/restaurantList",
     element: <RestaurantList />,
     layout: "BaseLayout",
-    roles: ["admin", "restaurant-owner"],
+    roles: ["admin-level1", "restaurant-owner"],
   },
   {
     path: "/addrestaurant",
     element: <AddRestaurant />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner"],
+    roles: ["restaurant-owner", "admin-level1"],
   },
   {
     path: "/myAssignedOrders",
     element: <DeliveryPartnerAssignedOrders />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner"],
+    roles: ["restaurant-owner", "admin-level1"],
   },
   {
     path: "/addmenuitem",
     element: <AddMenuItem />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner"],
+    roles: ["restaurant-owner", "admin-level1"],
   },
   {
     path: "/restaurantOrders/:restaurantId",
     element: <RestaurantOrders />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner"],
+    roles: ["restaurant-owner", "admin-level1"],
   },
   {
     path: "/restaurantDashBoard",
     element: <RestaurantDashBoard />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner"],
+    roles: ["restaurant-owner", "admin-level1"],
   },
   {
     path: "/restaurantMenuItem/:restaurantId",
     element: <RestaurantMenuItem />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner"],
+    roles: ["restaurant-owner", "admin-level1"],
+  },
+  {
+    path: "/admin",
+    element: <Dashboard />,
+    layout: "AdminLayout",
+    roles: ["admin-level1"],
+  },
+  {
+    path: "/admin/users",
+    element: <UserList />,
+    layout: "AdminLayout",
+    roles: ["admin-level1"],
+  },
+  {
+    path: "/admin/restaurants",
+    element: <RestaurantList />,
+    layout: "AdminLayout",
+    roles: ["admin-level1"],
+  },
+  {
+    path: "/admin/orders",
+    element: <OrdersList />,
+    layout: "AdminLayout",
+    roles: ["admin-level1"],
   },
 ];

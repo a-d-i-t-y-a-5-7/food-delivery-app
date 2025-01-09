@@ -13,6 +13,19 @@ export const userOrders = async (userId) => {
   }
 };
 
+export const fetchAllOrders = async () => {
+  try {
+    const response = await AxiosInstance.get(`/Order`, {
+      headers: {
+        "Include-Authorization": true,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch Orders.");
+  }
+};
+
 export const placeOrder = async (orderData) => {
   try {
     const response = await AxiosInstance.post(`/Order/place-order`, orderData, {

@@ -8,11 +8,24 @@ export const fetchRestaurants = async () => {
         headers: {
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response.data.restaurants;
   } catch (error) {
     throw new Error("Failed to fetch Restaurants.");
+  }
+};
+
+export const fetchAllUsers = async () => {
+  try {
+    const response = await AxiosInstance.get(`/User`, {
+      headers: {
+        "Include-Authorization": true,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch Users.");
   }
 };
 
@@ -25,7 +38,7 @@ export const handleRegister = async (registerDetails) => {
         headers: {
           "Include-Authorization": false,
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {

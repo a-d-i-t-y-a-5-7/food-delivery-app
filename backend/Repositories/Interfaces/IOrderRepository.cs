@@ -8,6 +8,7 @@ namespace backend.Repositories.Interfaces
         void AddDeliveryRequest(DeliveryRequest deliveryRequest);
         Task SaveAsync();
         Task<bool> PlaceOrderAsync(PlaceOrderDto placeOrderDto);
+        Task<List<Order>> GetAllOrders();
         OrdersDto GetOrderByOrderId(int orderId);
         public List<OrdersDto> GetOrderByUserId(int userId);
         public bool UpdateOrderAcceptance(UpdateOrderStatusDto statusDto);

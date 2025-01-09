@@ -35,7 +35,7 @@ export const Address = () => {
     if (userId) {
       loadAddresses();
     }
-  }, [userId, addresses]);
+  }, []);
 
   const handleAdd = () => {
     setCurrentAddress(null);
@@ -62,8 +62,8 @@ export const Address = () => {
         addresses.map((address) =>
           address.id === currentAddress.id
             ? { ...address, ...updatedAddress }
-            : address
-        )
+            : address,
+        ),
       );
     } else {
       setAddresses([...addresses, updatedAddress]);
@@ -73,10 +73,10 @@ export const Address = () => {
   const handleDeliverHere = (addressId) => {
     setSelectedAddressId(addressId);
     const selectedAddress = addresses.find(
-      (address) => address.id === addressId
+      (address) => address.id === addressId,
     );
     toast.success(
-      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`
+      `Selected delivery address: ${selectedAddress.addressLine1}, ${selectedAddress.city}`,
     );
   };
 
@@ -85,7 +85,7 @@ export const Address = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`
+        `Out of stock: Only ${item.availableQuantity} items are available.`,
       );
     }
   };
@@ -239,7 +239,7 @@ export const Address = () => {
                 ₹
                 {cartItems.reduce(
                   (total, item) => total + item.price * item.quantityInCart,
-                  0
+                  0,
                 )}
               </h6>
             </div>

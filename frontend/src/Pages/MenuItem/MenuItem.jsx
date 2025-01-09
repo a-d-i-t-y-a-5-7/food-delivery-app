@@ -51,7 +51,7 @@ export function MenuItem() {
         description: item.description,
         availableQuantity: item.quantity,
         restaurantId: item.restaurantId,
-      })
+      }),
     );
     toast.success("Item added to the cart.", {
       position: "top-right",

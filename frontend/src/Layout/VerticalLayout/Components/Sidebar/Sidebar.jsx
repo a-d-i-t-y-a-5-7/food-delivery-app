@@ -1,11 +1,9 @@
 import {
   DashboardOutlined,
   EnvironmentOutlined,
-  IdcardOutlined,
   SettingOutlined,
   TeamOutlined,
   UserOutlined,
-  VideoCameraAddOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -15,43 +13,27 @@ export const Sidebar = () => {
     {
       key: "1",
       icon: <DashboardOutlined />,
-      label: <Link to="/">Dashboard</Link>,
+      label: <Link to="/admin">Dashboard</Link>,
     },
     {
       key: "2",
       icon: <UserOutlined />,
-      label: <Link to="/users">Employees</Link>,
+      label: <Link to="/admin/users">Users</Link>,
     },
     {
-      key: "4",
+      key: "3",
       label: "Miscellaneous",
       icon: <SettingOutlined />,
       children: [
         {
-          key: "4-1",
+          key: "3-1",
           icon: <TeamOutlined />,
-          label: <Link to="/region">Region</Link>,
+          label: <Link to="/admin/restaurants">Restaurants</Link>,
         },
         {
-          key: "4-2",
+          key: "3-2",
           icon: <EnvironmentOutlined />,
-          label: <Link to="/location">Location</Link>,
-        },
-        {
-          key: "4-3",
-          icon: <IdcardOutlined />,
-          label: <Link to="/title">Title</Link>,
-        },
-        {
-          key: "4-4",
-          icon: <VideoCameraAddOutlined />,
-          label: <Link to="/interests">Employee Interest</Link>,
-        },
-
-        {
-          key: "4-6",
-          icon: <UserOutlined />,
-          label: <Link to="/role">Role</Link>,
+          label: <Link to="/admin/orders">Orders</Link>,
         },
       ],
     },

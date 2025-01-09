@@ -53,7 +53,7 @@ export const ViewProfile = () => {
         const response = await userOrders(userId);
         const fetchedOrders = response.data.orders;
         const sortedOrders = fetchedOrders.sort(
-          (a, b) => b.orderId - a.orderId
+          (a, b) => b.orderId - a.orderId,
         );
         setOrders(sortedOrders);
       }

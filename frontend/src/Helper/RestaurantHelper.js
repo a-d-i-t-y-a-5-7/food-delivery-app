@@ -8,7 +8,7 @@ export const getRestaurantList = async (ownerId) => {
         headers: {
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response;
   } catch (error) {
@@ -24,7 +24,7 @@ export const restaurantOrders = async (restaurantId) => {
         headers: {
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response;
   } catch (error) {
@@ -35,7 +35,7 @@ export const restaurantOrders = async (restaurantId) => {
 export const fetchReviewsByRestaurant = async (restaurantId) => {
   try {
     const response = await AxiosInstance.get(
-      `/Review/restaurant/${restaurantId}/reviews`
+      `/Review/restaurant/${restaurantId}/reviews`,
     );
     return response.data;
   } catch (error) {
@@ -46,7 +46,7 @@ export const fetchReviewsByRestaurant = async (restaurantId) => {
 export const fetchReviewsBydeliveryPartner = async (partnerId) => {
   try {
     const response = await AxiosInstance.get(
-      `Review/delivery-partner/${partnerId}/reviews`
+      `Review/delivery-partner/${partnerId}/reviews`,
     );
     return response.data;
   } catch (error) {
@@ -64,7 +64,7 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
     try {
       const response = await AxiosInstance.put(
         `/Order/update-status`,
-        orderStatusDto
+        orderStatusDto,
       );
       return response;
     } catch (error) {}
@@ -79,7 +79,7 @@ export const updateOrderStatus = async (orderId, orderStatus) => {
     try {
       const response = await AxiosInstance.put(
         `/Order/update-status`,
-        orderStatusDto
+        orderStatusDto,
       );
       return response;
     } catch (error) {}
@@ -95,14 +95,13 @@ export const addRestaurant = async (restaurantDetails) => {
           "Content-Type": "multipart/form-data",
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response;
   } catch (error) {
     throw error;
   }
 };
-
 
 export const fetchRestaurantByUserId = async (userId) => {
   try {
@@ -111,16 +110,14 @@ export const fetchRestaurantByUserId = async (userId) => {
       {
         headers: {
           "Include-Authorization": true,
-        }
-      }
-    )
-    return response.data.restaurants
+        },
+      },
+    );
+    return response.data.restaurants;
+  } catch (error) {
+    throw error;
   }
-  catch (error) {
-    throw error
-  }
-
-}
+};
 export const getSearchResults = async (query) => {
   try {
     const response = await AxiosInstance.get(
@@ -129,7 +126,7 @@ export const getSearchResults = async (query) => {
         headers: {
           "Include-Authorization": false,
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {

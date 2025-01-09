@@ -41,7 +41,7 @@ export const RestaurantDashBoard = () => {
   const handleCardClick = (restaurantId) => {
     const encryptedRestaurantId = CryptoJS.AES.encrypt(
       restaurantId.toString(),
-      secretKey
+      secretKey,
     ).toString();
     const encodedId = encodeURIComponent(encryptedRestaurantId);
     navigate(`/RestaurantMenuItem/${encodedId}`);

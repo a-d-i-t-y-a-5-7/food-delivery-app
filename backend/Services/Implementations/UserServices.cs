@@ -54,6 +54,11 @@ namespace backend.Services.Implementations
 
             return await GenerateJwtToken(user);
         }
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _userRepository.GetAllUsers();
+        }
+
         public async Task<User?> GetUserById(int id)
         {
             return await _userRepository.GetUserById(id);

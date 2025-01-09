@@ -8,7 +8,7 @@ export const fetchMyAssignedOrders = async (deliveryPartnerId) => {
         headers: {
           "Include-Authorization": true,
         },
-      }
+      },
     );
     return response;
   } catch (error) {
