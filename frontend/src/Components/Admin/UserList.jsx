@@ -1,4 +1,4 @@
-import { Spin, Table } from "antd";
+import { Breadcrumb, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { fetchAllUsers } from "../../Helper/UserHelper";
 
@@ -25,16 +25,34 @@ export const UserList = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: "#e85654",
+          color: "#fff",
+        },
+      }),
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: "#e85654",
+          color: "#fff",
+        },
+      }),
     },
     {
       title: "Phone",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: "#e85654",
+          color: "#fff",
+        },
+      }),
     },
   ];
 
@@ -43,8 +61,14 @@ export const UserList = () => {
   }
 
   return (
-    <div>
-      <Table dataSource={users} columns={columns} rowKey="id" />
-    </div>
+    <>
+      <Breadcrumb className="my-3">
+        <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+        <Breadcrumb.Item>Users</Breadcrumb.Item>
+      </Breadcrumb>
+      <div>
+        <Table dataSource={users} columns={columns} rowKey="id" bordered />
+      </div>
+    </>
   );
 };

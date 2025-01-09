@@ -107,7 +107,7 @@ order.DeliveryPartnerId = deliveryPartnerId;
             return true;
         }
         public async Task<List<Order>> GetAllOrders()
-        {
+        { 
             return await _context.Orders.ToListAsync();
         }
         public OrdersDto GetOrderByOrderId(int orderId)

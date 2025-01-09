@@ -1,6 +1,6 @@
 import { Dashboard } from "../Components/Admin/Dashboard";
 import { OrdersList } from "../Components/Admin/OrdersList";
-import { RestaurantList } from "../Components/Admin/RestaurantList";
+import { RestaurantsList } from "../Components/Admin/RestaurantsList";
 import { UserList } from "../Components/Admin/UserList";
 import {
   AddMenuItem,
@@ -13,6 +13,7 @@ import {
   MenuItem,
   MyOrders,
   Register,
+  RestaurantList,
   RestaurantOrders,
   SearchResult,
   ViewProfile,
@@ -47,33 +48,33 @@ export const routeList = [
     layout: "BaseLayout",
   },
   {
-    path: "/users/:userId",
-    element: <ViewProfile />,
-    layout: "BaseLayout",
-    roles: ["user", "admin-level1"],
-  },
-  {
-    path: "/address",
-    element: <Address />,
-    layout: "BaseLayout",
-    roles: ["user", "admin-level1"],
-  },
-  {
     path: "/search/:query",
     element: <SearchResult />,
     layout: "BaseLayout",
   },
   {
+    path: "/users/:userId",
+    element: <ViewProfile />,
+    layout: "BaseLayout",
+    roles: ["user", "admin-level1", "delivery-partner", "restaurant-owner"],
+  },
+  {
+    path: "/address",
+    element: <Address />,
+    layout: "BaseLayout",
+    roles: ["user", "admin-level1", "delivery-partner", "restaurant-owner"],
+  },
+  {
     path: "/addtocart",
     element: <AddToCart />,
     layout: "BaseLayout",
-    roles: ["user", "admin-level1"],
+    roles: ["user", "admin-level1", "delivery-partner", "restaurant-owner"],
   },
   {
     path: "/myOrders",
     element: <MyOrders />,
     layout: "BaseLayout",
-    roles: ["user", "admin-level1"],
+    roles: ["user", "admin-level1", "delivery-partner", "restaurant-owner"],
   },
   {
     path: "/restaurantList",
@@ -91,7 +92,7 @@ export const routeList = [
     path: "/myAssignedOrders",
     element: <DeliveryPartnerAssignedOrders />,
     layout: "BaseLayout",
-    roles: ["restaurant-owner", "admin-level1"],
+    roles: ["delivery-partner", "admin-level1"],
   },
   {
     path: "/addmenuitem",
@@ -131,7 +132,7 @@ export const routeList = [
   },
   {
     path: "/admin/restaurants",
-    element: <RestaurantList />,
+    element: <RestaurantsList />,
     layout: "AdminLayout",
     roles: ["admin-level1"],
   },

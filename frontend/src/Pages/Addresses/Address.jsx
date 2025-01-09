@@ -35,7 +35,7 @@ export const Address = () => {
     if (userId) {
       loadAddresses();
     }
-  }, []);
+  }, [addresses]);
 
   const handleAdd = () => {
     setCurrentAddress(null);
