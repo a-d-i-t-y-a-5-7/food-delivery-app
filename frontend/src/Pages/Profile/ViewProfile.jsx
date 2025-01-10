@@ -93,10 +93,10 @@ export const ViewProfile = () => {
       case "reviews":
         return (
           <div className="review-container">
-            {reviews.length === 0 ? (
+            {reviews?.length === 0 ? (
               <p>No Reviews found.</p>
             ) : (
-              reviews.map((review) => (
+              reviews?.map((review) => (
                 <ReviewCard
                   key={review.id}
                   rating={review.rating}
@@ -110,10 +110,10 @@ export const ViewProfile = () => {
       case "addresses":
         return (
           <div className="d-flex">
-            {addresses.length === 0 ? (
+            {addresses?.length === 0 ? (
               <p>No addresses found.</p>
             ) : (
-              addresses.map((address) => (
+              addresses?.map((address) => (
                 <AddressCard key={address.id} address={address} />
               ))
             )}
@@ -122,10 +122,10 @@ export const ViewProfile = () => {
       case "orders":
         return (
           <div className="order-container m-3">
-            {orders.length === 0 ? (
+            {orders?.length === 0 ? (
               <p>No Orders found.</p>
             ) : (
-              orders.map((order) => (
+              orders?.map((order) => (
                 <div className="mb-4">
                   <OrderCard
                     key={order.id}

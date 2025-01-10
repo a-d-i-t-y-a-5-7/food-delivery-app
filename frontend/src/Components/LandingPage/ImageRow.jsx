@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const ImageRow = ({ title, images, iconRow }) => {
   return (
@@ -12,7 +12,7 @@ const ImageRow = ({ title, images, iconRow }) => {
                 className="d-flex text-center p-3 bg-gradient text-dark rounded shadow mx-2"
                 style={{
                   backgroundImage:
-                    'linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))',
+                    "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
                 }}
               >
                 {item.icon}
@@ -20,16 +20,20 @@ const ImageRow = ({ title, images, iconRow }) => {
               </div>
             ))
           : images.map((image, index) => (
-              <div key={index} className="text-center mx-3" onClick={image.onClick}>
+              <div
+                key={index}
+                className="text-center mx-3"
+                onClick={image.onClick}
+              >
                 <img
                   src={image.img}
                   alt={image.alt}
                   className="rounded mb-2"
                   style={{
-                    width: '300px',
-                    height: '250px',
-                    objectFit: 'cover',
-                    cursor: 'pointer',
+                    width: "300px",
+                    height: "250px",
+                    objectFit: "cover",
+                    cursor: "pointer",
                   }}
                 />
               </div>

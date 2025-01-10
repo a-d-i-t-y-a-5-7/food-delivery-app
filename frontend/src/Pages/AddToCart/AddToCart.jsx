@@ -26,11 +26,11 @@ export const AddToCart = () => {
   };
 
   const handleCheckout = () => {
-    navigate("/address");
+    navigate("/checkout");
   };
 
   const handleBrowseRestaurants = () => {
-    navigate("/home");
+    navigate("/restaurants");
   };
 
   const handleIncrementQuantity = (item) => {

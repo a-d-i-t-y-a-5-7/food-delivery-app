@@ -1,4 +1,5 @@
 ﻿using backend.DTOs;
+using backend.Models;
 using backend.Services.Implementations;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,19 @@ namespace backend.Controllers
                 return Ok(new { message = "Order placed successfully", placeOrderDto.OrderId });
             }
             return BadRequest(new { message = "Failed to place order" });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders()
+        {
+            var orders = await _orderService.GetAllOrders();
+
+            if (orders == null || !orders.Any())
+            {
+                return NotFound(new { message = "No orders found" });
+            }
+
+            return Ok(orders);
         }
 
         [HttpGet("{orderId}")]

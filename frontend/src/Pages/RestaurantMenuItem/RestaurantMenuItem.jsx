@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { updateMenuItem, getCuisinesAndCategoryList, fetchMenuItemsDetail, addMenuItem, decodeparams } from '../../Helper/MenuItem';
-import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
-import './RestaurantMenuItem.css';
+import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  updateMenuItem,
+  getCuisinesAndCategoryList,
+  fetchMenuItemsDetail,
+  addMenuItem,
+  decodeparams,
+} from "../../Helper/MenuItem";
+import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import "./RestaurantMenuItem.css";
 
-export const RestaurantMenuItem =() => {
+export const RestaurantMenuItem = () => {
   const resetFormData = {
-    name: '',
-    description: '',
-    price: '',
-    quantity :'',
-    cuisineTypeId: '',
-    categoryId: '',
-    isAvailable: 'true',
+    name: "",
+    description: "",
+    price: "",
+    quantity: "",
+    cuisineTypeId: "",
+    categoryId: "",
+    isAvailable: "true",
     image: null,
   };
 
@@ -34,7 +40,7 @@ export const RestaurantMenuItem =() => {
     try {
       const decryptedRestaurantId = decodeparams(restaurantId);
       if (!decryptedRestaurantId) {
-        throw new Error('Invalid restaurant ID');
+        throw new Error("Invalid restaurant ID");
       }
       debugger;
       const response = await fetchMenuItemsDetail(decryptedRestaurantId);
@@ -44,13 +50,15 @@ export const RestaurantMenuItem =() => {
         setMenuItems([]);
       }
     } catch (error) {
-      console.log(error)
-      if (error?.response?.status === 404){
-      toast.error(`Error: ${error.response.data.errorMessage } for this Restaurant `|| "Unknown error occurred");
-      }
-      else{
-      setError(error.message || 'Failed to fetch menu items.');
-      toast.error(`Error: ${error.message || 'Unknown error occurred'}`);
+      console.log(error);
+      if (error?.response?.status === 404) {
+        toast.error(
+          `Error: ${error.response.data.errorMessage} for this Restaurant ` ||
+            "Unknown error occurred",
+        );
+      } else {
+        setError(error.message || "Failed to fetch menu items.");
+        toast.error(`Error: ${error.message || "Unknown error occurred"}`);
       }
     } finally {
       setLoading(false);
@@ -64,10 +72,13 @@ export const RestaurantMenuItem =() => {
         setCuisines(response.data.cuisines);
         setCategories(response.data.categories);
       } else {
-        throw new Error('Failed to fetch cuisines and categories');
+        throw new Error("Failed to fetch cuisines and categories");
       }
     } catch (error) {
-      toast.error(error.response?.data?.errorMessage || 'Failed to fetch cuisines and categories');
+      toast.error(
+        error.response?.data?.errorMessage ||
+          "Failed to fetch cuisines and categories",
+      );
     }
   };
 
@@ -105,11 +116,11 @@ export const RestaurantMenuItem =() => {
     setFormData({
       name: item.name,
       description: item.description,
-      price: item.price || '',
-      quantity : item.quantity || '',
-      cuisineTypeId: item.cuisineTypeId || '',
-      categoryId: item.categoryId || '',
-      isAvailable: item.isAvailable || 'true',
+      price: item.price || "",
+      quantity: item.quantity || "",
+      cuisineTypeId: item.cuisineTypeId || "",
+      categoryId: item.categoryId || "",
+      isAvailable: item.isAvailable || "true",
       image: null,
     });
     setIsEditMode(true);
@@ -139,29 +150,31 @@ export const RestaurantMenuItem =() => {
     try {
       let response;
       const decryptedRestaurantId = decodeparams(restaurantId);
-      menuItemDetails.append('restaurantId', decryptedRestaurantId);
+      menuItemDetails.append("restaurantId", decryptedRestaurantId);
       if (isEditMode) {
         response = await updateMenuItem(selectedItem.id, menuItemDetails);
         if (response.status === 200) {
-          toast.success('Menu Item Updated Successfully');
+          toast.success("Menu Item Updated Successfully");
         } else {
-          throw new Error('Failed to Update Menu Item');
+          throw new Error("Failed to Update Menu Item");
         }
       } else {
         response = await addMenuItem(menuItemDetails, decryptedRestaurantId);
         if (response.status === 201) {
-          toast.success('Menu Item Added Successfully');
+          toast.success("Menu Item Added Successfully");
         } else {
-          throw new Error('Failed to Add Menu Item');
+          throw new Error("Failed to Add Menu Item");
         }
       }
       handleCloseModal();
       fetchMenuItems();
     } catch (err) {
-      if (err.response.data.status === 500){
-        toast.error('Failed to submit menu item. Internal server error');
+      if (err.response.data.status === 500) {
+        toast.error("Failed to submit menu item. Internal server error");
       }
-      toast.error(err.response?.data?.errorMessage|| 'Failed to submit menu item.');
+      toast.error(
+        err.response?.data?.errorMessage || "Failed to submit menu item.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -178,33 +191,47 @@ export const RestaurantMenuItem =() => {
         <div className="col-md-4 d-flex justify-content-center">
           <div
             className="card shadow-sm p-3 mb-4 bg-white rounded d-flex justify-content-center align-items-center"
-            style={{ width: '18rem', height: '400px', cursor: 'pointer' }}
+            style={{ width: "18rem", height: "400px", cursor: "pointer" }}
             onClick={handleAddClick}
           >
             <div className="text-center">
-              <i className="bi bi-plus-circle" style={{ fontSize: '4rem', color: 'gray' }}></i>
+              <i
+                className="bi bi-plus-circle"
+                style={{ fontSize: "4rem", color: "gray" }}
+              ></i>
               <p className="mt-3 fw-bold">Add New Menu Item</p>
             </div>
           </div>
         </div>
         {menuItems.map((item) => (
           <div key={item.id} className="col-md-4 d-flex justify-content-center">
-            <div className="card shadow-sm p-3 mb-4 bg-white rounded" style={{ width: '18rem' }}>
+            <div
+              className="card shadow-sm p-3 mb-4 bg-white rounded"
+              style={{ width: "18rem" }}
+            >
               <img
                 src={item.imageUrl}
                 alt={`Image of ${item.name}`}
                 className="card-img-top rounded"
-                style={{ height: '180px', objectFit: 'cover' }}
+                style={{ height: "180px", objectFit: "cover" }}
               />
               <div className="card-body text-center">
                 <h5 className="card-title mb-2">{item.name}</h5>
-                <p className="card-text text-muted mb-2" style={{ fontSize: '0.9rem' }}>
+                <p
+                  className="card-text text-muted mb-2"
+                  style={{ fontSize: "0.9rem" }}
+                >
                   {item.description}
                 </p>
                 <div className="my-3">
-                  <span className="text-secondary fw-bold">Price: {item.price || 'N/A'}/-</span>
+                  <span className="text-secondary fw-bold">
+                    Price: {item.price || "N/A"}/-
+                  </span>
                 </div>
-                <button className="btn btn-primary w-100" onClick={() => handleEditClick(item)}>
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={() => handleEditClick(item)}
+                >
                   Edit
                 </button>
               </div>
@@ -215,14 +242,24 @@ export const RestaurantMenuItem =() => {
 
       {showModal && (
         <div className="modal-backdrop-blur">
-          <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+          <div
+            className="modal fade show"
+            style={{ display: "block" }}
+            tabIndex="-1"
+            aria-labelledby="editModalLabel"
+            aria-hidden="true"
+          >
             <div className="modal-dialog modal-lg mt-5">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="editModalLabel">
-                    {isEditMode ? 'Edit Menu Item' : 'Add New Menu Item'}
+                    {isEditMode ? "Edit Menu Item" : "Add New Menu Item"}
                   </h5>
-                  <button type="button" className="btn-close" onClick={handleCloseModal}></button>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={handleCloseModal}
+                  ></button>
                 </div>
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
                   <div className="modal-body">
@@ -333,7 +370,9 @@ export const RestaurantMenuItem =() => {
                         onChange={handleFileChange}
                       />
                       {formData.image && (
-                        <small className="form-text text-muted">{formData.image.name}</small>
+                        <small className="form-text text-muted">
+                          {formData.image.name}
+                        </small>
                       )}
                     </div>
                     <div className="mb-3">
@@ -354,13 +393,25 @@ export const RestaurantMenuItem =() => {
                     </div>
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={handleCloseModal}
+                    >
                       Close
                     </button>
-                    <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={isSubmitting}
+                    >
                       {isSubmitting ? (
-                        <span  aria-hidden="true">Submitting</span>
-                      ) : isEditMode ? 'Update Menu Item' : 'Add Menu Item'}
+                        <span aria-hidden="true">Submitting</span>
+                      ) : isEditMode ? (
+                        "Update Menu Item"
+                      ) : (
+                        "Add Menu Item"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -371,5 +422,4 @@ export const RestaurantMenuItem =() => {
       )}
     </div>
   );
-}
-
+};

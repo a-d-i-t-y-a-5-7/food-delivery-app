@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using backend.Repositories.Implementations;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
 
@@ -31,6 +32,12 @@ namespace backend.Services.Implementations
         public OrdersDto GetOrderByOrderId(int orderId)
         {
             return _orderRepository.GetOrderByOrderId(orderId);
+        }
+
+
+        public async Task<List<Order>> GetAllOrders()
+        {
+            return await _orderRepository.GetAllOrders();
         }
 
         public List<OrdersDto> GetOrderByUserId(int userId)

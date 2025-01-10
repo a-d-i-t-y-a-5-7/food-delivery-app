@@ -23,6 +23,10 @@ namespace backend.Repositories.Implementations
         {
             return await _context.Roles.FindAsync(roleId);
         }
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
         public async Task<User?> GetUserById(int userId)
         {
             return await _context.Users.FindAsync(userId);

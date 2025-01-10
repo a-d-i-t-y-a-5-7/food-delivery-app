@@ -8,6 +8,7 @@ namespace backend.Repositories.Interfaces
         Task<User?> GetUserByEmail(string email);
         Task<Role?> GetUserRole(int? roleId);
         Task<User?> GetUserById(int userId);
+        Task<List<User>> GetAllUsers();
         Task UpdateUser(User user);
         Task<User?> RegisterUser(RegisterDto newUser);
         Task<Address?> AddAddress(AddAddressDto newAddress);
