@@ -15,3 +15,4 @@ public partial class Admin
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }
+
