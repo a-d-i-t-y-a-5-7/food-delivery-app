@@ -38,7 +38,7 @@ export const routeList = [
     layout: "BaseLayout",
   },
   {
-    path: "/home",
+    path: "/restaurants",
     element: <Home />,
     layout: "BaseLayout",
   },
@@ -59,13 +59,13 @@ export const routeList = [
     roles: ["user", "admin-level1", "delivery-partner", "restaurant-owner"],
   },
   {
-    path: "/address",
+    path: "/checkout",
     element: <Address />,
     layout: "BaseLayout",
     roles: ["user", "admin-level1", "delivery-partner", "restaurant-owner"],
   },
   {
-    path: "/addtocart",
+    path: "/cart",
     element: <AddToCart />,
     layout: "BaseLayout",
     roles: ["user", "admin-level1", "delivery-partner", "restaurant-owner"],

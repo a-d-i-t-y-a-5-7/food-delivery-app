@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export const FooterComponent = () => {
   const navigate = useNavigate();
   const handleCategoryClick = () => {
-    navigate("/addtocart");
+    navigate("/cart");
   };
 
   return (

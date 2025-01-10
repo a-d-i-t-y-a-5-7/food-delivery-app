@@ -145,7 +145,7 @@ export const HeaderComponent = () => {
               />
             )}
 
-            <Link to="/addtocart" style={{ marginLeft: 10 }}>
+            <Link to="/cart" style={{ marginLeft: 10 }}>
               <Badge count={cartItems.length} showZero>
                 <ShoppingCartOutlined
                   style={{ fontSize: "28px", color: "#333" }}
