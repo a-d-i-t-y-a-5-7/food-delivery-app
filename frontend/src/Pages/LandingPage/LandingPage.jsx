@@ -31,18 +31,18 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    if (currentIndex + 6 < items.length) {
-      setCurrentIndex(currentIndex + 6);
+    if (currentIndex + 7 < items.length) {
+      setCurrentIndex(currentIndex + 7);
     }
   };
 
   const handlePrev = () => {
-    if (currentIndex - 6 >= 0) {
-      setCurrentIndex(currentIndex - 6);
+    if (currentIndex - 7 >= 0) {
+      setCurrentIndex(currentIndex - 7);
     }
   };
 
-  const currentItems = items.slice(currentIndex, currentIndex + 6);
+  const currentItems = items.slice(currentIndex, currentIndex + 7);
   const handleCategoryClick = () => {
     navigate("/restaurants");
   };
@@ -52,6 +52,12 @@ const LandingPage = () => {
     alt: item.name,
     onClick: handleCategoryClick,
   }));
+
+  const features = [
+    { icon: <FaTruck className="me-2" size={20} />, text: 'Fast Delivery' },
+    { icon: <FaLocationArrow className="me-2" size={20} />, text: 'Live Tracking' },
+    { icon: <FaCreditCard className="me-2" size={20} />, text: 'Hassle-free Payment' },
+  ];
 
   const dealsImages = [
     {
@@ -122,16 +128,18 @@ const LandingPage = () => {
     },
   ];
 
-  const features = [
-    { icon: <FaTruck className="me-2" size={20} />, text: "Fast Delivery" },
-    {
-      icon: <FaLocationArrow className="me-2" size={20} />,
-      text: "Live Tracking",
-    },
-    {
-      icon: <FaCreditCard className="me-2" size={20} />,
-      text: "Hassle-free Payment",
-    },
+  const others = [
+    {img: '/assets/Others/Dining 1.jpg', alt: 'dining1', onClick: handleCategoryClick},
+    {img: '/assets/Others/Dining 2.jpg', alt: 'dining2', onClick: handleCategoryClick},
+    {img: '/assets/Others/Dining 3.jpg', alt: 'dining3', onClick: handleCategoryClick},
+    {img: '/assets/Others/Dining 4.jpg', alt: 'dining4', onClick: handleCategoryClick},
+  ];
+
+  const pubs = [
+    {img: '/assets/pubs/Pub1.jpg', alt: 'pub1', onClick: handleCategoryClick},
+    {img: '/assets/pubs/Pub2.jpg', alt: 'pub2', onClick: handleCategoryClick},
+    {img: '/assets/pubs/Pub3.jpg', alt: 'pub3', onClick: handleCategoryClick},
+    {img: '/assets/pubs/Pub4.jpg', alt: 'pub4', onClick: handleCategoryClick},
   ];
 
   return (
@@ -186,10 +194,25 @@ const LandingPage = () => {
       </div>
 
       <ImageRow title="Today's Deals" images={dealsImages} />
-      <ImageRow title="Popular Cafe's" images={cafesImages} />
-      <ImageRow title="Popular Rooftop Restaurant's" images={rooftopImages} />
+      <ImageRow title="Popular Cafes" images={cafesImages} />
+      <ImageRow title="Popular Rooftop Restaurants" images={rooftopImages} />
+      <ImageRow title="Popular Dining Places" images={others} />
+      <ImageRow title="Popular Pubs" images={pubs} />
+
+      <div className="w-100 text-center mt-5 p-4" style={{ backgroundColor: '#f2f2f2' }}>
+        <blockquote className="blockquote mb-0">
+          <p className="fw-bold" style={{ fontSize: '1.25rem' }}>
+            "Good food is all the sweeter when shared with good friends and the loved ones."
+          </p>
+          <footer className="blockquote-footer">Swigato</footer>
+        </blockquote>
+      </div>
     </div>
   );
 };
 
 export default LandingPage;
+
+ 
+
+
