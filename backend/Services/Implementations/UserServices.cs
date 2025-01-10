@@ -85,6 +85,11 @@ namespace backend.Services.Implementations
                 existingUser.PasswordHash = hasher.HashPassword(existingUser, userProfileDto.Password);
             }
 
+            if (userProfileDto.Role.HasValue)
+            {
+                existingUser.RoleId = userProfileDto.Role.Value;
+            }
+
             await _userRepository.UpdateUser(existingUser);
         }
 
