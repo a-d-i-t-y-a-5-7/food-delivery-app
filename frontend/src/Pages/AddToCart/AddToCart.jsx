@@ -26,11 +26,11 @@ export const AddToCart = () => {
   };
 
   const handleCheckout = () => {
-    navigate("/address");
+    navigate("/checkout");
   };
 
   const handleBrowseRestaurants = () => {
-    navigate("/home");
+    navigate("/restaurants");
   };
 
   const handleIncrementQuantity = (item) => {
@@ -38,7 +38,7 @@ export const AddToCart = () => {
       dispatch(incrementQuantity(item.id));
     } else {
       toast.error(
-        `Out of stock: Only ${item.availableQuantity} items are available.`,
+        `Out of stock: Only ${item.availableQuantity} items are available.`
       );
     }
   };

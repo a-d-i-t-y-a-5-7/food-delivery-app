@@ -9,7 +9,7 @@ export const getUserById = async (userId) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error("Please check userId.");
+    // throw new Error("Please check userId.");
   }
 };
 
@@ -22,7 +22,7 @@ export const getReviewById = async (userId) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error("Please check userId.");
+    // throw new Error("Please check userId.");
   }
 };
 
@@ -35,7 +35,7 @@ export const AddReview = async (review) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error("Please check userId.");
+    // throw new Error("Please check userId.");
   }
 };
 
@@ -48,10 +48,10 @@ export const updateUser = async (userId, updatedData) => {
         headers: {
           "Include-Authorization": true,
         },
-      },
+      }
     );
     return response.data;
   } catch (error) {
-    throw new Error("Please check userId.");
+    // throw new Error("Please check userId.");
   }
 };

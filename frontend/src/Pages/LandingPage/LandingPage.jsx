@@ -44,7 +44,7 @@ const LandingPage = () => {
 
   const currentItems = items.slice(currentIndex, currentIndex + 6);
   const handleCategoryClick = () => {
-    navigate("/home");
+    navigate("/restaurants");
   };
 
   const categoryImages = currentItems.map((item) => ({
