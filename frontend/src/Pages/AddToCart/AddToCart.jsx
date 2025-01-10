@@ -8,6 +8,12 @@ import {
   incrementQuantity,
   setUserId,
 } from "../../Redux/Slices/cartSlice";
+import {
+  FaTruck,
+  FaLocationArrow,
+  FaCreditCard,
+} from "react-icons/fa";
+import ImageRow from "../../Components/LandingPage/ImageRow";
 
 export const AddToCart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -42,8 +48,26 @@ export const AddToCart = () => {
       );
     }
   };
+  const features = [
+    { icon: <FaTruck className="me-2" size={20} />, text: "Fast Delivery" },
+    { icon: <FaLocationArrow className="me-2" size={20} />, text: "Live Tracking" },
+    { icon: <FaCreditCard className="me-2" size={20} />, text: "Hassle-free Payment" },
+  ];
 
   return (
+    <>
+    <div className="d-flex justify-content-center align-items-center w-100 flex-column">
+      <div
+        className="text-center p-4 text-white rounded shadow w-100"
+        style={{
+          backgroundImage: "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
+        }}
+      >
+        <h1 className="fw-bold display-3">Swigato</h1>
+        <p className="lead">Order your most favourite food dishes today! 😋</p>
+        <ImageRow iconRow={features} />
+      </div>
+    </div>
     <div className="container mt-4" style={{ maxWidth: "1200px" }}>
       <h2 className="text-left mb-4">Cart Items</h2>
       <div className="row">
@@ -131,5 +155,6 @@ export const AddToCart = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };

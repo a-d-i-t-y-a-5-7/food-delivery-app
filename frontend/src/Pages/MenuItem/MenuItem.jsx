@@ -9,6 +9,12 @@ import { fetchMenuItemsDetail } from "../../Helper/MenuItem";
 import { fetchReviewsByRestaurant } from "../../Helper/RestaurantHelper";
 import { addToCart } from "../../Redux/Slices/cartSlice";
 import "./MenuItem.css";
+import {
+  FaTruck,
+  FaLocationArrow,
+  FaCreditCard,
+} from "react-icons/fa";
+import ImageRow from "../../Components/LandingPage/ImageRow";
 export function MenuItem() {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
@@ -72,10 +78,6 @@ export function MenuItem() {
       position: "top-right",
       autoClose: 2000,
     });
-
-    // setTimeout(() => {
-    //   navigate("/addtocart");
-    // }, 500);
   };
 
   const renderContent = (key) => {
@@ -156,21 +158,27 @@ export function MenuItem() {
   if (error) {
     return <div>No Menu Item Found For This Restaurant</div>;
   }
+  const features = [
+    { icon: <FaTruck className="me-2" size={20} />, text: "Fast Delivery" },
+    { icon: <FaLocationArrow className="me-2" size={20} />, text: "Live Tracking" },
+    { icon: <FaCreditCard className="me-2" size={20} />, text: "Hassle-free Payment" },
+  ];
 
   return (
+    <>
+      <div className="d-flex justify-content-center align-items-center w-100 flex-column">
+        <div
+          className="text-center p-4 text-white rounded shadow w-100"
+          style={{
+            backgroundImage: "linear-gradient(to right, rgb(242,169,62), rgb(240,112,84))",
+          }}
+        >
+          <h1 className="fw-bold display-3">Swigato</h1>
+          <p className="lead">Order your most favourite food dishes today! 😋</p>
+          <ImageRow iconRow={features} />
+        </div>
+      </div>
     <div className="container mt-4">
-      <div
-        style={{
-          width: "100%",
-          height: "20rem",
-          backgroundImage: "url(/assets/banner.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-
-      {/* <h2 className="text-center mb-4">Menu Items</h2> */}
-
       <div className="profile-content">
         <div className="tabs-section">
           <Tabs defaultActiveKey="reviews">
@@ -230,5 +238,6 @@ export function MenuItem() {
         )}
       </div> */}
     </div>
+    </>
   );
 }
