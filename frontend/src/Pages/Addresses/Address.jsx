@@ -244,7 +244,7 @@ export const Address = () => {
               </h6>
             </div>
 
-            <div className="mb-2">
+            <div className="mb-4">
               <label htmlFor="couponCode" className="form-label">
                 Apply Coupon
               </label>
@@ -255,9 +255,11 @@ export const Address = () => {
                   className="form-control"
                   placeholder="Enter coupon code"
                 />
-                <button className="btn btn-success" onClick={handleApplyCoupon}>
-                  Apply
-                </button>
+                 <div className="input-group-append">
+                    <button className="btn btn-success" onClick={handleApplyCoupon}>
+                      Apply
+                    </button>
+                  </div>
               </div>
             </div>
 
@@ -284,3 +286,9 @@ export const Address = () => {
     </div>
   );
 };
+
+
+
+
+ 
+
