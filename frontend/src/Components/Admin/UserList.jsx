@@ -20,6 +20,15 @@ export const UserList = () => {
     getUsers();
   }, []);
 
+  const roleMapping = {
+    1001: "admin-level1",
+    1002: "admin-level2",
+    1003: "admin-level3",
+    1004: "user",
+    1005: "delivery-partner",
+    1006: "restaurant-owner",
+  };
+
   const columns = [
     {
       title: "Name",
@@ -47,6 +56,18 @@ export const UserList = () => {
       title: "Phone",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: "#e85654",
+          color: "#fff",
+        },
+      }),
+    },
+    {
+      title: "Role",
+      dataIndex: "roleId",
+      key: "roleId",
+      render: (roleId) => roleMapping[roleId] || "Unknown",
       onHeaderCell: () => ({
         style: {
           backgroundColor: "#e85654",
